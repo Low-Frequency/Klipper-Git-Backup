@@ -2,7 +2,7 @@
 
 DATE=$(date +%F)
 
-sleep 30
+sleep 15
 touch /home/pi/git_log/"$DATE"
 echo "Adding SSH key to agent" >> /home/pi/git_log/"$DATE"
 eval "$(ssh-agent -s)" >> /home/pi/git_log/"$DATE"
