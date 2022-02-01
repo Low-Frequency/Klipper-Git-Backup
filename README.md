@@ -2,6 +2,7 @@
 
 This script is meant to be run as a cronjob to backup your klipper config files to a GitHub repository.
 
+If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
 
 # Setup
 
@@ -97,11 +98,17 @@ Choose the editor you want (I use nano for simplicity) and add the following lin
 ```
 
 Now the changes you make in your config will be pushed to GitHub everytime you power on your printer.
+When your config gets pushed to GitHub, the commit message will include the date (YYYY-MM-DD) of the backup.
+If something fails, you can view the log with the following command:
+```shell
+cat ~/git_log/<date>
+´´´
+
+With this you should get an idea of where the problem occurred.
 
 ## Further implementation
 
 You can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
-
 ```shell
 [gcode_shell_command backup_cfg]
 command: sh /home/pi/scripts/klipper_config_git_backup.sh
@@ -112,3 +119,8 @@ verbose: True
 gcode:
     RUN_SHELL_COMMAND CMD=backup_cfg
 ```
+
+## TO DO
+
+Log rotation.
+Although the log files are really small, a log rotation might be useful. At least it will be a fun experience to implement this functionality.
