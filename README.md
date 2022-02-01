@@ -61,7 +61,7 @@ mkdir ~/scripts
 mkdir ~/git_log
 ```
 
-After that you can either clone this repository to `~/scripts`, or copy and paste the contents of the [script](klipper_config_git_backup.sh").
+After that you can either clone this repository to `~/scripts`, or copy and paste the contents of the [script](klipper_config_git_backup.sh"). I recommend cloning the repo since it's less word for you ;)
 
 For copy/paste:
 ```shell
