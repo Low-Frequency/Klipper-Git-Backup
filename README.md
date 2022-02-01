@@ -97,3 +97,18 @@ Choose the editor you want (I use nano for simplicity) and add the following lin
 ```
 
 Now the changes you make in your config will be pushed to GitHub everytime you power on your printer.
+
+## Further implementation
+
+You can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
+
+```shell
+[gcode_shell_command backup_cfg]
+command: sh /home/pi/scripts/klipper_config_git_backup.sh
+timeout: 45.
+verbose: True
+
+[gcode_macro BACKUP_CFG]
+gcode:
+    RUN_SHELL_COMMAND CMD=backup_cfg
+```
