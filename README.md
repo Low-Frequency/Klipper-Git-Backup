@@ -123,4 +123,5 @@ gcode:
 ## TO DO
 
 Log rotation.
+
 Although the log files are really small, a log rotation might be useful. At least it will be a fun experience to implement this functionality.
