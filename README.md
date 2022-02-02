@@ -4,6 +4,12 @@ This script is meant to be run as a cronjob to backup your klipper config files 
 
 If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
 
+# How does it work?
+
+This script runs when your Pi starts. It waits for network connection and then pushes the config files to GitHub, if you have modified them since the last commit. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
+
+It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes 😉
+
 # Setup
 
 ## Adding an SSH key to your GitHub account
@@ -106,6 +112,26 @@ cat ~/git_log/<date>
 
 With this you should get an idea of where the problem occurred.
 
+## Customizing log rotation
+
+You can customzie how long the log files will be stored, or even turn off log rotation completely.
+
+To customize this, open the script:
+```shell
+nano ~/scripts/klipper_config_git_backup.sh
+```
+
+Notice this line:
+```shell
+DEL=$((($(date '+%s') - $(date -d '6 months ago' '+%s')) / 86400))
+```
+
+This calculates the number of days the logs live in the `git_log` folder. Default is 6 months.
+
+To customize this just change the `'6 months ago'` to a value of your choice, for example `'1 month ago'` for deleting the logs after one month, or even `'12 months ago'` to delete the files after one year.
+
+If you want to disable the log rotation, just change the value of the `ROTATE` variable to `0`.
+
 ## Further implementation
 
 If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) extension instealled, you can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
@@ -119,9 +145,3 @@ verbose: True
 gcode:
     RUN_SHELL_COMMAND CMD=backup_cfg
 ```
-
-## TO DO
-
-Log rotation.
-
-Although the log files are really small, a log rotation might be useful. At least it will be a fun experience to implement this functionality.
