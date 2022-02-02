@@ -10,7 +10,7 @@ echo "Backing up the klipper config files to GitHub" | tee /home/pi/git_log/"$DA
 echo "Waiting for network" | tee -a /home/pi/git_log/"$DATE"
 while [[ $COUNT -ne 0 ]]
 do
-        ping -c 1 8.8.8.8
+        ping -c 1 8.8.8.8 > /dev/null
         rc=$?
         if [[ $rc -eq 0 ]]
         then
