@@ -42,6 +42,24 @@ Before we continue test the SSH connection to GitHub:
 ssh -T git@github.com
 ```
 
+If the test was successful, you need to add the key permanently. To do this create a config file in the `.ssh` folder:
+
+```shell
+nano ~/.ssh/config
+```
+
+Add in this line:
+
+```shell
+IdentityFile ~/.ssh/github_id_rsa
+```
+
+After that you need to set the correct permissions for the config file and you're done with the SSH configuration:
+
+```shell
+chmod 600 ~/.ssh/config
+```
+
 ## Setting up the repo
 
 Initialize the `klipper_config` folder as your repo and push your config for the first time:
