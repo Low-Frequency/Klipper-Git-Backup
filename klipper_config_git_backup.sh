@@ -23,9 +23,6 @@ done
 
 if [[ $rc -eq 0 ]]
 then
-        echo "Adding SSH key to agent" | tee -a /home/pi/git_log/"$DATE"
-        eval "$(ssh-agent -s)" | tee -a /home/pi/git_log/"$DATE"
-        ssh-add /home/pi/.ssh/github_id_rsa | tee -a /home/pi/git_log/"$DATE"
         echo "Adding changes to push" | tee -a /home/pi/git_log/"$DATE"
         git -C /home/pi/klipper_config add .
         echo "Committing to GitHub repository" | tee -a /home/pi/git_log/"$DATE"
