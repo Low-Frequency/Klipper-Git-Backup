@@ -102,13 +102,13 @@ When your config gets pushed to GitHub, the commit message will include the date
 If something fails, you can view the log with the following command:
 ```shell
 cat ~/git_log/<date>
-´´´
+```
 
 With this you should get an idea of where the problem occurred.
 
 ## Further implementation
 
-You can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
+If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) extension instealled, you can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
 ```shell
 [gcode_shell_command backup_cfg]
 command: sh /home/pi/scripts/klipper_config_git_backup.sh
