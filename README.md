@@ -138,7 +138,7 @@ If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/m
 ```shell
 [gcode_shell_command backup_cfg]
 command: sh /home/pi/scripts/klipper_config_git_backup.sh
-timeout: 45.
+timeout: 65.
 verbose: True
 
 [gcode_macro BACKUP_CFG]
