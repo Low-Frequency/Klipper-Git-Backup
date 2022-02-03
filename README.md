@@ -1,14 +1,8 @@
 # Adding a Klipper config backup script
 
-This script is meant to be run as a cronjob to backup your klipper config files to a GitHub repository.
+This script is meant to be set up as a service to backup your klipper config files to a GitHub repository.
 
 If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
-
-## Disclaimer
-
-Not all functionalities are fully tested yet!
-
-Executing this script via cronjob, or manually while logged in to the Pi should work reliable. Using the script with the G-Code Shell extension might not work as intended. I'll try my best to support and troubleshoot this though.
 
 # How does it work?
 
@@ -117,14 +111,24 @@ At this point you're able to push your klipper config with the script. You can e
 
 ## Setting up the automation
 
-To automate the backup of you klipper config, we're setting up a cronjob that executes the script after a reboot:
+To automate the backup of you klipper config, we're setting up a service that executes the script after a reboot. To do this, you have to create a service file in `/etc/systemd/system`.
+
+If you cloned the repo, the setup is as easy as executing this command:
 ```shell
-crontab -e
+sudo mv ~/scripts/gitbackup.service /etc/systemd/system/gitbackup.service"
 ```
 
-Choose the editor you want (I use nano for simplicity) and add the following line at the end of the file:
+If you want to go the copy/paste route:
 ```shell
-@reboot /home/pi/scripts/klipper_config_git_backup.sh
+sudo nano /etc/systemd/system/gitbackup.service
+```
+
+Then paste the contents of the [service file](gitbackup.service) and save it.
+
+After creating the service file, you have to enable the service and start it:
+```shell
+sudo systemctl enable gitbackup.service
+sudo systemctl start gitbackup.service
 ```
 
 Now the changes you make in your config will be pushed to GitHub everytime you power on your printer.
@@ -154,7 +158,7 @@ This calculates the number of days the logs live in the `git_log` folder. Defaul
 
 To customize this just change the `'6 months ago'` to a value of your choice, for example `'1 month ago'` for deleting the logs after one month, or even `'12 months ago'` to delete the files after one year.
 
-If you want to disable the log rotation, just change the value of the `ROTATE` variable to `0`.
+If you want to disable the log rotation, just comment the last line of the script (add a `#` in front).
 
 ## Further implementation
 
