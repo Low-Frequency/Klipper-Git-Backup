@@ -1,0 +1,11 @@
+[Unit]
+Description=Klipper config backup service
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/scripts/klipper_config_git_backup.sh
+
+[Install]
+WantedBy=multi-user.target
