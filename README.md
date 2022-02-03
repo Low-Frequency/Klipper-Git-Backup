@@ -4,6 +4,12 @@ This script is meant to be run as a cronjob to backup your klipper config files 
 
 If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
 
+## Disclaimer
+
+Not all functionalities are fully tested yet!
+
+Executing this script via cronjob, or manually while logged in to the Pi should work reliable. Using the script with the G-Code Shell extension might not work as intended. I'll try my best to support and troubleshoot this though.
+
 # How does it work?
 
 This script runs when your Pi starts. It waits for network connection and then pushes the config files to GitHub, if you have modified them since the last commit. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
