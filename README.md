@@ -115,7 +115,7 @@ To automate the backup of you klipper config, we're setting up a service that ex
 
 If you cloned the repo, the setup is as easy as executing this command:
 ```shell
-sudo mv ~/scripts/gitbackup.service /etc/systemd/system/gitbackup.service"
+sudo mv ~/scripts/gitbackup.service /etc/systemd/system/gitbackup.service
 ```
 
 If you want to go the copy/paste route:
