@@ -17,7 +17,7 @@ It even has log rotation implemented, so it doesn't eat up the precious space fo
 Connect to your Raspberry Pi via SSH and generate a key pair using the following command: 
 
 ```shell
-ssh-keygen -t ed25519 -C "mail_of_your_github_account"
+ssh-keygen -t ed25519 -C "<mail_of_your_github_account>"
 ```
 
 Save the key pair under `/home/pi/.ssh/github_id_rsa` when it promts you to save it.
@@ -77,6 +77,12 @@ After that switch over to SSH:
 git remote set-url origin git@github.com:<username>/<your-repository>.git
 git remote add origin git@github.com:<username>/<your-repository>.git
 git push -u origin main
+```
+
+And set your username and email:
+´´´shell
+git config --global user.email "<mail_of_your_github_account>"
+git config --global user.name "<username>"
 ```
 
 ## Setting up the script
