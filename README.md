@@ -173,3 +173,27 @@ verbose: True
 gcode:
     RUN_SHELL_COMMAND CMD=backup_cfg
 ```
+
+# Restoring the config
+
+To restore the your config files, you first have to make the restore script executable:
+```shell
+chmod +x ~/scripts/restore_config.sh
+```
+
+If you need to restore your config files, you have two options:
+
+1. Restoring to your existing installation with the git repo already configured
+2. Restoring to a new installation
+
+To restore to the existing installation, execute the following command:
+```shell
+~/scripts/restore_config.sh restore"
+```
+
+To restore to a new installation, execute the following command:
+```shell
+~/scripts/restore_config.sh new <Your-GitHub-Repo-URL>
+```
+
+Note that the restore script isn't tested and might behave funky sometimes.
