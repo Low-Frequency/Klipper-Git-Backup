@@ -194,3 +194,10 @@ Just execute the script and follow the instructions:
 ```shell
 ~/scripts/klipper_backup_script/restore_config.sh
 ```
+
+# Uninstalling the automatic backup utility
+
+I don't know why you don't want to use automatic backups, but I might as well provide you with an easy way ro revert all the changes the scripts have done. Just execute this command:
+```shell
+~/scripts/klipper_backup_script/uninstall.sh
+```
