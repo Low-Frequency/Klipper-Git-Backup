@@ -22,7 +22,7 @@ else
                 if [[ $URL == *"github.com"* ]]
                 then
                         echo "Cloning from $URL"
-                        git -C /home/pi/klipper_config "$URL"
+                        git -C /home/pi clone "$URL"
                 else
                         echo "Please provide a valid URL to a git repo"
                 fi
