@@ -66,15 +66,10 @@ Initialize the `klipper_config` folder as your repo and push your config for the
 ```shell
 cd ~/klipper_config/
 git init
-git remote add origin <Your-GitHub-Repo-URL>
 git add .
 git commit -m "my first backup"
-git push -u origin master
-```
-After that switch over to SSH:
-
-```shell
-git remote set-url origin git@github.com:<username>/<your-repository>.git
+git remote add origin git@github.com:<username>/<your-repository>.git
+git push -u origin main
 ```
 
 ## Setting up the script
