@@ -80,7 +80,7 @@ git push -u origin main
 ```
 
 And set your username and email:
-´´´shell
+```shell
 git config --global user.email "<mail_of_your_github_account>"
 git config --global user.name "<username>"
 ```
