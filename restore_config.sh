@@ -19,12 +19,12 @@ else
                 git -C /home/pi/klipper_config reset --hard origin/master
         elif [ "$ARG" = "new" ]
         then
-                if [[ -z $URL ]]
+                if [[ $URL == *"github.com"* ]]
                 then
                         echo "Cloning from $URL"
                         git -C /home/pi/klipper_config "$URL"
                 else
-                        echo "Please provide the URL to your git repo"
+                        echo "Please provide a valid URL to a git repo"
                 fi
         else
                 echo "Please provide valid restore method"
