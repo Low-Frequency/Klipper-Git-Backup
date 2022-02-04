@@ -9,5 +9,5 @@ git -C /home/pi/klipper_config add .
 echo "Committing to GitHub repository" | tee -a /home/pi/git_log/$(date +%F)
 git -C /home/pi/klipper_config commit -m "backup $(date +%F)" | tee -a /home/pi/git_log/$(date +%F)
 echo "Pushing" | tee -a /home/pi/git_log/$(date +%F)
-git -C /home/pi/klipper_config push -u origin master | tee -a /home/pi/git_log/$(date +%F)
+git -C /home/pi/klipper_config push -u origin main | tee -a /home/pi/git_log/$(date +%F)
 find /home/pi/git_log -mindepth 1 -mtime +$DEL -delete
