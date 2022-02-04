@@ -32,6 +32,7 @@ echo "Cloning backup script"
 git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
 chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
+chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
 
 echo "Setting up the service"
 sudo mv /home/pi/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
