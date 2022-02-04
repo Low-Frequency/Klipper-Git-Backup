@@ -12,6 +12,13 @@ It even has log rotation implemented, so it doesn't eat up the precious space fo
 
 # Setup
 
+There are two ways to set this script up. The manual way, or completely automated. Everything you have to do is copy this command and type in the information the script asks for:
+```shell
+wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup.sh" && chmod +x setup.sh && ./setup.sh
+```
+
+The manual way is described in the following sections.
+
 ## Adding an SSH key to your GitHub account
 
 Connect to your Raspberry Pi via SSH and generate a key pair using the following command: 
@@ -96,25 +103,19 @@ mkdir ~/git_log
 
 After that you can either clone this repository to `~/scripts`, or copy and paste the contents of the [script](klipper_config_git_backup.sh). I recommend cloning the repo since it's less work for you :wink:
 
-For copy/paste:
-```shell
-nano ~/scripts/klipper_config_git_backup.sh
-```
-
 Cloning the repo:
 ```shell
-cd ~/scripts
-git clone https://github.com/Low-Frequency/klipper_backup_script
+git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
 ```
 
 After you copied the script, you have to make it executable:
 ```shell
-chmod +x ~/scripts/klipper_config_git_backup.sh
+chmod +x ~/scripts/klipper_backup_script/klipper_config_git_backup.sh
 ```
 
 At this point you're able to push your klipper config with the script. You can execute it with this command:
 ```shell
-~/scripts/klipper_config_git_backup.sh
+~/scripts/klipper_backup_script/klipper_config_git_backup.sh
 ```
 
 ## Setting up the automation
@@ -123,7 +124,7 @@ To automate the backup of you klipper config, we're setting up a service that ex
 
 If you cloned the repo, the setup is as easy as executing this command:
 ```shell
-sudo mv ~/scripts/gitbackup.service /etc/systemd/system/gitbackup.service
+sudo mv ~/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
 ```
 
 If you want to go the copy/paste route:
@@ -154,7 +155,7 @@ You can customzie how long the log files will be stored, or even turn off log ro
 
 To customize this, open the script:
 ```shell
-nano ~/scripts/klipper_config_git_backup.sh
+nano ~/scripts/klipper_backup_script/klipper_config_git_backup.sh
 ```
 
 Notice this line:
@@ -173,7 +174,7 @@ If you want to disable the log rotation, just comment the last line of the scrip
 If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) extension instealled, you can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
 ```shell
 [gcode_shell_command backup_cfg]
-command: sh /home/pi/scripts/klipper_config_git_backup.sh
+command: sh /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 timeout: 30.
 verbose: True
 
@@ -186,7 +187,7 @@ gcode:
 
 To restore the your config files, you first have to make the restore script executable:
 ```shell
-chmod +x ~/scripts/restore_config.sh
+chmod +x ~/scripts/klipper_backup_script/restore_config.sh
 ```
 
 If you need to restore your config files, you have two options:
@@ -196,12 +197,12 @@ If you need to restore your config files, you have two options:
 
 To restore to the existing installation, execute the following command:
 ```shell
-~/scripts/restore_config.sh restore
+~/scripts/klipper_backup_script/restore_config.sh restore
 ```
 
 To restore to a new installation, execute the following command:
 ```shell
-~/scripts/restore_config.sh new <Your-GitHub-Repo-URL>
+~/scripts/klipper_backup_script/restore_config.sh new <Your-GitHub-Repo-URL>
 ```
 
 Note that the restore script isn't tested and might behave funky sometimes.
