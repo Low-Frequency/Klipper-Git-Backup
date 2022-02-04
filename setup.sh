@@ -36,6 +36,7 @@ chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
 
 echo "Setting up the service"
 sudo mv /home/pi/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
+sudo chown root:root /etc/systemd/system/gitbackup.service
 sudo systemctl enable gitbackup.service
 sudo systemctl start gitbackup.service
 
@@ -54,3 +55,4 @@ echo "Testing SSH connention"
 ssh -T git@github.com
 echo "Pushing the first backup to your repo"
 /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+rm /home/pi/setup.sh
