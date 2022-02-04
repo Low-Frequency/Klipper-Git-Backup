@@ -17,7 +17,7 @@ mkdir /home/pi/.ssh
 echo "Generating SSH key pair"
 ssh-keygen -t ed25519 -C "$MAIL" -f /home/pi/.ssh/github_id_rsa -q -N ""
 echo "IdentityFile ~/.ssh/github_id_rsa" >> /home/pi/.ssh/config
-chmod 600 ~/.ssh/config
+chmod 600 /home/pi/.ssh/config
 
 echo "Initializing repo"
 git -C /home/pi/klipper_config init
@@ -30,10 +30,11 @@ git config --global user.name "$USER"
 
 echo "Cloning backup script"
 git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
-chmod +x ~/scripts/klipper_backup_script/klipper_config_git_backup.sh
+chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
 
 echo "Setting up the service"
-sudo mv ~/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
+sudo mv /home/pi/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
 sudo systemctl enable gitbackup.service
 sudo systemctl start gitbackup.service
 
@@ -43,7 +44,7 @@ echo "You can find instructions for this here:"
 echo "https://github.com/Low-Frequency/klipper_backup_script"
 echo ""
 echo ""
-cat ~/.ssh/github_id_rsa.pub
+cat /home/pi/.ssh/github_id_rsa.pub
 echo ""
 echo ""
 
