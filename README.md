@@ -188,7 +188,7 @@ If you need to restore your config files, you have two options:
 
 To restore to the existing installation, execute the following command:
 ```shell
-~/scripts/restore_config.sh restore"
+~/scripts/restore_config.sh restore
 ```
 
 To restore to a new installation, execute the following command:
