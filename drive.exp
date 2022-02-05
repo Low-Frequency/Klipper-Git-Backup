@@ -1,0 +1,48 @@
+#!/usr/bin/expect -f
+
+set force_conservative 1  ;# set to 1 to force conservative mode even if
+			  ;# script wasn't run conservatively originally
+if {$force_conservative} {
+	set send_slow {1 .1}
+	proc send {ignore arg} {
+		sleep .1
+		exp_send -s -- $arg
+	}
+}
+
+#get command line arguments
+set remote_name [lindex $argv 0]
+
+set timeout -1
+spawn rclone config
+match_max 100000
+expect "n/s/q> "
+send -- "n\r"
+expect "name> "
+send -- "$remote_name\r"
+expect "Storage> "
+send -- "16\r"
+expect "client_id> "
+send -- "\r"
+expect "client_secret> "
+send -- "\r"
+expect "scope> "
+send -- "1\r"
+expect "root_folder_id> "
+send -- "\r"
+expect "service_account_file> "
+send -- "\r"
+expect "y/n> "
+send -- "\r"
+expect "y/n> "
+send -- "N\r"
+expect "config_verification_code> "
+expect_user -re "(.*)\[\r\n]"
+send -- "$expect_out(1,string)\r"
+expect "y/n> "
+send -- "\r"
+expect "y/e/d> "
+send -- "\r"
+expect "e/n/d/r/c/s/q> "
+send -- "q\r"
+expect eof
