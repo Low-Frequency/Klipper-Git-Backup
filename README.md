@@ -8,7 +8,7 @@ If you have any questions, bug reports or requests feel free to DM me on Discord
 
 This script runs when your Pi starts. It waits for network connection and then pushes the config files to GitHub, if you have modified them since the last commit. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
 
-It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes 😉
+It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
 # Setup
 
@@ -153,21 +153,16 @@ With this you should get an idea of where the problem occurred.
 
 You can customzie how long the log files will be stored, or even turn off log rotation completely.
 
-To customize this, open the script:
+To customize this, open the config file:
 ```shell
-nano ~/scripts/klipper_backup_script/klipper_config_git_backup.sh
+nano ~/scripts/klipper_backup_script/backup.cfg
 ```
 
-Notice this line:
-```shell
-DEL=$((($(date '+%s') - $(date -d '6 months ago' '+%s')) / 86400))
-```
+In this file there are all customizable features.
 
-This calculates the number of days the logs live in the `git_log` folder. Default is 6 months.
+If you want to disable the log rotation completely, just set the `ROTATION` variable to `0`.
 
-To customize this just change the `'6 months ago'` to a value of your choice, for example `'1 month ago'` for deleting the logs after one month, or even `'12 months ago'` to delete the files after one year.
-
-If you want to disable the log rotation, just comment the last line of the script (add a `#` in front).
+To time to keep the logs, just change the `RETENTION` variable. Note that the time is calculated in months.
 
 ## Further implementation
 
@@ -197,7 +192,16 @@ Just execute the script and follow the instructions:
 
 # Uninstalling the automatic backup utility
 
-I don't know why you don't want to use automatic backups, but I might as well provide you with an easy way ro revert all the changes the scripts have done. Just execute this command:
+I don't know why you wouldn't want to use automatic backups, but I might as well provide you with an easy way ro revert all the changes the scripts have done. Just execute this command:
 ```shell
 ~/scripts/klipper_backup_script/uninstall.sh
 ```
+
+You still have to manually delete your GitHub repo and the SSH keys though.
+
+To delete the SSH keys, just execute this command:
+```shell
+rm -r ~/.ssh/github_id_rsa*
+```
+
+Don't forget to delete the public key in your GitHub profile too!
