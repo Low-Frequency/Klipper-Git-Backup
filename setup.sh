@@ -14,6 +14,7 @@ else
 fi
 
 echo ""
+
 echo "Cloning backup script"
 #git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
 #chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
@@ -34,8 +35,8 @@ echo "This can save space on your SD card"
 echo "This is recommended, if you choose to backup to Google Drive"
 echo ""
 
-ROT=9999
-while [[ $ROT != 1 && $ROT != 0 ]]
+ROT="o"
+while [[ "$ROT" != "y" && "$ROT" != "n" ]]
 do
 	read -p 'Enable log rotation? [y|n] ' ROT
 
@@ -43,10 +44,12 @@ do
 		n)
 			echo "ROTATION=0" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 			echo "Log rotation disabled"
+			break
 			;;
 		y)
                         echo "ROTATION=1" >> /home/pi/scripts/klipper_backup_script/backup.cfg
                         echo "Log rotation enabled"
+			break
                         ;;
 		*)
 			echo "Please provide a valid configuration"
@@ -173,7 +176,7 @@ then
 		echo ""
 
 		ADDED="o"
-		while [ "$ADDED" != "y" || "$ADDED" != "n" ]
+		while [[ "$ADDED" != "y" && "$ADDED" != "n" ]]
 		do
 			read -p 'Did you already add this key to your GitHub account? [y|n] ' ADDED
 
