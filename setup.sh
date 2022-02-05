@@ -2,7 +2,7 @@
 
 echo "Checking for dierectories"
 
-if [[ -d /home/pi/scripts ]
+if [[ -d /home/pi/scripts ]]
 then
 	echo "Scripts folder already exists"
 else
@@ -50,7 +50,7 @@ then
 	echo "SSH key already present"
 
 	ADDED=o
-	while [ "$ADDED" != "y" || "$ADDED" != "n" ]
+	while [[ "$ADDED" != "y" || "$ADDED" != "n" ]]
 	do
 		read -p 'Did you already add this key to your GitHub account? [y|n] ' ADDED
 
@@ -64,9 +64,11 @@ then
 			        echo "https://github.com/Low-Frequency/klipper_backup_script"
 			        echo ""
 				read -p 'Press enter to continue' CONTINUE
+				break
 				;;
 			y)
 				echo "Continuing setup"
+				break
 				;;
 			*)
 				echo "Please input a valid answer [y|n]"
@@ -117,7 +119,7 @@ echo "Type 1 to enable log rotation"
 echo "Type 0 to disable log rotation"
 
 ROT=9999
-while [ $ROT != 1 || $ROT != 0 ]
+while [[ $ROT != 1 || $ROT != 0 ]]
 do
 	read -p 'Enable log rotation? ' ROT
 
@@ -125,10 +127,12 @@ do
 		0)
 			echo "ROTATION=0" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 			echo "Log rotation disabled"
+			break
 			;;
 		1)
                         echo "ROTATION=1" >> /home/pi/scripts/klipper_backup_script/backup.cfg
                         echo "Log rotation enabled"
+			break
                         ;;
 		*)
 			echo "Please provide a valid configuration"
