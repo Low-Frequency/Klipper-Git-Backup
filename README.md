@@ -14,7 +14,7 @@ It even has log rotation implemented, so it doesn't eat up the precious space fo
 
 ## Preparations
 
-Crate a GitHub account if you want to store your backup there. If not, just use Google Drive.
+Create a GitHub account if you want to store your backup there. If not, just use Google Drive.
 
 If you plan to store the backup on GitHub, go ahead and create a new repo.
 
@@ -24,6 +24,8 @@ To install this script, `SSH` into your Pi and execute the following command :
 ```shell
 wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup.sh" && chmod +x setup.sh && ./setup.sh
 ```
+
+It can take a while for the Google Drive authentication to succeed, so don't panic if the install stops responding for a short period of time.
 
 ## Adding an SSH key to your GitHub account
 
@@ -51,7 +53,12 @@ If you want to disable the log rotation completely, just set the `ROTATION` vari
 
 To change the log retention time, just change the `RETENTION` variable. Note that the time is calculated in months.
 
-Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variables.
+Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variables. Note that you have to set up a remote location, if you add Google Drive after you've already done the install.
+
+To do this, you simply execute the following command:
+```shell
+chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/remote_location.sh
+```
 
 Changing `USER` and `REPO` is not advised unless you know what you're doing.
 
