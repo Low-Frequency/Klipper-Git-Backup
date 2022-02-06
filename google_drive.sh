@@ -11,8 +11,9 @@ then
         exit 2
 fi
 
-## Regex for space in string
+## Regex for string checking
 SPACE=" |'"
+SLASH="\/"
 
 ## Installing dependencies
 echo "Installing rclone"
@@ -27,9 +28,9 @@ echo "Setting up a remote location for your backup"
 
 ## Set up remote location
 REMNAME="google drive"
-while [[ $REMNAME =~ $SPACE ]]
+while [[ $REMNAME =~ $SPACE || $REMNAME =~ $SLASH]]
 do
-	read -p 'Please name your remote storage (no spaces allowed): ' REMNAME
+	read -p 'Please name your remote storage (no spaces, or / allowed): ' REMNAME
 done
 
 ## Adding config lines
@@ -38,9 +39,9 @@ sed -i "s/REMOTE=/REMOTE=$REMNAME/g" /home/pi/scripts/klipper_backup_script/back
 ## Specifying backup folder
 DIR="some directory"
 echo ""
-while [[ $DIR =~ $SPACE ]]
+while [[ $DIR =~ $SPACE || $DIR =~ $SLASH ]]
 do
-	read -p 'Please specify a folder to backup into (no spaces allowed): ' DIR
+	read -p 'Please specify a folder to backup into (no spaces, or / allowed): ' DIR
 done
 
 ## Adding config lines
