@@ -10,6 +10,8 @@ This script runs when your Pi starts. It waits for network connection and then p
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
+If you want to know what each script does, just execute it with the flags `-h` or `--help` and you get a manual.
+
 # Setup
 
 ## Preparations
