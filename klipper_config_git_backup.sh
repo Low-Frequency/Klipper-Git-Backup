@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if [[ "$1" = "-h" || "$1" = "--help" ]]
+then
+        less /home/pi/scripts/klipper_backup_script/manual
+        exit 1
+elif [[ -n "$1" ]]
+then
+        echo "Try -h, or --help for the manual"
+        exit 2
+fi
+
 configfile='/home/pi/scripts/klipper_backup_script/backup.cfg'
 configfile_secured='/home/pi/scripts/klipper_backup_script/sec_backup.cfg'
 

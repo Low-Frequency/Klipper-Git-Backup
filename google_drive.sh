@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if [[ "$1" = "-h" || "$1" = "--help" ]]
+then
+        less /home/pi/scripts/klipper_backup_script/manual
+        exit 1
+elif [[ -n "$1" ]]
+then
+        echo "Try -h, or --help for the manual"
+        exit 2
+fi
+
 ## Regex for space in string
 SPACE=" |'"
 
@@ -9,7 +19,7 @@ curl https://rclone.org/install.sh | sudo bash
 
 echo ""
 echo "Installing expect"
-sudo apt install expect -y
+sudo apt install expect
 
 echo ""
 echo "Setting up a remote location for your backup"

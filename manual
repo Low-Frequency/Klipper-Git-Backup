@@ -1,0 +1,93 @@
+#####################################################################
+##                                                                 ##
+## This is a short manual for the automatic klipper backup utility ##
+##                                                                 ##
+#####################################################################
+
+Written by: Low_Frequency
+
+Contact:
+  Discord: Low_Frequency#0831
+  GitHub: https://github.com/Low-Frequency
+
+#####################################################################
+##                                                                 ##
+##                Overview of the different scripts                ##
+##                                                                 ##
+#####################################################################
+
+1. setup.sh
+2. git_repo.sh
+3. google_drive.sh
+4. klipper_config_git_backup.sh
+5. restore_config.sh
+6. drive.exp
+7. delete_remote.exp
+8. uninstall.sh
+
+
+#####################################################################
+##                                                                 ##
+##                     How to use the scripts                      ##
+##                                                                 ##
+#####################################################################
+
+1. setup.sh
+
+This is the script for the initial setup. It is called directly from GitHub during the install
+
+
+2. git_repo.sh
+
+This script initializes the klipper_config folder as a GitHub repository. It is called from setup.sh, if you choose to backup to a GitHub repository.
+You can also execute this script to set up a GitHub repository after the setup if you want to enable GitHub backups. Execute it wit this command:
+
+~/scripts/klipper_backup_script/git_repo.sh
+
+
+3. google_drive.sh
+
+This script creates a link to your Google Drive as a backup location. It is called from setup.sh, if you choose to backup to Google Drive.
+You can also execute this script to set up Google Drive as a backup location after the setup if you want to enable Google Drive backups. Execute it wit this command:
+
+~/scripts/klipper_backup_script/google_drive.sh
+
+4. klipper_config_git_backup.sh
+
+This is the main script. It is run after every reboot of your Raspberry Pi, imports the config file and pushes a backup to your specified locations.
+You can manually back up your klipper config with this command:
+
+~/scripts/klipper_backup_script/klipper_config_git_backup.sh
+
+
+5. restore_config.sh
+
+If something catastrophically fails, you want this script. It guides you through the restore process for your klipper config.
+This script also relies on the config file to know which backup locations are available. To start the restoring process just execute this command:
+
+~/scripts/klipper_backup_script/restore_config.sh
+
+
+6. drive.exp
+
+This script automatically configures rclone for the Google Drive backup and is called from google_drive.sh. You shouldn't have to execute this script manually.
+
+
+7. delete_remote.exp
+
+This script deletes the link to your Google Drive and is called from uninstall.sh. You shouldn't have to execute this script manually.
+
+
+8. uninstall.sh
+
+Pretty self explanatory. This script completely uninstalls the klipper backup utility from your system.
+To do this, execute this command:
+
+~/scripts/klipper_backup_script/uninstall.sh
+
+Be aware, that you still have to manually delete your SSH keys after the backup utility has been uninstalled.
+To delete the keys, execute this command:
+
+rm -r ~/.ssh/github_id_rsa*
+
+Don't forget to delete the public key in your GitHub profile too!

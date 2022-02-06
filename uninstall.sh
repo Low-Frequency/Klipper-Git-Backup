@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if [[ "$1" = "-h" || "$1" = "--help" ]]
+then
+        less /home/pi/scripts/klipper_backup_script/manual
+        exit 1
+elif [[ -n "$1" ]]
+then
+        echo "Try -h, or --help for the manual"
+        exit 2
+fi
+
 echo "Removing log files"
 rm -r /home/pi/backup_log
 if command -v rclone

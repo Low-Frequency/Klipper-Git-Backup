@@ -1,5 +1,15 @@
 #!/bin/bash
 
+if [[ "$1" = "-h" || "$1" = "--help" ]]
+then
+        less /home/pi/scripts/klipper_backup_script/manual
+        exit 1
+elif [[ -n "$1" ]]
+then
+        echo "Try -h, or --help for the manual"
+        exit 2
+fi
+
 ## Installing git
 echo "Checking if git is installed"
 
@@ -79,7 +89,6 @@ C=9
 while [[ "$G" != "y" && "$G" != "n" ]]
 do
 	read -p 'Do you want to enable GitHub as a backup location? [y|n] ' G
-
 	case $G in
 		n)
 			echo "GitHub backup disabled"
@@ -100,7 +109,6 @@ echo ""
 while [[ "$C" != "y" && "$C" != "n" ]]
 do
         read -p 'Do you want to enable Google Drive backup? [y|n] ' C
-
         case $C in
                 n)
                         echo "Google Drive backup disabled"
@@ -108,8 +116,8 @@ do
                         ;;
                 y)
                         echo "Google Drive backup enabled"
-						chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
-						chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
+			chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
+			chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
                         ;;
                 *)
                         echo "Please provide a valid configuration"
@@ -198,7 +206,7 @@ do
 			;;
 		n)
 			echo "Backing up is recommended"
-			echo "Don't forget that"
+			echo "Don't forget to do that later"
 			;;
 		*)
 			echo "Please choose avalid action"
