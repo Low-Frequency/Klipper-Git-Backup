@@ -39,3 +39,8 @@ echo "FOLDER=\"$DIR\"" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 
 ## Configuring rclone
 /home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
+
+## Activating Google Drive backup
+sed -i 's/CLOUD=0/CLOUD=1/g' /home/pi/scripts/klipper_backup_script/backup.cfg
+
+echo "Google Drive backup has been configured and activated"
