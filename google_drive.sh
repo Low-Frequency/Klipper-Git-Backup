@@ -28,7 +28,7 @@ echo "Setting up a remote location for your backup"
 
 ## Set up remote location
 REMNAME="google drive"
-while [[ $REMNAME =~ $SPACE || $REMNAME =~ $SLASH]]
+while [[ $REMNAME =~ $SPACE || $REMNAME =~ $SLASH ]]
 do
 	read -p 'Please name your remote storage (no spaces, or / allowed): ' REMNAME
 done
