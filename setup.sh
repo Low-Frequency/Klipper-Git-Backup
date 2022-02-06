@@ -24,16 +24,16 @@ do
 			echo "Please run the uninstall script and update your Raspberry Pi if the setup fails"
 			;;
 		y)
-			echo "Updateing now"
-			sudo apt update && sudo apt update
+			echo "Please update your system now and execute the setup again"
+			echo "this is done with this command: sudo apt update && sudo apt upgrade"
+			echo "After that you can just type this to execute the setup again: ./setup.sh"
+			exit 3
 			;;
 		*)
 			echo "Please provide a valid answer"
 			;;
 	esac
 done
-
-read -p 'Do you want to update now? [y|n] ' UPDATE
 
 ## Installing git
 echo "Checking if git is installed"
@@ -48,6 +48,26 @@ else
 fi
 
 echo ""
+
+## Creating necessary directories
+echo ""
+echo "Checking for dierectories"
+
+if [[ -d /home/pi/scripts ]]
+then
+        echo "Scripts folder already exists"
+else
+        echo "Crating scripts folder"
+        mkdir /home/pi/scripts
+fi
+
+if [[ -d /home/pi/backup_log ]]
+then
+        echo "Log folder already exists"
+else
+        echo "Creating log folder"
+        mkdir /home/pi/backup_log
+fi
 
 ## Fetching backup script
 echo "Cloning backup script"
@@ -150,26 +170,6 @@ do
                         ;;
         esac
 done
-
-## Creating necessary directories
-echo ""
-echo "Checking for dierectories"
-
-if [[ -d /home/pi/scripts ]]
-then
-        echo "Scripts folder already exists"
-else
-        echo "Crating scripts folder"
-        mkdir /home/pi/scripts
-fi
-
-if [[ -d /home/pi/backup_log ]]
-then
-        echo "Log folder already exists"
-else
-        echo "Creating log folder"
-        mkdir /home/pi/backup_log
-fi
 
 ## GitHub setup
 if [ "$G" = "y" ]
