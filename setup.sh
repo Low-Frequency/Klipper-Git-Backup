@@ -112,8 +112,6 @@ do
 	esac
 done
 
-echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## Time in months to keep the logs" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 echo ""
 
 if [[ "$ROT" = "y" ]]
