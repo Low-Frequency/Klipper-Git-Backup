@@ -44,7 +44,7 @@ do
 done
 
 ## Adding config lines
-sed -i "s/FOLDER=/FOLDER=$DIR/g" /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/FOLDER=/FOLDER=\"$DIR\"/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 
 ## Configuring rclone
 /home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
