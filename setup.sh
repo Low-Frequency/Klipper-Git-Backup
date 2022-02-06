@@ -1,7 +1,10 @@
 #!/bin/bash
 
+
+## Regex for spaces in string
 SPACE=" |'"
 
+## Installing git
 echo "Checking if git is installed"
 
 if ! command -v git &> /dev/null
@@ -15,15 +18,18 @@ fi
 
 echo ""
 
+## Fetching backup script
 echo "Cloning backup script"
-#git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
-#chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
-#chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
-#chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
+git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
+chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
+chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
 
+## Adding config lines
 echo ""
 echo "Configuring the script"
 
+## Log rotation config
 echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 echo "## Log Rotation enable/disable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 echo "## 1: enable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
@@ -70,6 +76,7 @@ else
 	echo "RETENTION=$KEEP" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 fi
 
+## Choosing backup locations
 echo ""
 echo "Which backup locations do you want to enable?"
 echo "Type y to enable a backup location"
@@ -127,6 +134,7 @@ do
         esac
 done
 
+## Creating necessary directories
 echo ""
 echo "Checking for dierectories"
 
@@ -146,6 +154,7 @@ else
         mkdir /home/pi/backup_log
 fi
 
+## GitHub setup
 if [ "$G" = "y" ]
 then
 	if [[ -d /home/pi/.ssh ]]
@@ -156,6 +165,7 @@ then
 	        mkdir /home/pi/.ssh
 	fi
 
+	## Getting necessary information
 	read -p 'Please enter your GitHub Username: ' USER
 	read -p 'Please enter the name of your GitHub repository: ' REPO
 	read -p 'Please enter the e-mail of your GitHub account: ' MAIL
@@ -167,6 +177,7 @@ then
 
 	URL="https://github.com/$USER/$REPO"
 
+	## Checking SSH keys
 	echo ""
 	echo "Checking for GitHub SSH key"
 
@@ -200,6 +211,7 @@ then
 			esac
 		done
 	else
+		## Generating SSH key pair
 		echo "Generating SSH key pair"
 		ssh-keygen -t ed25519 -C "$MAIL" -f /home/pi/.ssh/github_id_rsa -q -N ""
 		echo "IdentityFile ~/.ssh/github_id_rsa" >> /home/pi/.ssh/config
@@ -215,6 +227,7 @@ then
 		read -p 'Press enter to continue' CONTINUE
 	fi
 
+	## Initializing repo
 	echo ""
 	echo "Initializing repo"
 	git -C /home/pi/klipper_config init
@@ -229,6 +242,7 @@ fi
 
 echo ""
 
+## Installing dependencies
 if [ "$C" = "y" ]
 then
 	echo "Installing rclone"
@@ -237,6 +251,7 @@ then
 	echo "Installing expect"
 	sudo apt install expect -y
 	echo ""
+	## Remote location setup
 	echo "Setting up a remote location for your backup"
 	REMNAME="google drive"
 	while [[ $REMNAME =~ $SPACE ]]
@@ -248,6 +263,7 @@ then
 	echo "REMOTE=$REMNAME" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 	DIR="some directory"
 	echo ""
+	## Specifying backup folder
 	while [[ $DIR =~ $SPACE ]]
 	do
 		read -p 'Please specify a folder to backup into (no spaces allowed): ' DIR
@@ -256,6 +272,7 @@ then
 	/home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
 fi
 
+## Enabling automatic backups
 echo ""
 echo "Setting up the service"
 sudo mv /home/pi/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
@@ -265,6 +282,7 @@ sudo systemctl start gitbackup.service
 
 echo ""
 
+## Testing GitHub connection
 if [ "$G" = "y" ]
 then
 	echo "Testing SSH connention"
@@ -272,6 +290,54 @@ then
 	echo ""
 fi
 
-echo "Pushing the first backup to your specified backup location(s)"
-/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+## Backing up/restoring
+NOW="o"
+BAK="o"
+while [[ "$NOW" != "y" && "$NOW" != "n" ]]
+do
+	read -p 'Do you want to restore a backup, or do a backup now? [y|n] ' NOW
+	case $NOW in
+		y)
+			echo "b: backup"
+			echo "r: restore"
+			while [[ "$BAK" != "b" && "$BAK" != "r" ]]
+			do
+				read -p 'Do you want to restore a backup, or do a backup? [b|r] ' BAK
+				case $BAK in
+					b)
+						ACT=1
+						;;
+					r)
+						ACT=2
+						;;
+					*)
+						echo "Please choose a valid action"
+						;;
+				esac
+			;;
+		n)
+			echo "Backing up is recommended"
+			echo "Don't forget that"
+			;;
+		*)
+			echo "Please choose avalid action"
+			;;
+	esac
+done
+
+case $ACT in
+	1)
+		echo "Pushing the first backup to your specified backup location(s)"
+		/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+		;;
+	2)
+		echo "Restoring backup"
+		/home/pi/scripts/klipper_backup_script/restore_config.sh
+		;;
+	*)
+		echo "Error while backing up/restoring"
+		;;
+esac
+
+## Deleting now unecessary setup script
 rm /home/pi/setup.sh

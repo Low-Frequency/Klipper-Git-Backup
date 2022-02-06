@@ -1,5 +1,6 @@
 #!/usr/bin/expect -f
 
+## Set slow mode to not outrun the configuration
 set force_conservative 1  ;# set to 1 to force conservative mode even if
 			  ;# script wasn't run conservatively originally
 if {$force_conservative} {
@@ -10,16 +11,25 @@ if {$force_conservative} {
 	}
 }
 
-#get command line arguments
+## Get remote location name
 set remote_name [lindex $argv 0]
 
+## Disable timeout
 set timeout -1
+
+## Configuring rclone
 spawn rclone config
 match_max 100000
+
+## New remote
 expect "n/s/q> "
 send -- "n\r"
+
+## Set remote name
 expect "name> "
 send -- "$remote_name\r"
+
+## Choosing Google Drive
 expect "Storage> "
 send -- "16\r"
 expect "client_id> "
@@ -36,13 +46,19 @@ expect "y/n> "
 send -- "\r"
 expect "y/n> "
 send -- "N\r"
+
+## Verify login and hand control to user
 expect "config_verification_code> "
 expect_user -re "(.*)\[\r\n]"
 send -- "$expect_out(1,string)\r"
+
+## Taking control back and finalizing the configuration
 expect "y/n> "
 send -- "\r"
 expect "y/e/d> "
 send -- "\r"
+
+## Exiting
 expect "e/n/d/r/c/s/q> "
 send -- "q\r"
 expect eof

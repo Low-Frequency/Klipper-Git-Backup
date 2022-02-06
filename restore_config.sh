@@ -3,22 +3,24 @@
 configfile='/home/pi/scripts/klipper_backup_script/backup.cfg'
 configfile_secured='/home/pi/scripts/klipper_backup_script/sec_backup.cfg'
 
-# check if the file contains malicious code
+## Check if the file contains malicious code
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"
 then
         echo "Config file is unclean, cleaning it..." >&2
-        # filter the original to a new file
+        ## Filter the original to a new file
         egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secured"
         configfile="$configfile_secured"
 fi
 
-# importing the config
+## Importing the config
 source "$configfile"
 
+## Setting error text colors
 YELLOW='\033[0;33m'
 RED='\033[0;31m'
 NONE='\033[0m'
 
+## Choosing backup source
 if [[ $GIT = 1 && $CLOUD = 1 ]]
 then
 	echo "From which source should the backup be restored?"
@@ -39,9 +41,11 @@ then
 				;;
 		esac
 	done
+## Only Git configured
 elif [ $GIT = 1 ]
 then
 	echo "GitHub selected as backup source"
+## Only Google Drive configured
 elif [ $CLOUD = 1 ]
 then
 	echo "Google Drive selected as backup source"
@@ -51,6 +55,7 @@ else
 	exit 1
 fi
 
+## Choosing restore mode
 echo "Which restoring mode do you want?"
 echo "1: Restore an old config to an existing installation"
 echo "2: Restore a config to a new installation"
@@ -71,26 +76,34 @@ do
 	esac
 done
 
+## Setting actions to take
 if [[ $SOURCE = 1 && $MODE = 1 ]]
 then
+	## GitHub to existing installation
 	ACTION=1
 elif [[ $SOURCE = 1 && $MODE = 2 ]]
 then
+	## GitHub to new installation
 	ACTION=2
 elif [[ $SOURCE = 2 && $MODE = 1 ]]
 then
+	## Google Drive to existing installation
 	ACTION=3
 elif [[ $SOURCE = 2 && $MODE = 2 ]]
 then
+	## Google Drive to new installation
 	ACTION=4
 else
+	## Input error
 	echo -e "${RED}Error while calculating which action to take${NONE}"
 	echo "Aborting"
 	exit 2
 fi
 
+'' Restoring
 case $ACTION in
 	1)
+		## GitHub to existing installation
 		echo -e "${YELLOW}WARNING!${NONE} This will delete your current configuration!"
 	        read -p 'Continue? [y|n] ' CONTINUE
 	        if [ "$CONTINUE" = "y" ]
@@ -103,6 +116,7 @@ case $ACTION in
 	        fi
 		;;
 	2)
+		## GitHub to new installation
 		echo "Checking SSH key"
 	        if [[ -f /home/pi/.ssh/github_id_rsa ]]
 	        then
@@ -134,6 +148,7 @@ case $ACTION in
 	        fi
 		;;
 	3)
+		## Google Drive to existing installation
 		echo "Backing up existing files"
 		mkdir /home/pi/klipper_config_bak
 		mv /home/pi/klipper_config/*.cfg /home/pi/klipper_config_bak
@@ -152,6 +167,7 @@ case $ACTION in
 		fi
 		;;
 	4)
+		## Google Drive to new installation
                 echo "Backing up existing files"
                 mkdir /home/pi/klipper_config_bak
                 mv /home/pi/klipper_config/*.cfg /home/pi/klipper_config_bak
@@ -170,6 +186,7 @@ case $ACTION in
                 fi
 		;;
 	*)
+		## Wrong action chosen
 		echo "${RED}Something went wrong while calculating the right restore action${NONE}"
 		;;
 esac

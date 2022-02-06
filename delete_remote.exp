@@ -1,5 +1,6 @@
 #!/usr/bin/expect -f
 
+## Set slow mode to not outrun the configuration
 set force_conservative 1  ;# set to 1 to force conservative mode even if
 			  ;# script wasn't run conservatively originally
 if {$force_conservative} {
@@ -10,13 +11,22 @@ if {$force_conservative} {
 	}
 }
 
+## Disable timeout
 set timeout -1
+
+## Configuring rclone
 spawn rclone config
 match_max 100000
+
+## Delete remote
 expect "e/n/d/r/c/s/q> "
 send -- "d\r"
+
+## Choosing remote to delete
 expect "remote> "
 send -- "1\r"
+
+## Exiting
 expect "n/s/q> "
 send -- "q\r"
 expect eof
