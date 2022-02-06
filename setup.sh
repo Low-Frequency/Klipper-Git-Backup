@@ -11,7 +11,7 @@ then
         exit 2
 fi
 
-echo "I strongly advise you update raour Raspberry Pi first"
+echo "I strongly advise you update your Raspberry Pi first"
 
 ## Update Pi
 UPDATE="o"
