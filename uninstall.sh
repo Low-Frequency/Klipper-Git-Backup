@@ -27,5 +27,9 @@ fi
 echo "Removing backup service"
 sudo systemctl disable gitbackup.service
 sudo rm /etc/systemd/system/gitbackup.service
+echo "Removing custom commands"
+sudo rm /usr/local/bin/backup
+sudo rm /usr/local/bin/restore
+sudo rm /usr/local/bin/uninstall_backup_utility
 echo "Deleting scripts"
 rm -r /home/pi/scripts/klipper_backup_script

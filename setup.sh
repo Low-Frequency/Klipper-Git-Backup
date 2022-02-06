@@ -247,9 +247,13 @@ case $ACT in
 		/home/pi/scripts/klipper_backup_script/restore_config.sh
 		;;
 	*)
-		echo "Error while backing up/restoring"
+		echo "No backup/restore action chosen"
 		;;
 esac
+
+sudo ln -s /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup
+sudo ln -s /home/pi/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore
+sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_backup_utility
 
 ## Deleting now unecessary setup script
 rm /home/pi/setup.sh

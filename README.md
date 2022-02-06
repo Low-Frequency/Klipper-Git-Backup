@@ -12,6 +12,8 @@ It even has log rotation implemented, so it doesn't eat up the precious space fo
 
 If you want to know what each script does, just execute it with the flags `-h` or `--help` and you get a manual.
 
+This script even sets up custom commands for you to use.
+
 # Setup
 
 ## Preparations
@@ -27,7 +29,7 @@ To install this script, `SSH` into your Pi and execute the following command :
 wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup.sh" && chmod +x setup.sh && ./setup.sh
 ```
 
-It can take a while for the Google Drive authentication to succeed, so don't panic if the install stops responding for a short period of time.
+It can take a while for the Google Drive authentication and backup to succeed, so don't panic if the install stops responding for a short period of time.
 
 ## Adding an SSH key to your GitHub account
 
@@ -35,9 +37,9 @@ The setup script tells you to copy a private key and add it to your GitHub accou
 
 ## Making manual backups
 
-To manually create a backup just execute the following command:
+To manually create a backup just execute the following command that is created during install:
 ```shell
-~/scripts/klipper_backup_script/klipper_config_git_backup.sh
+backup
 ```
 
 ## Editing the config file
@@ -87,6 +89,8 @@ Since I don't use the shell extension, I haven't tested this. Execution of the s
 
 ## Restoring the config
 
+The script sets up a custom command for this.
+
 If you need to restore your config files, you have two options:
 
 1. Restoring to your existing installation with the git repo already configured
@@ -94,14 +98,14 @@ If you need to restore your config files, you have two options:
 
 Just execute the script and follow the instructions:
 ```shell
-~/scripts/klipper_backup_script/restore_config.sh
+restore
 ```
 
 ## Uninstalling the automatic backup utility
 
-I don't know why you wouldn't want to use automatic backups, but I might as well provide you with an easy way to revert all the changes the scripts have done. Just execute this command:
+I don't know why you wouldn't want to use automatic backups, but I might as well provide you with an easy way to revert all the changes the scripts have done. Just execute this custom command:
 ```shell
-~/scripts/klipper_backup_script/uninstall.sh
+uninstall_backup_utility
 ```
 
 You still have to manually delete your GitHub repo and the SSH keys though.
