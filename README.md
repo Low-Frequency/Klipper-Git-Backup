@@ -53,14 +53,19 @@ If you want to disable the log rotation completely, just set the `ROTATION` vari
 
 To change the log retention time, just change the `RETENTION` variable. Note that the time is calculated in months.
 
-Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variables. Note that you have to set up a remote location, if you add Google Drive after you've already done the install.
+Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variables.
 
-To do this, you simply execute the following command:
+To set up Google Drive as a backup location after you've done the install, just execute this command:
 ```shell
-chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/remote_location.sh
+chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/google_drive.sh
 ```
 
-Changing `USER` and `REPO` is not advised unless you know what you're doing.
+If you want to set up GitHub as a backup location after you've done the install, just execute this command:
+```shell
+chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/git_repo.sh
+```
+
+Changing `USER`, `REPO` and `REMOTE`is not advised unless you know what you're doing.
 
 ## Further implementation
 

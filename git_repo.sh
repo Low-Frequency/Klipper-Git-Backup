@@ -78,7 +78,7 @@ echo "Setting username"
 git config --global user.email "$MAIL"
 git config --global user.name "$USER"
 
-## Activating Google Drive backup
+## Activating GitHub backup
 sed -i 's/GIT=0/GIT=1/g' /home/pi/scripts/klipper_backup_script/backup.cfg
 
 echo "GitHub backup has been configured and activated"

@@ -1,9 +1,5 @@
 #!/bin/bash
 
-
-## Regex for spaces in string
-SPACE=" |'"
-
 ## Installing git
 echo "Checking if git is installed"
 
@@ -24,6 +20,8 @@ git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_sc
 chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
 chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
+chmod +x /home/pi/scripts/klipper_backup_script/git_repo.sh
+chmod +x /home/pi/scripts/klipper_backup_script/google_drive.sh
 
 ## Adding config lines
 echo ""
@@ -143,115 +141,15 @@ fi
 ## GitHub setup
 if [ "$G" = "y" ]
 then
-	if [[ -d /home/pi/.ssh ]]
-	then
-	        echo "SSH folder already exists"
-	else
-	        echo "Creating SSH folder"
-	        mkdir /home/pi/.ssh
-	fi
-
-	## Getting necessary information
-	read -p 'Please enter your GitHub Username: ' USER
-	read -p 'Please enter the name of your GitHub repository: ' REPO
-	read -p 'Please enter the e-mail of your GitHub account: ' MAIL
-
-	sed -i "s/USER=/USER=$USER/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-	sed -i "s/REPO=/REPO=$REPO/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-
-	URL="https://github.com/$USER/$REPO"
-
-	## Checking SSH keys
-	echo ""
-	echo "Checking for GitHub SSH key"
-
-	if [[ -f /home/pi/.ssh/github_id_rsa ]]
-	then
-		echo "SSH key already present"
-		echo ""
-
-		ADDED="o"
-		while [[ "$ADDED" != "y" && "$ADDED" != "n" ]]
-		do
-			read -p 'Did you already add this key to your GitHub account? [y|n] ' ADDED
-
-			case $ADDED in
-				n)
-					echo "Please add this key to your GitHub account:"
-					echo ""
-					cat /home/pi/.ssh/github_id_rsa.pub
-					echo ""
-					echo "You can find instructions for this here:"
-				        echo "https://github.com/Low-Frequency/klipper_backup_script"
-				        echo ""
-					read -p 'Press enter to continue' CONTINUE
-					;;
-				y)
-					echo "Continuing setup"
-					;;
-				*)
-					echo "Please input a valid answer [y|n]"
-					;;
-			esac
-		done
-	else
-		## Generating SSH key pair
-		echo "Generating SSH key pair"
-		ssh-keygen -t ed25519 -C "$MAIL" -f /home/pi/.ssh/github_id_rsa -q -N ""
-		echo "IdentityFile ~/.ssh/github_id_rsa" >> /home/pi/.ssh/config
-		chmod 600 /home/pi/.ssh/config
-
-		echo "Please copy the public key and add it to your GitHub account:"
-		echo ""
-		cat /home/pi/.ssh/github_id_rsa.pub
-		echo ""
-		echo "You can find instructions for this here:"
-		echo "https://github.com/Low-Frequency/klipper_backup_script"
-		echo ""
-		read -p 'Press enter to continue' CONTINUE
-	fi
-
-	## Initializing repo
-	echo ""
-	echo "Initializing repo"
-	git -C /home/pi/klipper_config init
-	git -C /home/pi/klipper_config remote add origin "$URL"
-	git -C /home/pi/klipper_config remote set-url origin git@github.com:"$USER"/"$REPO".git
-
-	echo "Setting username"
-	git config --global user.email "$MAIL"
-	git config --global user.name "$USER"
-
+	/home/pi/scripts/klipper_backup_script/git_repo.sh
 fi
 
 echo ""
 
-## Installing dependencies
+## Google Drive setup
 if [ "$C" = "y" ]
 then
-	echo "Installing rclone"
-	curl https://rclone.org/install.sh | sudo bash
-	echo ""
-	echo "Installing expect"
-	sudo apt install expect -y
-	echo ""
-	## Remote location setup
-	echo "Setting up a remote location for your backup"
-	REMNAME="google drive"
-	while [[ $REMNAME =~ $SPACE ]]
-	do
-		read -p 'Please name your remote storage (no spaces allowed): ' REMNAME
-	done
-	sed -i "s/REMOTE/REMOTE=$REMNAME/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-	DIR="some directory"
-	echo ""
-	## Specifying backup folder
-	while [[ $DIR =~ $SPACE ]]
-	do
-		read -p 'Please specify a folder to backup into (no spaces allowed): ' DIR
-	done
-	sed -i "s/FOLDER=/FOLDER=$DIR/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-	/home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
+	/home/pi/scripts/klipper_backup_script/google_drive.sh
 fi
 
 ## Enabling automatic backups
@@ -296,6 +194,7 @@ do
 						echo "Please choose a valid action"
 						;;
 				esac
+			done
 			;;
 		n)
 			echo "Backing up is recommended"
