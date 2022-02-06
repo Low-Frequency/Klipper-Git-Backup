@@ -1,5 +1,6 @@
 #!/bin/bash
 
+## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
 	less /home/pi/scripts/klipper_backup_script/manual

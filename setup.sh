@@ -1,5 +1,6 @@
 #!/bin/bash
 
+## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
         less /home/pi/scripts/klipper_backup_script/manual
@@ -9,6 +10,30 @@ then
         echo "Try -h, or --help for the manual"
         exit 2
 fi
+
+echo "I strongly advise you update raour Raspberry Pi first"
+
+## Update Pi
+UPDATE="o"
+while [[ "$UPDATE" != "y" && "$UPDATE" != "n" ]]
+do
+	read -p 'Do you want to update now? [y|n] ' UPDATE
+	case $UPDATE in
+		n)
+			echo "The setup might fail"
+			echo "Please run the uninstall script and update your Raspberry Pi if the setup fails"
+			;;
+		y)
+			echo "Updateing now"
+			sudo apt update && sudo apt update
+			;;
+		*)
+			echo "Please provide a valid answer"
+			;;
+	esac
+done
+
+read -p 'Do you want to update now? [y|n] ' UPDATE
 
 ## Installing git
 echo "Checking if git is installed"
