@@ -30,10 +30,6 @@ echo ""
 echo "Configuring the script"
 
 ## Log rotation config
-echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## Log Rotation enable/disable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## 1: enable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## 0: disable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 
 echo ""
 echo "Do you want to enable log rotation?"
@@ -48,12 +44,11 @@ do
 
 	case $ROT in
 		n)
-			echo "ROTATION=0" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+			sed -i 's/ROTATION=1/ROTATION=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
 			echo "Log rotation disabled"
 			break
 			;;
 		y)
-                        echo "ROTATION=1" >> /home/pi/scripts/klipper_backup_script/backup.cfg
                         echo "Log rotation enabled"
 			break
                         ;;
@@ -68,12 +63,10 @@ echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 echo "## Time in months to keep the logs" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 echo ""
 
-if [ $ROT = 0 ]
+if [[ "$ROT" = "y" ]]
 then
-	echo "RETENTION=6" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-else
 	read -p "How long should the logs be kept (in months) " KEEP
-	echo "RETENTION=$KEEP" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+	sed -i "s/RETENTION=6/RETENTION=$KEEP/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 fi
 
 ## Choosing backup locations
@@ -82,11 +75,6 @@ echo "Which backup locations do you want to enable?"
 echo "Type y to enable a backup location"
 echo "Type n to disable a backup location"
 echo ""
-
-echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## Backup locations enable/disable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## 1: enable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## 0: disable" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 
 G=9
 C=9
@@ -97,11 +85,10 @@ do
 	case $G in
 		n)
 			echo "GitHub backup disabled"
-			echo "GIT=0" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+			sed -i 's/GIT=1/GIT=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
 			;;
 		y)
 			echo "GitHub backup enabled"
-			echo "GIT=1" >> /home/pi/scripts/klipper_backup_script/backup.cfg
 			;;
 		*)
 			echo "Please provide a valid configuration"
@@ -119,13 +106,12 @@ do
         case $C in
                 n)
                         echo "Google Drive backup disabled"
-                        echo "CLOUD=0" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+                        sed -i 's/CLOUD=1/CLOUD=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
                         ;;
                 y)
                         echo "Google Drive backup enabled"
-                        echo "CLOUD=1" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-			chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
-			chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
+						chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
+						chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
                         ;;
                 *)
                         echo "Please provide a valid configuration"
@@ -170,10 +156,8 @@ then
 	read -p 'Please enter the name of your GitHub repository: ' REPO
 	read -p 'Please enter the e-mail of your GitHub account: ' MAIL
 
-	echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-	echo "## GitHub user and repository name" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-	echo "USER=$USER" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-	echo "REPO=$REPO" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+	sed -i "s/USER=/USER=$USER/g" /home/pi/scripts/klipper_backup_script/backup.cfg
+	sed -i "s/REPO=/REPO=$REPO/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 
 	URL="https://github.com/$USER/$REPO"
 
@@ -258,9 +242,7 @@ then
 	do
 		read -p 'Please name your remote storage (no spaces allowed): ' REMNAME
 	done
-	echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-	echo "## File paths for cloud backup" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-	echo "REMOTE=$REMNAME" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+	sed -i "s/REMOTE/REMOTE=$REMNAME/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 	DIR="some directory"
 	echo ""
 	## Specifying backup folder
@@ -268,7 +250,7 @@ then
 	do
 		read -p 'Please specify a folder to backup into (no spaces allowed): ' DIR
 	done
-	echo "FOLDER=\"$DIR\"" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+	sed -i "s/FOLDER=/FOLDER=$DIR/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 	/home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
 fi
 

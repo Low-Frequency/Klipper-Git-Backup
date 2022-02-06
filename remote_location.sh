@@ -22,9 +22,7 @@ do
 done
 
 ## Adding config lines
-echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## File paths for cloud backup" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "REMOTE=$REMNAME" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/REMOTE=/REMOTE=$REMNAME/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 
 ## Specifying backup folder
 DIR="some directory"
@@ -35,7 +33,7 @@ do
 done
 
 ## Adding config lines
-echo "FOLDER=\"$DIR\"" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/FOLDER=/FOLDER=$DIR/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 
 ## Configuring rclone
 /home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"

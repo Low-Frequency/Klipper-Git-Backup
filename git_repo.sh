@@ -13,10 +13,8 @@ read -p 'Please enter your GitHub Username: ' USER
 read -p 'Please enter the name of your GitHub repository: ' REPO
 read -p 'Please enter the e-mail of your GitHub account: ' MAIL
 
-echo "##" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "## GitHub user and repository name" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "USER=$USER" >> /home/pi/scripts/klipper_backup_script/backup.cfg
-echo "REPO=$REPO" >> /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/USER=/USER=$USER/g" /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/REPO=/REPO=$REPO/g" /home/pi/scripts/klipper_backup_script/backup.cfg
 
 URL="https://github.com/$USER/$REPO"
 
