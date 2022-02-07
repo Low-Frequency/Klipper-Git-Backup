@@ -52,7 +52,7 @@ case $BACKUP in
 	10)
 		## Google Drive
 		echo "Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
-		rclone sync /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
+		rclone copy /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
 		;;
 	11)
 		## GitHub and Google Drive
@@ -64,7 +64,7 @@ case $BACKUP in
                 echo "Pushing" | tee -a /home/pi/backup_log/$(date +%F).log
                 git -C /home/pi/klipper_config push -u origin master | tee -a /home/pi/backup_log/$(date +%F).log
 		echo "Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
-                rclone sync /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
+                rclone copy /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
                 ;;
 	*)
 		## Config error

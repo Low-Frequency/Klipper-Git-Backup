@@ -166,7 +166,7 @@ case $ACTION in
 		mv /home/pi/klipper_config/*.conf /home/pi/klipper_config_bak
 
 		echo "Restoring backup"
-		rclone sync "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
+		rclone copy "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
 
 		read -p 'Do you want to keep the old files? [y|n] ' DEL
 		if [ "$DEL" = "n" ]
@@ -185,7 +185,7 @@ case $ACTION in
                 mv /home/pi/klipper_config/*.conf /home/pi/klipper_config_bak
 
                 echo "Restoring backup"
-                rclone sync "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
+                rclone copy "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
 
                 read -p 'Do you want to keep the old files? [y|n] ' DEL
                 if [ "$DEL" = "n" ]
