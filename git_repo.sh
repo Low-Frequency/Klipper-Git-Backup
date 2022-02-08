@@ -22,10 +22,9 @@ fi
 ## Getting necessary information
 read -p 'Please enter your GitHub Username: ' USER
 read -p 'Please enter the name of your GitHub repository: ' REPO
-read -p 'Please enter the e-mail of your GitHub account: ' MAIL
 
-sed -i "s/USER=/USER=$USER/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-sed -i "s/REPO=/REPO=$REPO/g" /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i "s/USER=none/USER=$USER/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/REPO=none/REPO=$REPO/g" /home/pi/.config/klipper_backup_script/backup.cfg
 
 URL="https://github.com/$USER/$REPO"
 
@@ -64,6 +63,7 @@ then
 else
 	## Generating SSH key pair
 	echo "Generating SSH key pair"
+	read -p 'Please enter the e-mail of your GitHub account: ' MAIL
 	ssh-keygen -t ed25519 -C "$MAIL" -f /home/pi/.ssh/github_id_rsa -q -N ""
 	echo "IdentityFile ~/.ssh/github_id_rsa" >> /home/pi/.ssh/config
 	chmod 600 /home/pi/.ssh/config
@@ -90,6 +90,6 @@ git config --global user.email "$MAIL"
 git config --global user.name "$USER"
 
 ## Activating GitHub backup
-sed -i 's/GIT=0/GIT=1/g' /home/pi/scripts/klipper_backup_script/backup.cfg
+sed -i 's/GIT=0/GIT=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
 
 echo "GitHub backup has been configured and activated"

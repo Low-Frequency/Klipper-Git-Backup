@@ -11,8 +11,8 @@ then
         exit 2
 fi
 
-configfile='/home/pi/scripts/klipper_backup_script/backup.cfg'
-configfile_secured='/home/pi/scripts/klipper_backup_script/sec_backup.cfg'
+configfile='/home/pi/.config/klipper_backup_script/backup.cfg'
+configfile_secured='/home/pi/.config/klipper_backup_script/sec_backup.cfg'
 
 ## Check if the file contains malicious code
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"

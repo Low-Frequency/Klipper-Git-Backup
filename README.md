@@ -6,7 +6,7 @@ If you have any questions, bug reports or requests feel free to DM me on Discord
 
 # How does it work?
 
-This script runs when your Pi starts. It waits for network connection and then pushes a backup to your specified locations. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
+This script runs when your Pi starts, or if configured even on a set timeschedule. It waits for network connection and then pushes a backup to your specified locations. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
@@ -30,6 +30,15 @@ wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backu
 ```
 
 It can take a while for the Google Drive authentication and backup to succeed, so don't panic if the install stops responding for a short period of time.
+
+## Update
+
+I added an update script for easy addition of features in the future. To update, just type `update_bak_util`. If you don't have the update script yet, you need to pull the latest version of the script and do the setup again.
+
+To do this, execute the following command:
+```shell
+git -C /home/pi/scripts/klipper_backup_script pull origin main && chmod +x /home/pi/scripts/klipper_backup_script/setup.sh && /home/pi/scripts/klipper_backup_script/setup.sh
+```
 
 ## Adding an SSH key to your GitHub account
 
@@ -69,7 +78,15 @@ If you want to set up GitHub as a backup location after you've done the install,
 chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/git_repo.sh
 ```
 
-Changing `USER`, `REPO` and `REMOTE`is not advised unless you know what you're doing.
+If you want to customize the backup schedule, edit the following variables:
+
+`INTERVAL`: Enable/disable backup schedule.
+
+`TIME`: The schedule interval time.
+
+`UNIT`: The time unit for the interval.
+
+Changing `USER`, `REPO`, `REMOTE`, `FOLDER` and `BREAK` is not advised unless you know what you're doing.
 
 ## Further implementation
 
@@ -105,7 +122,7 @@ restore
 
 I don't know why you wouldn't want to use automatic backups, but I might as well provide you with an easy way to revert all the changes the scripts have done. Just execute this custom command:
 ```shell
-uninstall_backup_utility
+uninstall_bak_util
 ```
 
 You still have to manually delete your GitHub repo and the SSH keys though.

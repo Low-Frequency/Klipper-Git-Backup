@@ -31,5 +31,7 @@ echo "Removing custom commands"
 sudo rm /usr/local/bin/backup
 sudo rm /usr/local/bin/restore
 sudo rm /usr/local/bin/uninstall_backup_utility
+echo "Deleting config"
+rm -r /home/pi/.config/klipper_backup_script
 echo "Deleting scripts"
 rm -r /home/pi/scripts/klipper_backup_script

@@ -11,7 +11,7 @@ then
         exit 2
 fi
 
-echo "I strongly advise you update your Raspberry Pi first"
+echo "I strongly recommend you update your Raspberry Pi first"
 
 ## Update Pi
 UPDATE="o"
@@ -70,13 +70,22 @@ else
 fi
 
 ## Fetching backup script
-echo "Cloning backup script"
-git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
-chmod +x /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
-chmod +x /home/pi/scripts/klipper_backup_script/restore_config.sh
-chmod +x /home/pi/scripts/klipper_backup_script/uninstall.sh
-chmod +x /home/pi/scripts/klipper_backup_script/git_repo.sh
-chmod +x /home/pi/scripts/klipper_backup_script/google_drive.sh
+echo "Downloading backup script"
+if [[ ! d /home/pi/scripts/klipper_backup_script ]]
+then
+	git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
+else
+	git pull origin main
+fi
+
+chmod +x /home/pi/scripts/klipper_backup_script/*.sh
+
+if [[ ! -d /home/pi/.config/klipper_backup_script ]]
+then
+        mkdir -p /home/pi/.config/klipper_backup_script
+fi
+
+mv /home/pi/scripts/klipper_backup_script/backup.cfg /home/pi/.config/klipper_backup_script/
 
 ## Adding config lines
 echo ""
@@ -90,35 +99,7 @@ echo "This can save space on your SD card"
 echo "This is recommended, if you choose to backup to Google Drive"
 echo ""
 
-ROT="o"
-while [[ "$ROT" != "y" && "$ROT" != "n" ]]
-do
-	read -p 'Enable log rotation? [y|n] ' ROT
-
-	case $ROT in
-		n)
-			sed -i 's/ROTATION=1/ROTATION=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
-			echo "Log rotation disabled"
-			break
-			;;
-		y)
-                        echo "Log rotation enabled"
-			break
-                        ;;
-		*)
-			echo "Please provide a valid configuration"
-			echo ""
-			;;
-	esac
-done
-
-echo ""
-
-if [[ "$ROT" = "y" ]]
-then
-	read -p "How long should the logs be kept (in months) " KEEP
-	sed -i "s/RETENTION=6/RETENTION=$KEEP/g" /home/pi/scripts/klipper_backup_script/backup.cfg
-fi
+/home/pi/scripts/klipper_backup_script/log_rotation.sh
 
 ## Choosing backup locations
 echo ""
@@ -135,13 +116,16 @@ do
 	case $G in
 		n)
 			echo "GitHub backup disabled"
-			sed -i 's/GIT=1/GIT=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
+			sed -i 's/GIT=1/GIT=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
 			;;
 		y)
 			echo "GitHub backup enabled"
+			echo "Configuring..."
+			/home/pi/scripts/klipper_backup_script/git_repo.sh
+			echo ""
 			;;
 		*)
-			echo "Please provide a valid configuration"
+			echo "Please provide a valid answer"
 			echo ""
 			;;
 	esac
@@ -155,33 +139,27 @@ do
         case $C in
                 n)
                         echo "Google Drive backup disabled"
-                        sed -i 's/CLOUD=1/CLOUD=0/g' /home/pi/scripts/klipper_backup_script/backup.cfg
+                        sed -i 's/CLOUD=1/CLOUD=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 y)
                         echo "Google Drive backup enabled"
 			chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
 			chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
+			echo "Configuring..."
+			/home/pi/scripts/klipper_backup_script/google_drive.sh
+			echo ""
                         ;;
                 *)
-                        echo "Please provide a valid configuration"
+                        echo "Please provide a valid answer"
                         echo ""
                         ;;
         esac
 done
 
-## GitHub setup
-if [ "$G" = "y" ]
-then
-	/home/pi/scripts/klipper_backup_script/git_repo.sh
-fi
-
 echo ""
 
-## Google Drive setup
-if [ "$C" = "y" ]
-then
-	/home/pi/scripts/klipper_backup_script/google_drive.sh
-fi
+## Configuring backup intervals
+/home/pi/scripts/klipper_backup_script/scheduled_backups.sh
 
 ## Enabling automatic backups
 echo ""
@@ -253,7 +231,8 @@ esac
 
 sudo ln -s /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup
 sudo ln -s /home/pi/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore
-sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_backup_utility
+sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util
+sudo ln -s /home/pi/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util
 
 ## Deleting now unecessary setup script
 rm /home/pi/setup.sh
