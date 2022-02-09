@@ -220,6 +220,7 @@ case $ACT in
 		echo "Making a backup during the setup process is bugged right now. Please run the following command after the setup finishes:"
 		echo "backup &"
 		echo "Note that this will not give you any output since it runs in the background. So don't worry, it really does run"
+		echo "If you want to verify it working, you can check if a log file with the current date exists in the backup_log folder"
 		#echo "Pushing the first backup to your specified backup location(s)"
 		#/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 		;;
