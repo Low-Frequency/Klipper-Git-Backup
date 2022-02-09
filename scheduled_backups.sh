@@ -37,7 +37,7 @@ do
                                 read -p 'Unit: ' UN
                         done
                         sed -i "s/^TIME=.*/TIME=$TM/g" /home/pi/.config/klipper_backup_script/backup.cfg
-                        sed -i 's/^UNIT=.*/UNIT=$UN/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i "s/^UNIT=.*/UNIT=$UN/g" /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 n)
                         echo "Disabling scheduled backups"
