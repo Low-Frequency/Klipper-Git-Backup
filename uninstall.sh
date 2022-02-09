@@ -30,7 +30,8 @@ sudo rm /etc/systemd/system/gitbackup.service
 echo "Removing custom commands"
 sudo rm /usr/local/bin/backup
 sudo rm /usr/local/bin/restore
-sudo rm /usr/local/bin/uninstall_backup_utility
+sudo rm /usr/local/bin/uninstall_bak_util
+sudo rm /usr/local/bin/update_bak_util
 echo "Deleting config"
 rm -r /home/pi/.config/klipper_backup_script
 echo "Deleting scripts"
