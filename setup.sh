@@ -71,7 +71,7 @@ fi
 
 ## Fetching backup script
 echo "Downloading backup script"
-if [[ ! d /home/pi/scripts/klipper_backup_script ]]
+if [[ ! -d /home/pi/scripts/klipper_backup_script ]]
 then
 	git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
 else
