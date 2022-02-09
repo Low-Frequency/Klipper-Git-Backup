@@ -144,7 +144,7 @@ do
 	then
 		sed -i 's/BREAK=0/BREAK=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
 	fi
-	source '$configfile'
+	source "$configfile"
 	if [ $BREAK = 1 ]
 	then
 		break
