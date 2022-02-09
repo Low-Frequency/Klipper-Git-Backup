@@ -57,7 +57,7 @@ You can customzie how long the log files will be stored, add a backup location a
 
 To customize this, open the config file:
 ```shell
-nano ~/scripts/klipper_backup_script/backup.cfg
+nano ~/.config/klipper_backup_script/backup.cfg
 ```
 
 In this file there are all customizable features.
