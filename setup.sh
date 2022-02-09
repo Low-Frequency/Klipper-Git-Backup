@@ -217,8 +217,11 @@ done
 
 case $ACT in
 	1)
-		echo "Pushing the first backup to your specified backup location(s)"
-		/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+		echo "Making a backup during the setup process is bugged right now. Please run the following command after the setup finishes:"
+		echo "backup &"
+		echo "Note that this will not give you any output since it runs in the background. So don't worry, it really does run"
+		#echo "Pushing the first backup to your specified backup location(s)"
+		#/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 		;;
 	2)
 		echo "Restoring backup"
