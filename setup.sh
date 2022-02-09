@@ -215,14 +215,37 @@ do
 	esac
 done
 
+configfile='/home/pi/.config/klipper_backup_script/backup.cfg'
+configfile_secured='/home/pi/.config/klipper_backup_script/sec_backup.cfg'
+
+sed -i "s/^BREAK=.*/BREAK=0/g" /home/pi/.config/klipper_backup_script/backup.cfg
+
+## Check if the file contains malicious code
+if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"
+then
+        echo "Config file is unclean, cleaning it..." >&2
+        ## Filter the original to a new file
+        egrep '^#|^[^ ]*=[^;&]*'  "$configfile" > "$configfile_secured"
+        configfile="$configfile_secured"
+fi
+
+## Importing the config
+source "$configfile"
+
 case $ACT in
 	1)
-		echo "Making a backup during the setup process is bugged right now. Please run the following command after the setup finishes:"
-		echo "backup &"
-		echo "Note that this will not give you any output since it runs in the background. So don't worry, it really does run"
-		echo "If you want to verify it working, you can check if a log file with the current date exists in the backup_log folder"
-		#echo "Pushing the first backup to your specified backup location(s)"
-		#/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+		if [[ $INTERVAL = 1 ]]
+		then
+			echo "You need to reboot to enable the backups"
+			echo "Backups will be done automatically then"
+		elif [[ $INTERVAL = 0 ]]
+		then
+			echo "Backing up your config to the specified locations"
+			/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+		else
+			echo "Something went wrong while configuring the script"
+			echo "Please check the config"
+		fi
 		;;
 	2)
 		echo "Restoring backup"

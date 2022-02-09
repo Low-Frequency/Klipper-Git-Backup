@@ -47,10 +47,10 @@ then
 			MULTIPLIER=86400
 			;;
 		*)
-			echo "Misconfiguration in backup interval"
-			echo "Please specify a valid timespan"
-			echo "Available are s(econds), m(inutes), h(ours) and d(ays)"
-			echo "Falling back to hourly backup"
+			echo "[$(date '+%F %T')]: Misconfiguration in backup interval" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Please specify a valid timespan" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Available are s(econds), m(inutes), h(ours) and d(ays)" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Falling back to hourly backup" | tee -a /home/pi/backup_log/$(date +%F).log
 			MULTIPLIEER=3600
 			;;
 	esac
@@ -81,40 +81,40 @@ do
 	case $BACKUP in
 		0)
 			## None specified
-			echo "No backups configured" | tee /home/pi/backup_log/$(date +%F).log
-			echo "Exiting" | tee /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: No backups configured" | tee /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Exiting" | tee /home/pi/backup_log/$(date +%F).log
 			;;
 		1)
 			## GitHub
-			echo "Backing up to GitHub" | tee /home/pi/backup_log/$(date +%F).log
-			echo "Adding changes to push" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Adding changes to push" | tee -a /home/pi/backup_log/$(date +%F).log
 			git -C /home/pi/klipper_config add .
-			echo "Committing to GitHub repository" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a /home/pi/backup_log/$(date +%F).log
 			git -C /home/pi/klipper_config commit -m "backup $(date +%F)" | tee -a /home/pi/backup_log/$(date +%F).log
-			echo "Pushing" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Pushing" | tee -a /home/pi/backup_log/$(date +%F).log
 			git -C /home/pi/klipper_config push -u origin master | tee -a /home/pi/backup_log/$(date +%F).log
 			;;
 		10)
 			## Google Drive
-			echo "Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
 			rclone copy /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
 			;;
 		11)
 			## GitHub and Google Drive
-			echo "Backing up to GitHub" | tee /home/pi/backup_log/$(date +%F).log
-	                echo "Adding changes to push" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee /home/pi/backup_log/$(date +%F).log
+	                echo "[$(date '+%F %T')]: Adding changes to push" | tee -a /home/pi/backup_log/$(date +%F).log
 	                git -C /home/pi/klipper_config add .
-	                echo "Committing to GitHub repository" | tee -a /home/pi/backup_log/$(date +%F).log
+	                echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a /home/pi/backup_log/$(date +%F).log
 	                git -C /home/pi/klipper_config commit -m "backup $(date +%F)" | tee -a /home/pi/backup_log/$(date +%F).log
-	                echo "Pushing" | tee -a /home/pi/backup_log/$(date +%F).log
+	                echo "[$(date '+%F %T')]: Pushing" | tee -a /home/pi/backup_log/$(date +%F).log
 	                git -C /home/pi/klipper_config push -u origin master | tee -a /home/pi/backup_log/$(date +%F).log
-			echo "Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee /home/pi/backup_log/$(date +%F).log
 	                rclone copy /home/pi/klipper_config "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file=/home/pi/backup_log/"$(date +%F)".log --log-level=INFO
 	                ;;
 		*)
 			## Config error
-			echo "No valid backup configuration" | tee -a /home/pi/backup_log/$(date +%F).log
-			echo "Please check the config file!" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: No valid backup configuration" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Please check the config file!" | tee -a /home/pi/backup_log/$(date +%F).log
 			;;
 	esac
 
@@ -127,7 +127,7 @@ do
 	case $ROTATION in
 		0)
 			## No action taken
-			echo "Log rotation is disabled" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Log rotation is disabled" | tee -a /home/pi/backup_log/$(date +%F).log
 			;;
 		1)
 			## Delete old logs
@@ -135,8 +135,8 @@ do
 			;;
 		*)
 			## Config error
-			echo "No valid log rotation configuration" | tee -a /home/pi/backup_log/$(date +%F).log
-			echo "Please check the config file!" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: No valid log rotation configuration" | tee -a /home/pi/backup_log/$(date +%F).log
+			echo "[$(date '+%F %T')]: Please check the config file!" | tee -a /home/pi/backup_log/$(date +%F).log
 			;;
 	esac
 
