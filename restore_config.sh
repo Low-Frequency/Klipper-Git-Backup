@@ -31,6 +31,9 @@ YELLOW='\033[0;33m'
 RED='\033[0;31m'
 NONE='\033[0m'
 
+MODE=9
+SOURCE=9
+
 ## Choosing backup source
 if [[ $GIT = 1 && $CLOUD = 1 ]]
 then
@@ -56,10 +59,12 @@ then
 elif [ $GIT = 1 ]
 then
 	echo "GitHub selected as backup source"
+	SOURCE=1
 ## Only Google Drive configured
 elif [ $CLOUD = 1 ]
 then
 	echo "Google Drive selected as backup source"
+	SOURCE=2
 else
 	echo -e "${RED}Restoring is not possible${NONE}"
 	echo -e "${RED}Please make sure you have a valid config file${NONE}"

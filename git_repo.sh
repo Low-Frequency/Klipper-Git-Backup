@@ -23,8 +23,8 @@ fi
 read -p 'Please enter your GitHub Username: ' USER
 read -p 'Please enter the name of your GitHub repository: ' REPO
 
-sed -i "s/USER=none/USER=$USER/g" /home/pi/.config/klipper_backup_script/backup.cfg
-sed -i "s/REPO=none/REPO=$REPO/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/^USER=.*/USER=$USER/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/^REPO=.*/REPO=$REPO/g" /home/pi/.config/klipper_backup_script/backup.cfg
 
 URL="https://github.com/$USER/$REPO"
 
@@ -90,6 +90,6 @@ git config --global user.email "$MAIL"
 git config --global user.name "$USER"
 
 ## Activating GitHub backup
-sed -i 's/GIT=0/GIT=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i 's/^GIT=.*/GIT=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
 
 echo "GitHub backup has been configured and activated"

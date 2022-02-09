@@ -16,6 +16,8 @@ PAUSE=1
 configfile='/home/pi/.config/klipper_backup_script/backup.cfg'
 configfile_secured='/home/pi/.config/klipper_backup_script/sec_backup.cfg'
 
+sed -i "s/^BREAK=.*/BREAK=0/g" /home/pi/.config/klipper_backup_script/backup.cfg
+
 ## Check if the file contains malicious code
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"
 then
@@ -29,34 +31,46 @@ fi
 source "$configfile"
 
 ## Checking time unit
-case $UNIT in
-	s)
-		MULTIPLIER=1
-		;;
-	m)
-		MULTIPLIER=60
-		;;
-	h)
-		MULTIPLIER=3600
-		;;
-	d)
-		MULTIPLIER=86400
-		;;
-	*)
-		echo "Misconfiguration in backup interval"
-		echo "Please specify a valid timespan"
-		echo "Available are s(econds), m(inutes), h(ours) and d(ays)"
-		echo "Falling back to hourly backup"
-		MULTIPLIEER=3600
-		;;
-esac
+if [[ -n $UNIT ]]
+then
+	case $UNIT in
+		s)
+			MULTIPLIER=1
+			;;
+		m)
+			MULTIPLIER=60
+			;;
+		h)
+			MULTIPLIER=3600
+			;;
+		d)
+			MULTIPLIER=86400
+			;;
+		*)
+			echo "Misconfiguration in backup interval"
+			echo "Please specify a valid timespan"
+			echo "Available are s(econds), m(inutes), h(ours) and d(ays)"
+			echo "Falling back to hourly backup"
+			MULTIPLIEER=3600
+			;;
+	esac
 
-## Calulating the intervals
-
-PAUSE=$(($TIME * $MULTIPLIER))
+	## Calulating the intervals
+	PAUSE=$(($TIME * $MULTIPLIER))
+fi
 
 ## Calculating days to keep the logs
 DEL=$((($(date '+%s') - $(date -d "$RETENTION months ago" '+%s')) / 86400))
+
+if [[ -z $CLOUD ]]
+then
+	CLOUD=0
+fi
+
+if [[ -z $GIT ]]
+then
+	GIT=0
+fi
 
 ## Calculating which backups should be done
 BACKUP=$((10*$CLOUD + $GIT))
@@ -103,6 +117,11 @@ do
 			echo "Please check the config file!" | tee -a /home/pi/backup_log/$(date +%F).log
 			;;
 	esac
+
+	if [[ -z $ROTATION ]]
+	then
+		ROTATION=1
+	fi
 
 	## Log rotation
 	case $ROTATION in

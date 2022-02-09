@@ -19,7 +19,7 @@ do
         case $INTER in
                 y)
                         echo "Enabling scheduled backups"
-                        sed -i 's/INTERVAL=0/INTERVAL=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^INTERVAL=.*/INTERVAL=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         echo ""
                         UN="o"
                         TM=0
@@ -36,12 +36,12 @@ do
                                 read -p 'Intervals: ' TM
                                 read -p 'Unit: ' UN
                         done
-                        sed -i "s/TIME=none/TIME=$TM/g" /home/pi/.config/klipper_backup_script/backup.cfg
-                        sed -i 's/UNIT=none/UNIT=$UN/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i "s/^TIME=.*/TIME=$TM/g" /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^UNIT=.*/UNIT=$UN/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 n)
                         echo "Disabling scheduled backups"
-                        sed -i 's/INTERVAL=1/INTERVAL=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^INTERVAL=.*/INTERVAL=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 *)
                         echo "Please prvide a valid answer"

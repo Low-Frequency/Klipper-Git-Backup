@@ -18,12 +18,12 @@ do
 
         case $ROT in
                 n)
-                        sed -i 's/ROTATION=1/ROTATION=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^ROTATION=.*/ROTATION=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         echo "Log rotation disabled"
                         ;;
                 y)
                         echo "Log rotation enabled"
-                        sed -i 's/ROTATION=0/ROTATION=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^ROTATION=.*/ROTATION=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 *)
                         echo "Please provide a valid configuration"
@@ -37,5 +37,5 @@ echo ""
 if [[ "$ROT" = "y" ]]
 then
         read -p "How long should the logs be kept (in months) " KEEP
-        sed -i "s/RETENTION=6/RETENTION=$KEEP/g" /home/pi/.config/klipper_backup_script/backup.cfg
+        sed -i "s/^RETENTION=.*/RETENTION=$KEEP/g" /home/pi/.config/klipper_backup_script/backup.cfg
 fi

@@ -116,7 +116,7 @@ do
 	case $G in
 		n)
 			echo "GitHub backup disabled"
-			sed -i 's/GIT=1/GIT=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+			sed -i 's/^GIT=.*/GIT=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
 			;;
 		y)
 			echo "GitHub backup enabled"
@@ -139,7 +139,7 @@ do
         case $C in
                 n)
                         echo "Google Drive backup disabled"
-                        sed -i 's/CLOUD=1/CLOUD=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^CLOUD=.*/CLOUD=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
                         ;;
                 y)
                         echo "Google Drive backup enabled"
@@ -233,6 +233,8 @@ sudo ln -s /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh /
 sudo ln -s /home/pi/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore
 sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util
 sudo ln -s /home/pi/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util
+sudo ln -s /home/pi/scripts/klipper_backup_script/git_repo.sh /usr/local/bin/reconfigure_git
+sudo ln -s /home/pi/scripts/klipper_backup_script/google_drive.sh /usr/local/bin/reconfigure_drive
 
 ## Deleting now unecessary setup script
 rm /home/pi/setup.sh

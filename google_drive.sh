@@ -34,7 +34,7 @@ do
 done
 
 ## Adding config lines
-sed -i "s/REMOTE=none/REMOTE=$REMNAME/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/^REMOTE=.*/REMOTE=$REMNAME/g" /home/pi/.config/klipper_backup_script/backup.cfg
 
 ## Specifying backup folder
 DIR="some directory"
@@ -45,12 +45,12 @@ do
 done
 
 ## Adding config lines
-sed -i "s/FOLDER=none/FOLDER=\"$DIR\"/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/^FOLDER=.*/FOLDER=\"$DIR\"/g" /home/pi/.config/klipper_backup_script/backup.cfg
 
 ## Configuring rclone
 /home/pi/scripts/klipper_backup_script/drive.exp "$REMNAME"
 
 ## Activating Google Drive backup
-sed -i 's/CLOUD=0/CLOUD=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i 's/^CLOUD=.*/CLOUD=1/g' /home/pi/.config/klipper_backup_script/backup.cfg
 
 echo "Google Drive backup has been configured and activated"

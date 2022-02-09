@@ -13,6 +13,13 @@ fi
 
 git -C /home/pi/scripts/klipper_backup_script pull origin main
 
+sudo ln -s /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup
+sudo ln -s /home/pi/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore
+sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util
+sudo ln -s /home/pi/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util
+sudo ln -s /home/pi/scripts/klipper_backup_script/git_repo.sh /usr/local/bin/reconfigure_git
+sudo ln -s /home/pi/scripts/klipper_backup_script/google_drive.sh /usr/local/bin/reconfigure_drive
+
 echo "Checking your config"
 
 if [[ ! -f /home/pi/.config/klipper_backup_script/backup.cfg ]]
@@ -40,6 +47,11 @@ fi
 ## Importing the config
 source "$configfile"
 
+if [[ -z $GIT ]]
+then
+	GIT=0
+fi
+
 if [ $GIT = 0 ]
 	echo "You don't have GitHub enabled as a backup location"
 	while [[ "$GHUB" != "y" &&  "$GHUB" != "n" ]]
@@ -58,6 +70,11 @@ if [ $GIT = 0 ]
 				;;
 		esac
 	done
+fi
+
+if [[ -z $CLOUD ]]
+then
+        CLOUD=0
 fi
 
 if [ $CLOUD = 0 ]
@@ -80,6 +97,11 @@ if [ $CLOUD = 0 ]
         done
 fi
 
+if [[ -z $INTERVAL ]]
+then
+        INTERVAL=0
+fi
+
 if [ $INTERVAL = 0 ]
         echo "You don't have scheduled backups enabled"
         while [[ "$SCH" != "y" &&  "$SCH" != "n" ]]
@@ -98,6 +120,11 @@ if [ $INTERVAL = 0 ]
                                 ;;
                 esac
         done
+fi
+
+if [[ -z $ROTATION ]]
+then
+        ROTATION=0
 fi
 
 if [ $ROTATION = 0 ]
@@ -119,7 +146,5 @@ if [ $ROTATION = 0 ]
                 esac
         done
 fi
-
-rm /home/pi/scripts/klipper_backup_script/update_needed
 
 echo "Update completed"

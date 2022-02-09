@@ -31,6 +31,8 @@ echo "Removing custom commands"
 sudo rm /usr/local/bin/backup
 sudo rm /usr/local/bin/restore
 sudo rm /usr/local/bin/uninstall_backup_utility
+sudo rm /usr/local/bin/reconfigure_git
+sudo rm /usr/local/bin/reconfigure_drive
 echo "Deleting config"
 rm -r /home/pi/.config/klipper_backup_script
 echo "Deleting scripts"
