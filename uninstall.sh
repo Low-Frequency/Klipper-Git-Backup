@@ -3,7 +3,7 @@
 ## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
-        less /home/pi/scripts/klipper_backup_script/manual
+        less "$HOME/scripts/klipper_backup_script/manual"
         exit 1
 elif [[ -n "$1" ]]
 then
@@ -12,13 +12,13 @@ then
 fi
 
 echo "Removing log files"
-rm -r /home/pi/backup_log
+rm -r "$HOME/backup_log"
 if command -v rclone
 then
 	echo "Removing cloud storage"
-	/home/pi/scripts/klipper_backup_script/delete_remote.exp
+	"$HOME/scripts/klipper_backup_script/delete_remote.exp"
 	echo "Uninstalling rclone"
-	sudo rm /home/pi/.config/rclone/rclone.conf
+	sudo rm "$HOME/.config/rclone/rclone.conf"
 	sudo rm /usr/bin/rclone
 	sudo rm /usr/local/share/man/man1/rclone.1
 	echo "Uninstalling expect"
@@ -34,8 +34,7 @@ sudo rm /usr/local/bin/reconfigure_git
 sudo rm /usr/local/bin/reconfigure_drive
 sudo rm /usr/local/bin/uninstall_bak_util
 sudo rm /usr/local/bin/update_bak_util
-sudo ln -s /home/pi/scripts/klipper_backup_script/setup.sh /usr/local/bin/setup_klipper_bak_util
 echo "Deleting config"
-rm -r /home/pi/.config/klipper_backup_script
+rm -r "$HOME/.config/klipper_backup_script"
 echo "Deleting scripts"
-rm -r /home/pi/scripts/klipper_backup_script
+rm -r "$HOME/scripts/klipper_backup_script"

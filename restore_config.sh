@@ -3,7 +3,7 @@
 ## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
-        less /home/pi/scripts/klipper_backup_script/manual
+        less "$HOME/scripts/klipper_backup_script/manual"
         exit 1
 elif [[ -n "$1" ]]
 then
@@ -11,8 +11,8 @@ then
         exit 2
 fi
 
-configfile='/home/pi/.config/klipper_backup_script/backup.cfg'
-configfile_secured='/home/pi/.config/klipper_backup_script/sec_backup.cfg'
+configfile="$HOME/.config/klipper_backup_script/backup.cfg"
+configfile_secured="$HOME/.config/klipper_backup_script/sec_backup.cfg"
 
 ## Check if the file contains malicious code
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"
@@ -125,8 +125,8 @@ case $ACTION in
 	        if [ "$CONTINUE" = "y" ]
 	        then
 	                echo "Restoring old configuration"
-	                git -C /home/pi/klipper_config fetch --all
-	                git -C /home/pi/klipper_config reset --hard origin/master
+	                git -C "$HOME/klipper_config fetch" --all
+	                git -C "$HOME/klipper_config reset" --hard origin/master
 	        else
 	                echo -e "${RED}Restore canceled${NONE}"
 	        fi
@@ -134,9 +134,9 @@ case $ACTION in
 	2)
 		## GitHub to new installation
 		echo "Checking SSH key"
-	        if [[ -f /home/pi/.ssh/github_id_rsa ]]
+	        if [[ -f "$HOME/.ssh/github_id_rsa" ]]
 	        then
-        	        if [[ -d /home/pi/klipper_config/.git ]]
+        	        if [[ -d "$HOME/klipper_config/.git" ]]
 	                then
 	                        echo -e "${RED}ERROR!${NONE} The klipper_config folder is already a git repository"
 	                        echo "Please use restore mode 1"
@@ -144,19 +144,19 @@ case $ACTION in
 	                        URL="https://github.com/$USER/$REPO"
 
 	                        echo "Backing up the default klipper_config folder"
-	                        mv /home/pi/klipper_config /home/pi/klipper_config_bak
+	                        mv "$HOME/klipper_config /home/pi/klipper_config_bak"
 
 	                        echo "Cloning the repo"
-	                        git -C /home/pi clone "$URL"
-	                        mv "/home/pi/$REPO" /home/pi/klipper_config
+	                        git -C "$HOME" clone "$URL"
+	                        mv "/home/pi/$REPO" "$HOME/klipper_config"
 
 	                        read -p 'Do you want to keep the old folder? [y|n] ' DEL
 	                        if [ "$DEL" = "n" ]
 	                        then
 	                                echo "Deleting backup"
-	                                rm -r /home/pi/klipper_config_bak
+	                                rm -r "$HOME/klipper_config_bak"
 	                        else
-	                                echo "Old folder is located at /home/pi/klipper_config_bak"
+	                                echo "Old folder is located at $HOME/klipper_config_bak"
 	                        fi
 	                fi
 	        else
@@ -166,39 +166,39 @@ case $ACTION in
 	3)
 		## Google Drive to existing installation
 		echo "Backing up existing files"
-		mkdir /home/pi/klipper_config_bak
-		mv /home/pi/klipper_config/*.cfg /home/pi/klipper_config_bak
-		mv /home/pi/klipper_config/*.conf /home/pi/klipper_config_bak
+		mkdir "$HOME/klipper_config_bak"
+		mv "$HOME/klipper_config/*.cfg /home/pi/klipper_config_bak"
+		mv "$HOME/klipper_config/*.conf /home/pi/klipper_config_bak"
 
 		echo "Restoring backup"
-		rclone copy "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
+		rclone copy "$REMOTE":"$FOLDER" "$HOME/klipper_config_restore" --transfers=1
 
 		read -p 'Do you want to keep the old files? [y|n] ' DEL
 		if [ "$DEL" = "n" ]
 		then
 			echo "Deleting backup"
-			rm -r /home/pi/klipper_config_bak
+			rm -r "$HOME/klipper_config_bak"
 		else
-			echo "Old files are located at /home/pi/klipper_config_bak"
+			echo "Old files are located at $HOME/klipper_config_bak"
 		fi
 		;;
 	4)
 		## Google Drive to new installation
                 echo "Backing up existing files"
-                mkdir /home/pi/klipper_config_bak
-                mv /home/pi/klipper_config/*.cfg /home/pi/klipper_config_bak
-                mv /home/pi/klipper_config/*.conf /home/pi/klipper_config_bak
+                mkdir "$HOME/klipper_config_bak"
+                mv "$HOME/klipper_config/*.cfg /home/pi/klipper_config_bak"
+                mv "$HOME/klipper_config/*.conf /home/pi/klipper_config_bak"
 
                 echo "Restoring backup"
-                rclone copy "$REMOTE":"$FOLDER" /home/pi/klipper_config_restore --transfers=1
+                rclone copy "$REMOTE":"$FOLDER" "$HOME/klipper_config_restore" --transfers=1
 
                 read -p 'Do you want to keep the old files? [y|n] ' DEL
                 if [ "$DEL" = "n" ]
                 then
                         echo "Deleting backup"
-                        rm -r /home/pi/klipper_config_bak
+                        rm -r "$HOME/klipper_config_bak"
                 else
-                        echo "Old files are located at /home/pi/klipper_config_bak"
+                        echo "Old files are located at $HOME/klipper_config_bak"
                 fi
 		;;
 	*)

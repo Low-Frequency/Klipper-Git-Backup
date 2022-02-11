@@ -3,7 +3,7 @@
 ## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
-        less /home/pi/scripts/klipper_backup_script/manual
+        less "$HOME/scripts/klipper_backup_script/manual"
         exit 1
 elif [[ -n "$1" ]]
 then
@@ -53,39 +53,39 @@ echo ""
 echo ""
 echo "Checking for dierectories"
 
-if [[ -d /home/pi/scripts ]]
+if [[ -d "$HOME/scripts" ]]
 then
         echo "Scripts folder already exists"
 else
         echo "Crating scripts folder"
-        mkdir /home/pi/scripts
+        mkdir "$HOME/scripts"
 fi
 
-if [[ -d /home/pi/backup_log ]]
+if [[ -d "$HOME/backup_log" ]]
 then
         echo "Log folder already exists"
 else
         echo "Creating log folder"
-        mkdir /home/pi/backup_log
+        mkdir "$HOME/backup_log"
 fi
 
 ## Fetching backup script
 echo "Downloading backup script"
-if [[ ! -d /home/pi/scripts/klipper_backup_script ]]
+if [[ ! -d "$HOME/scripts/klipper_backup_script" ]]
 then
-	git -C /home/pi/scripts clone https://github.com/Low-Frequency/klipper_backup_script
+	git -C "$HOME/scripts" clone https://github.com/Low-Frequency/klipper_backup_script
 else
 	git pull origin main
 fi
 
-chmod +x /home/pi/scripts/klipper_backup_script/*.sh
+chmod +x "$HOME/scripts/klipper_backup_script/*.sh"
 
-if [[ ! -d /home/pi/.config/klipper_backup_script ]]
+if [[ ! -d "$HOME/.config/klipper_backup_script" ]]
 then
-        mkdir -p /home/pi/.config/klipper_backup_script
+        mkdir -p "$HOME/.config/klipper_backup_script"
 fi
 
-mv /home/pi/scripts/klipper_backup_script/backup.cfg /home/pi/.config/klipper_backup_script/
+mv "$HOME/scripts/klipper_backup_script/backup.cfg" "$HOME/.config/klipper_backup_script/"
 
 ## Adding config lines
 echo ""
@@ -99,7 +99,7 @@ echo "This can save space on your SD card"
 echo "This is recommended, if you choose to backup to Google Drive"
 echo ""
 
-/home/pi/scripts/klipper_backup_script/log_rotation.sh
+"$HOME/scripts/klipper_backup_script/log_rotation.sh"
 
 ## Choosing backup locations
 echo ""
@@ -116,12 +116,12 @@ do
 	case $G in
 		n)
 			echo "GitHub backup disabled"
-			sed -i 's/^GIT=.*/GIT=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+			sed -i 's/^GIT=.*/GIT=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
 			;;
 		y)
 			echo "GitHub backup enabled"
 			echo "Configuring..."
-			/home/pi/scripts/klipper_backup_script/git_repo.sh
+			"$HOME/scripts/klipper_backup_script/git_repo.sh"
 			echo ""
 			;;
 		*)
@@ -139,14 +139,14 @@ do
         case $C in
                 n)
                         echo "Google Drive backup disabled"
-                        sed -i 's/^CLOUD=.*/CLOUD=0/g' /home/pi/.config/klipper_backup_script/backup.cfg
+                        sed -i 's/^CLOUD=.*/CLOUD=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
                         ;;
                 y)
                         echo "Google Drive backup enabled"
-			chmod +x /home/pi/scripts/klipper_backup_script/drive.exp
-			chmod +x /home/pi/scripts/klipper_backup_script/delete_remote.exp
+			chmod +x "$HOME/scripts/klipper_backup_script/drive.exp"
+			chmod +x "$HOME/scripts/klipper_backup_script/delete_remote.exp"
 			echo "Configuring..."
-			/home/pi/scripts/klipper_backup_script/google_drive.sh
+			"$HOME/scripts/klipper_backup_script/google_drive.sh"
 			echo ""
                         ;;
                 *)
@@ -159,12 +159,13 @@ done
 echo ""
 
 ## Configuring backup intervals
-/home/pi/scripts/klipper_backup_script/scheduled_backups.sh
+"$HOME/scripts/klipper_backup_script/scheduled_backups.sh"
 
 ## Enabling automatic backups
+sed -i "s/^User=.*/User=$USER/g" "$HOME/scripts/klipper_backup_script/gitbackup.service"
 echo ""
 echo "Setting up the service"
-sudo mv /home/pi/scripts/klipper_backup_script/gitbackup.service /etc/systemd/system/gitbackup.service
+sudo mv "$HOME/scripts/klipper_backup_script/gitbackup.service" /etc/systemd/system/gitbackup.service
 sudo chown root:root /etc/systemd/system/gitbackup.service
 sudo systemctl enable gitbackup.service
 sudo systemctl start gitbackup.service
@@ -215,10 +216,10 @@ do
 	esac
 done
 
-configfile='/home/pi/.config/klipper_backup_script/backup.cfg'
-configfile_secured='/home/pi/.config/klipper_backup_script/sec_backup.cfg'
+configfile="$HOME/.config/klipper_backup_script/backup.cfg"
+configfile_secured="$HOME/.config/klipper_backup_script/sec_backup.cfg"
 
-sed -i "s/^BREAK=.*/BREAK=0/g" /home/pi/.config/klipper_backup_script/backup.cfg
+sed -i "s/^BREAK=.*/BREAK=0/g" "$HOME/.config/klipper_backup_script/backup.cfg"
 
 ## Check if the file contains malicious code
 if egrep -q -v '^#|^[^ ]*=[^;]*' "$configfile"
@@ -241,7 +242,7 @@ case $ACT in
 		elif [[ $INTERVAL = 0 ]]
 		then
 			echo "Backing up your config to the specified locations"
-			/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+			"$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh"
 		else
 			echo "Something went wrong while configuring the script"
 			echo "Please check the config"
@@ -249,19 +250,19 @@ case $ACT in
 		;;
 	2)
 		echo "Restoring backup"
-		/home/pi/scripts/klipper_backup_script/restore_config.sh
+		"$HOME/scripts/klipper_backup_script/restore_config.sh"
 		;;
 	*)
 		echo "No backup/restore action chosen"
 		;;
 esac
 
-sudo ln -s /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup
-sudo ln -s /home/pi/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore
-sudo ln -s /home/pi/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util
-sudo ln -s /home/pi/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util
-sudo ln -s /home/pi/scripts/klipper_backup_script/git_repo.sh /usr/local/bin/reconfigure_git
-sudo ln -s /home/pi/scripts/klipper_backup_script/google_drive.sh /usr/local/bin/reconfigure_drive
+sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh" /usr/local/bin/backup
+sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh" /usr/local/bin/restore
+sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh" /usr/local/bin/uninstall_bak_util
+sudo ln -s "$HOME/scripts/klipper_backup_script/update.sh" /usr/local/bin/update_bak_util
+sudo ln -s "$HOME/scripts/klipper_backup_script/git_repo.sh" /usr/local/bin/reconfigure_git
+sudo ln -s "$HOME/scripts/klipper_backup_script/google_drive.sh" /usr/local/bin/reconfigure_drive
 
 ## Deleting now unecessary setup script
-rm /home/pi/setup.sh
+rm "$HOME/setup.sh"
