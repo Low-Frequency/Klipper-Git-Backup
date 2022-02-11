@@ -6,7 +6,7 @@ Requires=network-online.target
 
 [Service]
 Type=simple
-User=pi
+User=
 ExecStart=/home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
 
 [Install]
