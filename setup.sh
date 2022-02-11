@@ -163,6 +163,7 @@ echo ""
 
 ## Enabling automatic backups
 sed -i "s/^User=.*/User=$USER/g" "$HOME/scripts/klipper_backup_script/gitbackup.service"
+sed -i "s|ExecStart=.*|ExecStart=$HOME\/scripts\/klipper_backup_script\/klipper_config_git_backup.sh|g" "$HOME/scripts/klipper_backup_script/gitbackup.service"
 echo ""
 echo "Setting up the service"
 sudo mv "$HOME/scripts/klipper_backup_script/gitbackup.service" /etc/systemd/system/gitbackup.service
