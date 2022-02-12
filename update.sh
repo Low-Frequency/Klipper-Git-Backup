@@ -3,7 +3,7 @@
 ## Opening manual
 if [[ "$1" = "-h" || "$1" = "--help" ]]
 then
-        less "$HOME/scripts/klipper_backup_script/manual^"
+        less "$HOME/scripts/klipper_backup_script/manual"
         exit 1
 elif [[ -n "$1" ]]
 then
@@ -11,19 +11,14 @@ then
         exit 2
 fi
 
-sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup"
-sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore"
-sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util"
-sudo ln -s "$HOME/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util"
+git -C "$HOME/scripts/klipper_backup_script" pull origin main
 
-git -C "$HOME/scripts/klipper_backup_script pull origin main"
-
-sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh /usr/local/bin/backup"
-sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh /usr/local/bin/restore"
-sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh /usr/local/bin/uninstall_bak_util"
-sudo ln -s "$HOME/scripts/klipper_backup_script/update.sh /usr/local/bin/update_bak_util"
-sudo ln -s "$HOME/scripts/klipper_backup_script/git_repo.sh /usr/local/bin/reconfigure_git"
-sudo ln -s "$HOME/scripts/klipper_backup_script/google_drive.sh /usr/local/bin/reconfigure_drive"
+sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh" /usr/local/bin/backup
+sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh" /usr/local/bin/restore
+sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh" /usr/local/bin/uninstall_bak_util
+sudo ln -s "$HOME/scripts/klipper_backup_script/update.sh" /usr/local/bin/update_bak_util
+sudo ln -s "$HOME/scripts/klipper_backup_script/git_repo.sh" /usr/local/bin/reconfigure_git
+sudo ln -s "$HOME/scripts/klipper_backup_script/google_drive.sh" /usr/local/bin/reconfigure_drive
 
 echo "Checking your config"
 
@@ -65,7 +60,7 @@ if [ $GIT = 0 ]
 		case $GHUB in
 			y)
 				echo "Configuring GitHub"
-				"$HOME/.config/klipper_backup_script/git_repo.sh"
+				"$HOME/scripts/klipper_backup_script/git_repo.sh"
 				;;
 			n)
 				echo "Skipping GitHub config"
@@ -90,7 +85,7 @@ if [ $CLOUD = 0 ]
                 case $CLD in
                         y)
                                 echo "Configuring Google Drive"
-                                "$HOME/.config/klipper_backup_script/google_drive.sh"
+                                "$HOME/scripts/klipper_backup_script/google_drive.sh"
                                 ;;
                         n)
                                 echo "Skipping Google Drive config"
@@ -115,7 +110,7 @@ if [ $INTERVAL = 0 ]
                 case $SCH in
                         y)
                                 echo "Configuring scheduled backups"
-                                "$HOME/.config/klipper_backup_script/scheduled_backups.sh"
+                                "$HOME/scripts/klipper_backup_script/scheduled_backups.sh"
                                 ;;
                         n)
                                 echo "Skipping scheduled backups"
@@ -140,7 +135,7 @@ if [ $ROTATION = 0 ]
                 case $ROT in
                         y)
                                 echo "Configuring scheduled backups"
-                                "$HOME/.config/klipper_backup_script/log_rotation.sh"
+                                "$HOME/scripts/klipper_backup_script/log_rotation.sh"
                                 ;;
                         n)
                                 echo "Skipping log rotation"
