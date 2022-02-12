@@ -37,7 +37,7 @@ I added an update script for easy addition of features in the future. To update,
 
 To do this, execute the following command:
 ```shell
-git -C /home/pi/scripts/klipper_backup_script pull origin main && chmod +x /home/pi/scripts/klipper_backup_script/setup.sh && /home/pi/scripts/klipper_backup_script/setup.sh
+git -C ~/scripts/klipper_backup_script pull origin main && chmod +x ~/scripts/klipper_backup_script/setup.sh && ~/scripts/klipper_backup_script/setup.sh
 ```
 
 ## Adding an SSH key to your GitHub account
@@ -93,7 +93,7 @@ Changing `USER`, `REPO`, `REMOTE`, `FOLDER` and `BREAK` is not advised unless yo
 If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) extension instealled, you can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
 ```shell
 [gcode_shell_command backup_cfg]
-command: sh /home/pi/scripts/klipper_backup_script/klipper_config_git_backup.sh
+command: sh <YOUR_HOME_FOLDER>/scripts/klipper_backup_script/klipper_config_git_backup.sh
 timeout: 30.
 verbose: True
 
