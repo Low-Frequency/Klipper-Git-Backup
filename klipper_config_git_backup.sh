@@ -81,12 +81,12 @@ do
 	case $BACKUP in
 		0)
 			## None specified
-			echo "[$(date '+%F %T')]: No backups configured" | tee "$HOME/backup_log/$(date +%F).log"
-			echo "[$(date '+%F %T')]: Exiting" | tee "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: No backups configured" | tee -a "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: Exiting" | tee -a "$HOME/backup_log/$(date +%F).log"
 			;;
 		1)
 			## GitHub
-			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee -a "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Adding changes to push" | tee -a "$HOME/backup_log/$(date +%F).log"
 			git -C "$HOME/klipper_config" add .
 			echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
@@ -96,19 +96,19 @@ do
 			;;
 		10)
 			## Google Drive
-			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee -a "$HOME/backup_log/$(date +%F).log"
 			rclone copy "$HOME/klipper_config" "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file="$HOME/backup_log/$(date +%F).log" --log-level=INFO
 			;;
 		11)
 			## GitHub and Google Drive
-			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                echo "[$(date '+%F %T')]: Adding changes to push" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                git -C "$HOME/klipper_config" add .
 	                echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                git -C "$HOME/klipper_config" commit -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                echo "[$(date '+%F %T')]: Pushing" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                git -C "$HOME/klipper_config" push -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
-			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee "$HOME/backup_log/$(date +%F).log"
+			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                rclone copy "$HOME/klipper_config" "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file="$HOME/backup_log/$(date +%F).log" --log-level=INFO
 	                ;;
 		*)
@@ -131,6 +131,7 @@ do
 			;;
 		1)
 			## Delete old logs
+			echo "[$(date '+%F %T')]: Deleting old logs" | tee -a "$HOME/backup_log/$(date +%F).log"
 			find "$HOME/backup_log" -mindepth 1 -mtime +$DEL -delete
 			;;
 		*)
