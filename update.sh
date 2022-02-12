@@ -152,4 +152,8 @@ if [ $ROTATION = 0 ]
         done
 fi
 
+rm "$HOME/scripts/klipper_backup_script/setup.sh"
+rm "$HOME/scripts/klipper_backup_script/gitbackup.service"
+rm "$HOME/scripts/klipper_backup_script/backup.cfg"
+
 echo "Update completed"
