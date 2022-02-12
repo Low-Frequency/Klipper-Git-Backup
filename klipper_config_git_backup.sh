@@ -88,9 +88,9 @@ do
 			## GitHub
 			echo "[$(date '+%F %T')]: Backing up to GitHub" | tee "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Adding changes to push" | tee -a "$HOME/backup_log/$(date +%F).log"
-			git -C "$HOME/klipper_config add" .
+			git -C "$HOME/klipper_config" add .
 			echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
-			git -C "$HOME/klipper_config commit" -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
+			git -C "$HOME/klipper_config" commit -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Pushing" | tee -a "$HOME/backup_log/$(date +%F).log"
 			git -C "$HOME/klipper_config" push -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
 			;;
@@ -105,9 +105,9 @@ do
 	                echo "[$(date '+%F %T')]: Adding changes to push" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                git -C "$HOME/klipper_config" add .
 	                echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
-	                git -C "$HOME/klipper_config commit" -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
+	                git -C "$HOME/klipper_config" commit -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                echo "[$(date '+%F %T')]: Pushing" | tee -a "$HOME/backup_log/$(date +%F).log"
-	                git -C "$HOME/klipper_config push" -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
+	                git -C "$HOME/klipper_config" push -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee "$HOME/backup_log/$(date +%F).log"
 	                rclone copy "$HOME/klipper_config" "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file="$HOME/backup_log/$(date +%F).log" --log-level=INFO
 	                ;;
