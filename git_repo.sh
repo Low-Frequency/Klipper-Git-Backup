@@ -65,7 +65,7 @@ else
 	echo "Generating SSH key pair"
 	read -p 'Please enter the e-mail of your GitHub account: ' MAIL
 	ssh-keygen -t ed25519 -C "$MAIL" -f "$HOME/.ssh/github_id_rsa" -q -N ""
-	echo "IdentityFile ~/.ssh/github_id_rsa" >> "$HOME/.ssh/config"
+	echo "IdentityFile $HOME/.ssh/github_id_rsa" >> "$HOME/.ssh/config"
 	chmod 600 "$HOME/.ssh/config"
 
 	echo "Please copy the public key and add it to your GitHub account:"
