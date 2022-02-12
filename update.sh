@@ -13,22 +13,14 @@ fi
 
 git -C "$HOME/scripts/klipper_backup_script" pull origin main
 
-sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh" /usr/local/bin/backup
-sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh" /usr/local/bin/restore
-sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh" /usr/local/bin/uninstall_bak_util
-sudo ln -s "$HOME/scripts/klipper_backup_script/update.sh" /usr/local/bin/update_bak_util
-sudo ln -s "$HOME/scripts/klipper_backup_script/git_repo.sh" /usr/local/bin/reconfigure_git
-sudo ln -s "$HOME/scripts/klipper_backup_script/google_drive.sh" /usr/local/bin/reconfigure_drive
-
 echo "Checking your config"
 
 if [[ ! -f "$HOME/.config/klipper_backup_script/backup.cfg" ]]
 then
 	echo "Config not found!"
 	echo "Please run the setup script again!"
-	echo "Setting up command for this..."
-	echo "To set the script up just type: setup_klipper_bak_util"
-	sudo ln -s "$HOME/scripts/klipper_backup_script/setup.sh" /usr/local/bin/setup_klipper_bak_util
+	echo "To do this, execute the following command:"
+	echo "chmod +x ~/scripts/klipper_backup_script/setup.sh && ~/scripts/klipper_backup_script/setup.sh"
 	exit 1
 fi
 
