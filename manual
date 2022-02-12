@@ -18,15 +18,21 @@ Contact:
 
  1. setup.sh
  2. git_repo.sh
+       Command: reconfigure_git
  3. google_drive.sh
+       Command: reconfigure_drive
  4. klipper_config_git_backup.sh
+       Command: backup
  5. restore_config.sh
+       Command: restore
  6. drive.exp
  7. delete_remote.exp
  8. uninstall.sh
+       Command: uninstall_bak_util
  9. log_rotation.sh
 10. scheduled_backups.sh
 11. update.sh
+      Command: update_bak_util
 
 
 #####################################################################
@@ -43,32 +49,25 @@ This is the script for the initial setup. It is called directly from GitHub duri
 2. git_repo.sh
 
 This script initializes the klipper_config folder as a GitHub repository. It is called from setup.sh, if you choose to backup to a GitHub repository.
-You can also execute this script to set up a GitHub repository after the setup if you want to enable GitHub backups. Execute it wit this command:
-
-~/scripts/klipper_backup_script/git_repo.sh
+You can also execute this script to set up a GitHub repository after the setup if you want to enable GitHub backups.
 
 
 3. google_drive.sh
 
 This script creates a link to your Google Drive as a backup location. It is called from setup.sh, if you choose to backup to Google Drive.
-You can also execute this script to set up Google Drive as a backup location after the setup if you want to enable Google Drive backups. Execute it wit this command:
+You can also execute this script to set up Google Drive as a backup location after the setup if you want to enable Google Drive backups.
 
-~/scripts/klipper_backup_script/google_drive.sh
 
 4. klipper_config_git_backup.sh
 
 This is the main script. It is run after every reboot of your Raspberry Pi, imports the config file and pushes a backup to your specified locations.
-You can manually back up your klipper config with this command:
-
-backup
+You can manually back up your klipper config with the command mentioned in the overview.
 
 
 5. restore_config.sh
 
 If something catastrophically fails, you want this script. It guides you through the restore process for your klipper config.
-This script also relies on the config file to know which backup locations are available. To start the restoring process just execute this command:
-
-restore
+This script also relies on the config file to know which backup locations are available. To start the restoring process just execute the command mentioned in the overview.
 
 
 6. drive.exp
@@ -84,9 +83,7 @@ This script deletes the link to your Google Drive and is called from uninstall.s
 8. uninstall.sh
 
 Pretty self explanatory. This script completely uninstalls the klipper backup utility from your system.
-To do this, execute this command:
-
-uninstall_bak_util
+To do this, execute the command mentioned in the overview.
 
 Be aware, that you still have to manually delete your SSH keys after the backup utility has been uninstalled.
 To delete the keys, execute this command:
@@ -99,16 +96,16 @@ Don't forget to delete the public key in your GitHub profile too!
 9. log_rotation.sh
 
 This script sets up the log rotation. You can execute it manually, if you want to set up, or customize log rotation after the setup.
+Setup and customization can also be done directly in the config file.
 
 
 10. scheduled_backups.sh
 
 This script sets up a backup schedule. If you want to customize your existing schedule, or enable/disable it, you can run this script.
+This can also be done directly by editing the config file.
 
 
 11. update.sh
 
 The name says it. This updates the backup utility if you run it. Running the update script is a great way to enable and customize unused features of the backup utility too.
-To run it, execute this command:
-
-update_bak_util
+To run it, execute the command mentioned in the overview.
