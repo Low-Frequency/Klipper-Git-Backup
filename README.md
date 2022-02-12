@@ -6,11 +6,11 @@ If you have any questions, bug reports or requests feel free to DM me on Discord
 
 # How does it work?
 
-This script runs when your Pi starts, or if configured even on a set timeschedule. It waits for network connection and then pushes a backup to your specified locations. Every action is logged and the output gets sent to the terminal. This way you always know what fails, or has failed in the past.
+This script runs when your Pi starts, or if configured even on a set timeschedule. It waits for network connection and then pushes a backup to your specified locations. Every action is logged. This way you always know what fails, or has failed in the past.
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
-If you want to know what each script does, just execute it with the flags `-h` or `--help` and you get a manual.
+If you want to know what each script does, just execute it with the flags `-h` or `--help` and you get an overview and description for all scripts.
 
 This script even sets up custom commands for you to use.
 
@@ -33,12 +33,7 @@ It can take a while for the Google Drive authentication and backup to succeed, s
 
 ## Update
 
-I added an update script for easy addition of features in the future. To update, just type `update_bak_util`. If you don't have the update script yet, you need to pull the latest version of the script and do the setup again.
-
-To do this, execute the following command:
-```shell
-git -C ~/scripts/klipper_backup_script pull origin main && chmod +x ~/scripts/klipper_backup_script/setup.sh && ~/scripts/klipper_backup_script/setup.sh
-```
+I added an update script for easy addition of features in the future. To update, just type `update_bak_util`. If you don't have the update script yet, please uninstall the existing version and install it again. After that you have the update command availabe in the future.
 
 ## Adding an SSH key to your GitHub account
 
@@ -70,12 +65,12 @@ Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variabl
 
 To set up Google Drive as a backup location after you've done the install, just execute this command:
 ```shell
-chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/google_drive.sh
+reconfigure_drive
 ```
 
 If you want to set up GitHub as a backup location after you've done the install, just execute this command:
 ```shell
-chmod +x ~/scripts/klipper_backup_script/remote_location.sh && ~/scripts/klipper_backup_script/git_repo.sh
+reconfigure_git
 ```
 
 If you want to customize the backup schedule, edit the following variables:
@@ -88,22 +83,6 @@ If you want to customize the backup schedule, edit the following variables:
 
 Changing `USER`, `REPO`, `REMOTE`, `FOLDER` and `BREAK` is not advised unless you know what you're doing.
 
-## Further implementation
-
-If you have the [G-code Shell command](https://github.com/th33xitus/kiauh/blob/master/docs/gcode_shell_command.md) extension instealled, you can add the script to your macros in your `printer.cfg`. Just add the following lines to your macro section:
-```shell
-[gcode_shell_command backup_cfg]
-command: sh <YOUR_HOME_FOLDER>/scripts/klipper_backup_script/klipper_config_git_backup.sh
-timeout: 30.
-verbose: True
-
-[gcode_macro BACKUP_CFG]
-gcode:
-    RUN_SHELL_COMMAND CMD=backup_cfg
-```
-
-Since I don't use the shell extension, I haven't tested this. Execution of the script via gcode macro might work, or it might not. I did my best to avoid operations I know won't work with the extension, but it might be that I missed some.
-
 ## Restoring the config
 
 The script sets up a custom command for this.
@@ -113,7 +92,7 @@ If you need to restore your config files, you have two options:
 1. Restoring to your existing installation with the git repo already configured
 2. Restoring to a new installation
 
-Just execute the script and follow the instructions:
+Just execute the following command and follow the instructions to choose from the availabe options:
 ```shell
 restore
 ```
