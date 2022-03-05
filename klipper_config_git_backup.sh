@@ -92,7 +92,7 @@ do
 			echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
 			git -C "$HOME/klipper_config" commit -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Pushing" | tee -a "$HOME/backup_log/$(date +%F).log"
-			git -C "$HOME/klipper_config" push -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
+			git -C "$HOME/klipper_config" push -u origin $BRANCH | tee -a "$HOME/backup_log/$(date +%F).log"
 			;;
 		10)
 			## Google Drive
@@ -107,7 +107,7 @@ do
 	                echo "[$(date '+%F %T')]: Committing to GitHub repository" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                git -C "$HOME/klipper_config" commit -m "backup $(date +%F)" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                echo "[$(date '+%F %T')]: Pushing" | tee -a "$HOME/backup_log/$(date +%F).log"
-	                git -C "$HOME/klipper_config" push -u origin master | tee -a "$HOME/backup_log/$(date +%F).log"
+	                git -C "$HOME/klipper_config" push -u origin $BRANCH | tee -a "$HOME/backup_log/$(date +%F).log"
 			echo "[$(date '+%F %T')]: Backing up to Cloud storage provider" | tee -a "$HOME/backup_log/$(date +%F).log"
 	                rclone copy "$HOME/klipper_config" "$REMOTE":"$FOLDER" --exclude "/.git/**" --transfers=1 --log-file="$HOME/backup_log/$(date +%F).log" --log-level=INFO
 	                ;;
