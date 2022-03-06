@@ -22,9 +22,13 @@ fi
 ## Getting necessary information
 read -p 'Please enter your GitHub Username: ' USER
 read -p 'Please enter the name of your GitHub repository: ' REPO
+read -p 'Please enter the name of your GitHub branch (main): ' BRANCH
+
+BRANCH=${BRANCH:-main}
 
 sed -i "s/^USER=.*/USER=$USER/g" "$HOME/.config/klipper_backup_script/backup.cfg"
 sed -i "s/^REPO=.*/REPO=$REPO/g" "$HOME/.config/klipper_backup_script/backup.cfg"
+sed -i "s/^BRANCH=.*/BRANCH=$BRANCH/g" "$HOME/.config/klipper_backup_script/backup.cfg"
 
 URL="https://github.com/$USER/$REPO"
 
@@ -81,7 +85,7 @@ fi
 ## Initializing repo
 echo ""
 echo "Initializing repo"
-git -C "$HOME/klipper_config" init
+git -C "$HOME/klipper_config" init --initial-branch=$BRANCH
 git -C "$HOME/klipper_config" remote add origin "$URL"
 git -C "$HOME/klipper_config" remote set-url origin git@github.com:"$USER"/"$REPO".git
 
