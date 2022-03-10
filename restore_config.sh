@@ -125,8 +125,8 @@ case $ACTION in
 	        if [ "$CONTINUE" = "y" ]
 	        then
 	                echo "Restoring old configuration" | tee -a "$HOME/backup_log/$(date +%F).log"
-	                git -C "$HOME/klipper_config fetch" --all | tee -a "$HOME/backup_log/$(date +%F).log"
-	                git -C "$HOME/klipper_config reset" --hard origin/master | tee -a "$HOME/backup_log/$(date +%F).log"
+	                git -C "$HOME/klipper_config" fetch --all | tee -a "$HOME/backup_log/$(date +%F).log"
+	                git -C "$HOME/klipper_config" reset --hard origin/master | tee -a "$HOME/backup_log/$(date +%F).log"
 	        else
 	                echo -e "${RED}Restore canceled${NONE}"
 	        fi
