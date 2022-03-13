@@ -45,6 +45,7 @@ then
 fi
 
 if [ $GIT = 0 ]
+then
 	echo "You don't have GitHub enabled as a backup location"
 	while [[ "$GHUB" != "y" &&  "$GHUB" != "n" ]]
 	do
@@ -70,6 +71,7 @@ then
 fi
 
 if [ $CLOUD = 0 ]
+then
         echo "You don't have GitHub enabled as a backup location"
         while [[ "$CLD" != "y" &&  "$CLD" != "n" ]]
         do
@@ -95,6 +97,7 @@ then
 fi
 
 if [ $INTERVAL = 0 ]
+then
         echo "You don't have scheduled backups enabled"
         while [[ "$SCH" != "y" &&  "$SCH" != "n" ]]
         do
@@ -120,6 +123,7 @@ then
 fi
 
 if [ $ROTATION = 0 ]
+then
         echo "You don't have Log rotation enabled"
         while [[ "$ROT" != "y" &&  "$ROT" != "n" ]]
         do
