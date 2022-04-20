@@ -33,7 +33,7 @@ It can take a while for the Google Drive authentication and backup to succeed, s
 
 Be aware that this script only works correctly if the installed version of ```git``` is 2.28 or newer. Check this with ```git --version```.
 
-If the displayed version is prior to 2.28, update your system first! If ```apt update && apt upgrade``` doesn't let you update to an newer version of git, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
+If the displayed version is prior to 2.28, update your system first! If ```apt update && apt upgrade``` doesn't let you update to an newer version of ```git```, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
 
 ## Update
 
