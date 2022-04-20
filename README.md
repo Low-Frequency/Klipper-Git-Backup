@@ -31,6 +31,10 @@ wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backu
 
 It can take a while for the Google Drive authentication and backup to succeed, so don't panic if the install stops responding for a short period of time.
 
+Be aware that this script only works correctly if the installed version of ```git``` is 2.28 or newer. Check this with ```git --version```.
+
+If the displayed version is prior to 2.28, update your system first! If ```apt update && apt upgrade``` doesn't let you update to an newer version of git, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
+
 ## Update
 
 I added an update script for easy addition of features in the future. To update, just type `update_bak_util`. If you don't have the update script yet, please uninstall the existing version and install it again. After that you have the update command availabe in the future.
