@@ -22,7 +22,7 @@ fi
 ## Getting necessary information
 read -p 'Please enter your GitHub Username: ' USER
 read -p 'Please enter the name of your GitHub repository: ' REPO
-read -p 'Please enter the name of your GitHub branch (main): ' BRANCH
+read -p 'Please enter the name of your GitHub branch (Leave blank, if you're using the default main branch): ' BRANCH
 
 BRANCH=${BRANCH:-main}
 
