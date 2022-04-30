@@ -11,6 +11,8 @@ then
         exit 2
 fi
 
+version=$(git --version | cut -b 13- | sed -e 's/\.//g')
+
 echo "I strongly recommend you update your Raspberry Pi first"
 
 ## Update Pi
@@ -119,6 +121,13 @@ do
 			sed -i 's/^GIT=.*/GIT=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
 			;;
 		y)
+			if [[ version -lt 2280 ]]
+			then
+        			echo "You have to update git"
+				echo "To get the newest version, you have to install git from the source"
+				echo "Please follow the guide linked in the install section in the repo and try again"
+				exit 4
+			fi
 			echo "GitHub backup enabled"
 			echo "Configuring..."
 			"$HOME/scripts/klipper_backup_script/git_repo.sh"
