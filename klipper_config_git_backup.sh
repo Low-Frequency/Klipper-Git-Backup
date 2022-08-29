@@ -141,12 +141,12 @@ do
 			;;
 	esac
 
-	if [ $INTERVAL = 0 ]
+	if [[ $INTERVAL = 0 ]]
 	then
 		sed -i 's/BREAK=0/BREAK=1/g' "$HOME/.config/klipper_backup_script/backup.cfg"
 	fi
 	source "$configfile"
-	if [ $BREAK = 1 ]
+	if [[ $BREAK = 1 ]]
 	then
 		break
 	else
