@@ -1,6 +1,10 @@
 # Adding a Klipper config backup script
 
-This script is meant to be set up as a service to backup your klipper config files to a GitHub repository, or Google Drive.
+This script sets itself up as a service to backup your klipper config files to a GitHub repository, or Google Drive.
+
+In the version prior to this only a default install of klipper was supported. Now you can use this script with systems that were set up with [KIAUH](https://github.com/th33xitus/kiauh) too and it even supports multiple instances of klipper!
+
+If your're migrating from an old version of the script please just set it up from scratch since pretty much everything has changed.
 
 If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
 
@@ -10,9 +14,9 @@ This script runs when your Pi starts, or if configured even on a set timeschedul
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
-If you want to know what each script does, just execute it with the flags `-h` or `--help` and you get an overview and description for all scripts.
+If you want to know what each script does, you can look inside of the manual located inside of the scripts folder.
 
-This script even sets up custom commands for you to use.
+This script even sets up custom commands for you to use which makes it super easy to backup and restore your configs via the CLI.
 
 # Setup
 
@@ -26,18 +30,16 @@ If you plan to store the backup on GitHub, go ahead and create a new repo.
 
 To install this script, `SSH` into your Pi and execute the following command :
 ```shell
-wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup.sh" && chmod +x setup.sh && ./setup.sh
+wget -qO setup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup_klipper_backup.sh" && chmod +x setup.sh && ./setup_klipper_backup.sh
 ```
 
-It can take a while for the Google Drive authentication and backup to succeed, so don't panic if the install stops responding for a short period of time.
+Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. Check this with `git --version`. Alternatively the install script will check this for you too.
 
-Be aware that this script only works correctly if the installed version of ```git``` is 2.28 or newer. Check this with ```git --version```.
-
-If the displayed version is prior to 2.28, update your system first! If ```apt update && apt upgrade``` doesn't let you update to an newer version of ```git```, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
+If the displayed version is prior to 2.28, update your system first! If `apt-get update && apt-get upgrade` doesn't let you update to an newer version of `git`, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
 
 ## Update
 
-I added an update script for easy addition of features in the future. To update, just type `update_bak_util`. If you don't have the update script yet, please uninstall the existing version and install it again. After that you have the update command availabe in the future.
+I removed the update script, since it was a pain to track all the versions and make it compatible to every possible version. The easiest way to update is to just uninstall the backup utility with the `uninstall_bak_util` command and set it up again.
 
 ## Adding an SSH key to your GitHub account
 
@@ -67,16 +69,6 @@ To change the log retention time, just change the `RETENTION` variable. Note tha
 
 Enabling or disabling backup locations is done via the `GIT` and `CLOUD` variables.
 
-To set up Google Drive as a backup location after you've done the install, just execute this command:
-```shell
-reconfigure_drive
-```
-
-If you want to set up GitHub as a backup location after you've done the install, just execute this command:
-```shell
-reconfigure_git
-```
-
 If you want to customize the backup schedule, edit the following variables:
 
 `INTERVAL`: Enable/disable backup schedule.
@@ -85,18 +77,13 @@ If you want to customize the backup schedule, edit the following variables:
 
 `UNIT`: The time unit for the interval.
 
-Changing `USER`, `REPO`, `REMOTE`, `FOLDER` and `BREAK` is not advised unless you know what you're doing.
+Changing the variables below the marked section is not advised unless you know what you're doing.
 
 ## Restoring the config
 
 The script sets up a custom command for this.
 
-If you need to restore your config files, you have two options:
-
-1. Restoring to your existing installation with the git repo already configured
-2. Restoring to a new installation
-
-Just execute the following command and follow the instructions to choose from the availabe options:
+If you need to restore your config files just execute the following command and follow the instructions to choose from the availabe options:
 ```shell
 restore
 ```
