@@ -89,50 +89,49 @@ function google_backup {
 }
 
 function backup {
-  BACKUP=$((10*$CLOUD + $GIT))
-  CLOUD=${CLOUD:-0}
+	BREAK=0
+	CLOUD=${CLOUD:-0}
   GIT=${GIT:-0}
   ROTATION=${ROTATION:-1}
+  BACKUP=$((10*$CLOUD + $GIT))
 
-  while [[ $BREAK = 0 ]]
+  while [[ $BREAK -eq 0 ]]
   do
-  	case $BACKUP in
-  		0)
-  			echo "[$(date '+%F %T')]: No backups configured" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			;;
-  		1)
-        git_backup
-  			;;
-  		10)
-  			google_backup
-  			;;
-  		11)
-        git_backup
-        google_backup
-  	    ;;
-  		*)
-  			echo "[$(date '+%F %T')]: No valid backup configuration" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Please check the config file!" | tee -a "$HOME/backup_log/$(date +%F).log"
-        exit 1
-  			;;
-  	esac
+		case $BACKUP in
+			0)
+				echo "[$(date '+%F %T')]: No backups configured" | tee -a "$HOME/backup_log/$(date +%F).log"
+				;;
+			1)
+				git_backup
+				;;
+			10)
+				google_backup
+				;;
+			11)
+				git_backup
+				google_backup
+				;;
+			*)
+				echo "[$(date '+%F %T')]: No valid backup configuration" | tee -a "$HOME/backup_log/$(date +%F).log"
+				echo "[$(date '+%F %T')]: Please check the config file!" | tee -a "$HOME/backup_log/$(date +%F).log"
+				exit 1
+				;;
+		esac
 
-    log_rotation
+		log_rotation
 
-  	if [[ $INTERVAL = 0 ]]
-  	then
-  		sed -i 's/BREAK=0/BREAK=1/g' "$HOME/.config/klipper_backup_script/backup.cfg"
-  	fi
+		if [[ $INTERVAL -eq 0 ]]
+		then
+			BREAK=1
+		fi
 
-  	import_config
-
-  	if [[ $BREAK = 1 ]]
-  	then
-  		break
-  	else
-  		sleep $PAUSE
-  	fi
-  done
+		if [[ $BREAK -eq 1 ]]
+		then
+			break
+		else
+			sleep $PAUSE
+		fi
+	done
 }
 
 ### BACKUP SCRIPT

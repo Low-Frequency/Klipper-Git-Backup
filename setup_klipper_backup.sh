@@ -23,7 +23,7 @@ function check_yes_no {
 function check_number {
   ANSWER=$1
   case $ANSWER in
-    ^[0-9]+$)
+    [0-9])
       return 0
       ;;
     *)
@@ -73,14 +73,21 @@ function instance_check {
         while ! check_number $KLIPPER_INSTANCE_NUMBER
         do
           read -p "How many instances do you run? " KLIPPER_INSTANCE_NUMBER
+
+          case $KLIPPER_INSTANCE_NUMBER in
+            [0-9])
+              ;;
+            *)
+              echo "Please provide a valid answer"
+              ;;
+          esac
         done
         ;;
       n|N)
         KLIPPER_INSTANCE_NUMBER=1
         ;;
       *)
-        echo "Unexpected error! Please open an issue on GitHub with an exact description of what went wrong and the output of the script"
-        exit 1
+        echo "Please provide a valid answer"
         ;;
     esac
   done
@@ -99,12 +106,13 @@ function setup_git_repo {
   fi
 
   ### Getting GitHub information
+  echo "Setting up $KLIPPER_INSTANCE_NUMBER repositories for backups"
   read -p "Please enter your GitHub Username: " GITHUB_USER
   while [[ $KLIPPER_INSTANCE_NUMBER -ne 0 ]]
   do
-    read -p "Please enter the name of your GitHub repository: " GITHUB_REPO
+    read -p "Please enter the name of your $KLIPPER_INSTANCE_NUMBER. GitHub repository: " GITHUB_REPO
     GITHUB_REPO_LIST+=("$GITHUB_REPO")
-    read -p "Please enter the name of the klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
+    read -p "Please enter the name of the $KLIPPER_INSTANCE_NUMBER. klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
     CONFIG_FOLDER=${CONFIG_FOLDER:-klipper_config}
     GITHUB_CONFIG_FOLDER_LIST+=("$CONFIG_FOLDER")
     KLIPPER_INSTANCE_NUMBER=$(( $KLIPPER_INSTANCE_NUMBER - 1 ))
@@ -205,7 +213,17 @@ function setup_google_drive {
 function generate_config {
   echo "Generating config file"
 
-  if [[ $GOOGLE_DRIVE_ENABLED -eq y ]]
+  if [[ $DRIVE_REMOTE_NAME == "placeholder to make the loop go" ]]
+  then
+    DRIVE_REMOTE_NAME=
+  fi
+
+  if [[ $DRIVE_REMOTE_FOLDER == "placeholder to make the loop go" ]]
+  then
+    DRIVE_REMOTE_NAME=
+  fi
+
+  if [[ $GOOGLE_DRIVE_ENABLED == "y" ]]
   then
     sed -i "s/^REMOTE=.*/REMOTE=$DRIVE_REMOTE_NAME/g" "$HOME/.config/klipper_backup_script/backup.cfg"
     if ! grep -q DRIVE_REMOTE_FOLDER_LIST "$HOME/.config/klipper_backup_script/backup.cfg"
@@ -220,7 +238,7 @@ function generate_config {
     sed -i 's/^CLOUD=.*/CLOUD=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
   fi
 
-  if [[ $GITHUB_ENABLED -eq y ]]
+  if [[ $GITHUB_ENABLED == "y" ]]
   then 
     sed -i "s/^USER=.*/USER=$GITHUB_USER/g" "$HOME/.config/klipper_backup_script/backup.cfg"
     sed -i "s/^BRANCH=.*/BRANCH=$GITHUB_BRANCH/g" "$HOME/.config/klipper_backup_script/backup.cfg"
@@ -250,7 +268,7 @@ function generate_config {
     sed -i 's/^GIT=.*/GIT=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
   fi
 
-  if [[ $LOG_ROTATION_ENABLED -eq y ]]
+  if [[ $LOG_ROTATION_ENABLED == "y" ]]
   then
     sed -i 's/^ROTATION=.*/ROTATION=1/g' "$HOME/.config/klipper_backup_script/backup.cfg"
     sed -i "s/^RETENTION=.*/RETENTION=$LOG_RETENTION/g" "$HOME/.config/klipper_backup_script/backup.cfg"
@@ -258,7 +276,7 @@ function generate_config {
     sed -i 's/^ROTATION=.*/ROTATION=0/g' "$HOME/.config/klipper_backup_script/backup.cfg"
   fi
 
-  if [[ $BACKUP_INTERVALS_ENABLED -eq y ]]
+  if [[ $BACKUP_INTERVALS_ENABLED == "y" ]]
   then
     sed -i 's/^INTERVAL=.*/INTERVAL=1/g' "$HOME/.config/klipper_backup_script/backup.cfg"
     sed -i "s/^TIME=.*/TIME=$BACKUP_INTERVAL/g" "$HOME/.config/klipper_backup_script/backup.cfg"
