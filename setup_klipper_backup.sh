@@ -108,14 +108,16 @@ function setup_git_repo {
   ### Getting GitHub information
   echo "Setting up $KLIPPER_INSTANCE_NUMBER repositories for backups"
   read -p "Please enter your GitHub Username: " GITHUB_USER
+  REPO_COUNT=1
   while [[ $KLIPPER_INSTANCE_NUMBER -ne 0 ]]
   do
-    read -p "Please enter the name of your $KLIPPER_INSTANCE_NUMBER. GitHub repository: " GITHUB_REPO
+    read -p "Please enter the name of your $REPO_COUNT. GitHub repository: " GITHUB_REPO
     GITHUB_REPO_LIST+=("$GITHUB_REPO")
-    read -p "Please enter the name of the $KLIPPER_INSTANCE_NUMBER. klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
+    read -p "Please enter the name of the $REPO_COUNT. klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
     CONFIG_FOLDER=${CONFIG_FOLDER:-klipper_config}
     GITHUB_CONFIG_FOLDER_LIST+=("$CONFIG_FOLDER")
     KLIPPER_INSTANCE_NUMBER=$(( $KLIPPER_INSTANCE_NUMBER - 1 ))
+    REPO_COUNT=$(( $REPO_COUNT + 1 ))
     CONFIG_FOLDER=
   done
   read -p "Please enter the name of your GitHub branch (Leave empty for default main branch): " GITHUB_BRANCH
@@ -417,7 +419,8 @@ function enable_log_rotation {
         echo "Log rotation disabled"
         ;;
       y|Y)
-        read -p "How long should the logs be kept (in months) " LOG_RETENTION
+        read -p "How long should the logs be kept (in months). Default is 3 months: " LOG_RETENTION
+        LOG_RETENTION=${LOG_RETENTION:-3}
         ;;
       *)
         echo "Please provide a valid answer"
