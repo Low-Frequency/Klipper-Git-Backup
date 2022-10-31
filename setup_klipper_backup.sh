@@ -193,19 +193,21 @@ function setup_google_drive {
   done
 
   ## Specifying backup folder
-
+  echo -e "\nSetting up $KLIPPER_INSTANCE_NUMBER folders in the remote location for your backups"
+  FOLDER_COUNT=1
   while [[ $KLIPPER_INSTANCE_NUMBER -ne 0 ]]
   do
     while [[ $DRIVE_REMOTE_FOLDER =~ $REGEX_SPACE || $DRIVE_REMOTE_FOLDER =~ $REGEX_SLASH ]]
     do
-    	read -p "Please specify the folder to backup into (no spaces, or / allowed): " DRIVE_REMOTE_FOLDER
+    	read -p "Please specify the $FOLDER_COUNT. folder to backup into (no spaces, or / allowed): " DRIVE_REMOTE_FOLDER
     done
-    read -p "Please enter the name of the klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
+    read -p "Please enter the name of the $FOLDER_COUNT. klipper_config, or printer_data folder to be backed up (Leave empty for default klipper_config): " CONFIG_FOLDER
     CONFIG_FOLDER=${CONFIG_FOLDER:-klipper_config}
     DRIVE_REMOTE_FOLDER_LIST+=($DRIVE_REMOTE_FOLDER)
     DRIVE_CONFIG_FOLDER_LIST+=("$CONFIG_FOLDER")
     CONFIG_FOLDER=
     KLIPPER_INSTANCE_NUMBER=$(( $KLIPPER_INSTANCE_NUMBER - 1 ))
+    FOLDER_COUNT=$(( $COUNT + 1 ))
   done
 
   ## Configuring rclone
