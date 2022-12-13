@@ -33,7 +33,7 @@ send -- "$remote_name\r"
 
 ### Choosing Google Drive
 expect "Storage> "
-send -- "16\r"
+send -- "18\r"
 expect "client_id> "
 send -- "\r"
 expect "client_secret> "
