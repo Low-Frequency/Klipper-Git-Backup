@@ -1,8 +1,10 @@
 #!/usr/bin/expect -f
 
-## Set slow mode to not outrun the configuration
-set force_conservative 1  ;# set to 1 to force conservative mode even if
-			  ;# script wasn't run conservatively originally
+### Set slow mode to not outrun the configuration
+### set to 1 to force conservative mode even if
+### script wasn't run conservatively originally
+set force_conservative 1
+
 if {$force_conservative} {
 	set send_slow {1 .1}
 	proc send {ignore arg} {
@@ -11,22 +13,22 @@ if {$force_conservative} {
 	}
 }
 
-## Disable timeout
+### Disable timeout
 set timeout -1
 
-## Configuring rclone
+### Configuring rclone
 spawn rclone config
 match_max 100000
 
-## Delete remote
+### Delete remote
 expect "e/n/d/r/c/s/q> "
 send -- "d\r"
 
-## Choosing remote to delete
+### Choosing remote to delete
 expect "remote> "
 send -- "1\r"
 
-## Exiting
+### Exiting
 expect "n/s/q> "
 send -- "q\r"
 expect eof

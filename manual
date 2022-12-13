@@ -16,24 +16,15 @@ Contact:
 ##                                                                 ##
 #####################################################################
 
- 1. setup.sh
- 2. git_repo.sh
-       Command: reconfigure_git
- 3. google_drive.sh
-       Command: reconfigure_drive
- 4. klipper_config_git_backup.sh
+ 1. setup_klipper_backup.sh
+ 2. klipper_config_git_backup.sh
        Command: backup
- 5. restore_config.sh
+ 3. restore_config.sh
        Command: restore
- 6. drive.exp
- 7. delete_remote.exp
- 8. uninstall.sh
+ 4. drive.exp
+ 5. delete_remote.exp
+ 6. uninstall.sh
        Command: uninstall_bak_util
- 9. log_rotation.sh
-10. scheduled_backups.sh
-11. update.sh
-      Command: update_bak_util
-
 
 #####################################################################
 ##                                                                 ##
@@ -43,44 +34,35 @@ Contact:
 
 1. setup.sh
 
-This is the script for the initial setup. It is called directly from GitHub during the install
+This is the script for the initial setup. It is called directly from GitHub during the install.
+You shouldn't have to execute this manually and it might break the backup utility if it is run multiple times.
 
 
-2. git_repo.sh
-
-This script initializes the klipper_config folder as a GitHub repository. It is called from setup.sh, if you choose to backup to a GitHub repository.
-You can also execute this script to set up a GitHub repository after the setup if you want to enable GitHub backups.
-
-
-3. google_drive.sh
-
-This script creates a link to your Google Drive as a backup location. It is called from setup.sh, if you choose to backup to Google Drive.
-You can also execute this script to set up Google Drive as a backup location after the setup if you want to enable Google Drive backups.
-
-
-4. klipper_config_git_backup.sh
+2. klipper_config_git_backup.sh
 
 This is the main script. It is run after every reboot of your Raspberry Pi, imports the config file and pushes a backup to your specified locations.
 You can manually back up your klipper config with the command mentioned in the overview.
 
 
-5. restore_config.sh
+3. restore_config.sh
 
 If something catastrophically fails, you want this script. It guides you through the restore process for your klipper config.
 This script also relies on the config file to know which backup locations are available. To start the restoring process just execute the command mentioned in the overview.
 
 
-6. drive.exp
+4. drive.exp
 
-This script automatically configures rclone for the Google Drive backup and is called from google_drive.sh. You shouldn't have to execute this script manually.
-
-
-7. delete_remote.exp
-
-This script deletes the link to your Google Drive and is called from uninstall.sh. You shouldn't have to execute this script manually.
+This script automatically configures rclone for the Google Drive backup and is called from the setup.
+You shouldn't have to execute this script manually.
 
 
-8. uninstall.sh
+5. delete_remote.exp
+
+This script deletes the link to your Google Drive and is called from uninstall.sh.
+You shouldn't have to execute this script manually.
+
+
+6. uninstall.sh
 
 Pretty self explanatory. This script completely uninstalls the klipper backup utility from your system.
 To do this, execute the command mentioned in the overview.
@@ -91,21 +73,3 @@ To delete the keys, execute this command:
 rm -r ~/.ssh/github_id_rsa*
 
 Don't forget to delete the public key in your GitHub profile too!
-
-
-9. log_rotation.sh
-
-This script sets up the log rotation. You can execute it manually, if you want to set up, or customize log rotation after the setup.
-Setup and customization can also be done directly in the config file.
-
-
-10. scheduled_backups.sh
-
-This script sets up a backup schedule. If you want to customize your existing schedule, or enable/disable it, you can run this script.
-This can also be done directly by editing the config file.
-
-
-11. update.sh
-
-The name says it. This updates the backup utility if you run it. Running the update script is a great way to enable and customize unused features of the backup utility too.
-To run it, execute the command mentioned in the overview.

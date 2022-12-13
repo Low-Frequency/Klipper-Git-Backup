@@ -1,8 +1,10 @@
 #!/usr/bin/expect -f
 
-## Set slow mode to not outrun the configuration
-set force_conservative 1  ;# set to 1 to force conservative mode even if
-			  ;# script wasn't run conservatively originally
+### Set slow mode to not outrun the configuration
+### set to 1 to force conservative mode even if
+### script wasn't run conservatively originally
+set force_conservative 1
+
 if {$force_conservative} {
 	set send_slow {1 .1}
 	proc send {ignore arg} {
@@ -11,54 +13,58 @@ if {$force_conservative} {
 	}
 }
 
-## Get remote location name
+### Get remote location name
 set remote_name [lindex $argv 0]
 
-## Disable timeout
+### Disable timeout
 set timeout -1
 
-## Configuring rclone
+### Configuring rclone
 spawn rclone config
 match_max 100000
 
-## New remote
+### New remote
 expect "n/s/q> "
 send -- "n\r"
 
-## Set remote name
+### Set remote name
 expect "name> "
 send -- "$remote_name\r"
 
-## Choosing Google Drive
+### Choosing Google Drive
 expect "Storage> "
-send -- "16\r"
+send -- "18\r"
 expect "client_id> "
 send -- "\r"
 expect "client_secret> "
 send -- "\r"
 expect "scope> "
 send -- "1\r"
-expect "root_folder_id> "
-send -- "\r"
 expect "service_account_file> "
 send -- "\r"
 expect "y/n> "
 send -- "\r"
 expect "y/n> "
-send -- "N\r"
+send -- "n\r"
+# expect "root_folder_id> "
+# send -- "\r"
+# expect "y/n> "
+# send -- "\r"
+# expect "y/n> "
+# send -- "N\r"
 
-## Verify login and hand control to user
-expect "config_verification_code> "
+### Verify login and hand control to user
+expect "config_token> "
 expect_user -re "(.*)\[\r\n]"
 send -- "$expect_out(1,string)\r"
 
-## Taking control back and finalizing the configuration
+### Taking control back and finalizing the configuration
 expect "y/n> "
 send -- "\r"
 expect "y/e/d> "
 send -- "\r"
 
-## Exiting
+### Exiting
 expect "e/n/d/r/c/s/q> "
 send -- "q\r"
 expect eof
