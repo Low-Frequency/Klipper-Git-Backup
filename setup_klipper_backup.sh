@@ -387,6 +387,9 @@ function enable_backups {
   	esac
   done
 
+  # Drive Support disabled due to changes in rclone
+  GOOGLE_DRIVE_ENABLED=n
+
   while ! check_yes_no $GOOGLE_DRIVE_ENABLED
   do
     read -p "Do you want to enable Google Drive backup? [y|N] " GOOGLE_DRIVE_ENABLED
