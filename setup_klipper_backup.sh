@@ -206,8 +206,9 @@ function setup_google_drive {
     DRIVE_REMOTE_FOLDER_LIST+=($DRIVE_REMOTE_FOLDER)
     DRIVE_CONFIG_FOLDER_LIST+=("$CONFIG_FOLDER")
     CONFIG_FOLDER=
+    DRIVE_REMOTE_FOLDER="another folder"
     KLIPPER_INSTANCE_NUMBER=$(( $KLIPPER_INSTANCE_NUMBER - 1 ))
-    FOLDER_COUNT=$(( $COUNT + 1 ))
+    FOLDER_COUNT=$(( $FOLDER_COUNT + 1 ))
   done
 
   ## Configuring rclone
