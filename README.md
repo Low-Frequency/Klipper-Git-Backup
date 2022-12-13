@@ -39,7 +39,10 @@ If the displayed version is prior to 2.28, update your system first! If `apt-get
 
 ## Update
 
-I removed the update script, since it was a pain to track all the versions and make it compatible to every possible version. The easiest way to update is to just uninstall the backup utility with the `uninstall_bak_util` command and set it up again.
+I removed the update script, since it was a pain to track all the versions and make it compatible to every possible version. To update you simply can pull the latest version from the repo with this command:
+```shell
+git -C "$HOME/scripts/klipper_backup_script" pull
+```
 
 ## Adding an SSH key to your GitHub account
 
