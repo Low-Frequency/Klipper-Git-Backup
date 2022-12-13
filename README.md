@@ -1,6 +1,6 @@
 # Adding a Klipper config backup script
 
-This script sets itself up as a service to backup your klipper config files to a GitHub repository, or Google Drive.
+This script sets itself up as a service to backup your klipper config files to a GitHub repository. For Google Drive support refer to the last section of this file.
 
 In the version prior to this only a default install of klipper was supported. Now you can use this script with systems that were set up with [KIAUH](https://github.com/th33xitus/kiauh) too and it even supports multiple instances of klipper!
 
@@ -103,3 +103,7 @@ rm -r ~/.ssh/github_id_rsa*
 ```
 
 Don't forget to delete the public key in your GitHub profile too!
+
+## Google Drive support
+
+Google drive support has been disabled due to some changes in the setup of rclone. You can still try to use it, but you have to manually set it up and edit the config file with the respective options (the code for Google Drive backups is still there). But be aware that this is untested in the current version and I might deny support (depending on the issue) when things go wrong.
