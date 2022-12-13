@@ -6,7 +6,7 @@ In the version prior to this only a default install of klipper was supported. No
 
 If your're migrating from an old version of the script please just set it up from scratch since pretty much everything has changed.
 
-If you have any questions, bug reports or requests feel free to DM me on Discord: **Low_Frequency#0831**
+If you have any questions, bug reports or requests feel free to create an issue or DM me on Discord: **Low_Frequency#0831**
 
 # How does it work?
 
