@@ -338,7 +338,7 @@ function check_requirements {
     git pull origin main
   fi
 
-  chmod +x "$HOME/scripts/klipper_backup_script/*.sh" && chmod +x "$HOME/scripts/klipper_backup_script/*.exp"
+  chmod +x "$HOME"/scripts/klipper_backup_script/*.sh && chmod +x "$HOME"/scripts/klipper_backup_script/*.exp
 
   if [[ ! -d "$HOME/.config/klipper_backup_script" ]]
   then
@@ -483,4 +483,4 @@ sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh" /u
 sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh" /usr/local/bin/restore
 sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh" /usr/local/bin/uninstall_bak_util
 
-rm "$HOME/setup.sh"
+rm "$HOME/setup_klipper_backup.sh"
