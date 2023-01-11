@@ -35,7 +35,7 @@ wget -qO setup_klipper_backup.sh "https://raw.githubusercontent.com/Low-Frequenc
 
 Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. Check this with `git --version`. Alternatively the install script will check this for you too.
 
-If the displayed version is prior to 2.28, update your system first! If `apt-get update && apt-get upgrade` doesn't let you update to an newer version of `git`, follow this [guide](https://arslanmalik.medium.com/how-to-install-git-on-raspberry-pi-cdd6ee877e74).
+If the displayed version is prior to 2.28, update your system first! If `apt-get update && apt-get upgrade` doesn't let you update to an newer version of `git`, follow this [guide](git-update.md).
 
 ## Update
 
