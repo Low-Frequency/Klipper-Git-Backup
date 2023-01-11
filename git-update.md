@@ -35,3 +35,8 @@ To verify the installation execute `git --version`. If the installation was succ
 ```bash
 git version 2.39.0
 ```
+
+If `git` was installed sucessfully you can remove the source files located in `/usr/src/`:
+```bash
+sudo rm -rf /usr/src/git*
+```

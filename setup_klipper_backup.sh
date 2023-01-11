@@ -373,8 +373,21 @@ function enable_backups {
   			then
         echo "You have to update git"
         echo "To get the newest version, you have to install git from the source"
-        echo "Please follow the guide linked in the install section in the repo and try again"
-        exit 1
+        read -p "Do you want to update git now? [Y|n] " INSTALL_GIT
+        while ! check_yes_no $INSTALL_GIT
+        do
+          case $INSTALL_GIT in
+            n|N)
+              echo "Please follow the guide linked in the install section in the repo and try again"
+              exit 1
+              ;;
+            y|Y)
+              "$HOME/scripts/klipper_backup_script/install-git.sh"
+              ;;
+            *)
+              echo "Please provide a valid answer\n"
+              ;;
+          esac
   			fi
   			echo "GitHub backup enabled"
   			setup_git_repo

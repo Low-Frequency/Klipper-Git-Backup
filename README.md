@@ -33,9 +33,9 @@ To install this script, `SSH` into your Pi and execute the following command:
 wget -qO setup_klipper_backup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup_klipper_backup.sh" && chmod +x setup_klipper_backup.sh && ./setup_klipper_backup.sh
 ```
 
-Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. Check this with `git --version`. Alternatively the install script will check this for you too.
+Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. The install script will check that for you and prompt you to install the latest version of `git` from the source. This is done with a separate [git install script](install-git.sh). You can also use this script to update `git` since it won't be updated by `apt` anymore.
 
-If the displayed version is prior to 2.28, update your system first! If `apt-get update && apt-get upgrade` doesn't let you update to an newer version of `git`, follow this [guide](git-update.md).
+Alternatively you can check this with `git --version` and follow this [guide](git-update.md) to update it manually.
 
 ## Update
 
