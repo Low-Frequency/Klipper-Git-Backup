@@ -1,6 +1,6 @@
 # Installing `git` from source
 
-If `apt` dorsn't let you update `git` to version 2.28 or newer, you have to install a newer version from the source. To do that you first have to uninstall `git`:
+If `apt` doesn't let you update `git` to version 2.28 or newer, you have to install a newer version from the source. To do that you first have to uninstall `git`:
 ```bash
 sudo apt remove git
 ```
