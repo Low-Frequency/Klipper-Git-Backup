@@ -1,77 +1,93 @@
 #!/bin/bash
 
-### Print text to shell
-print_step() {
-  STEP=$1
-  echo ""
-  echo -e "${CYAN}### $STEP ${NONE}"
-  echo ""
+### Function to print text to shell
+print_msg() {
+  TYPE=$1
+  MSG=$2
+  case $TYPE in
+    info)
+      echo -e "${PURPLE} $MSG ${NONE}"
+      ;;
+    success)
+      echo -e "${GREEN} $MSG ${NONE}"
+      ;;
+    error)
+      echo -e "${RED} $MSG ${NONE}"
+      ;;
+    step)
+      echo -e "\n${CYAN}### $MSG ###${NONE}\n"
+      ;;
+  esac
 }
 
-error_msg() {
-  MSG=$1
-  echo -e "${RED} $MSG ${NONE}"
-}
-
-success_msg() {
-  MSG=$1
-  echo -e "${GREEN} $MSG ${NONE}"
+cmd() {
+  
 }
 
 NONE='\033[0m'
 CYAN='\033[0;36m'
+PURPLE='\033[0;35m'
 GREEN='\033[0;32m'
 RED='\033[0;31m'
+REQUIRED_PACKETS=(make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext)
 
 ### Get latest version number from the releases
-LATEST_VERSION=$(curl https://github.com/git/git/tags | grep "/git/git/releases/tag" | grep -oE "v[0-9]\.[0-9]+\.[0-9]+(-rc[0-9])?" | uniq | head -1)
-VERSION=$(echo $LATEST_VERSION | sed -e 's/v//')
+LATEST_VERSION=$(curl -s https://github.com/git/git/tags | grep "/git/git/releases/tag" | grep -oE "v[0-9]\.[0-9]+\.[0-9]+(-rc[0-9])?" | uniq | head -1)
+VERSION_NUMBER=${LATEST_VERSION//v/}
 
 ### Uninstalling git
-if command -v git
+if command -v git > /dev/null
 then
-  print_step "Removing existing installation"
-  sudo apt-get remove git -y
-  sudo apt-get autoremove -y
+  if [[ $(git --version) == "git version $VERSION_NUMBER" ]]
+  then
+    print_msg success "git already up to date"
+    exit 0
+  else
+    print_msg step "Step 1/6: Removing existing installation"
+    sudo apt-get remove git -y
+    sudo apt-get autoremove -y
+  fi
 fi
 
 ### Install dependencies to compile git
-print_step "Installing dependencies"
+print_msg step "Step 2/6: Installing dependencies. ${#REQUIRED_PACKETS[@]} required packets"
 sudo apt-get update
-sudo apt install make libssl-dev libghc-zlib-dev libcurl4-gnutls-dev libexpat1-dev gettext -y
+for i in "${!REQUIRED_PACKETS[@]}"
+do
+  print_msg info "Installing packet $((i + 1))/${#REQUIRED_PACKETS[@]}: ${REQUIRED_PACKETS[$i]}"
+  sudo apt install "${REQUIRED_PACKETS[$i]}" -y
+done
 
 ### Downloading the source code
-print_step "Downloading latest release"
-sudo wget -O /usr/src/git.tar.gz "https://github.com/git/git/archive/refs/tags/$LATEST_VERSION.tar.gz"
+print_msg step "Step 3/6: Downloading latest release"
+sudo wget -qO /usr/src/git.tar.gz "https://github.com/git/git/archive/refs/tags/$LATEST_VERSION.tar.gz"
 sudo tar -xf /usr/src/git.tar.gz -C "/usr/src"
 
 ### Compiling and installing
-print_step "Installing git"
-sudo make -C "/usr/src/git-$VERSION" prefix=/usr/local all
-sudo make -C "/usr/src/git-$VERSION" prefix=/usr/local install
+print_msg step "Step 4/6: Installing git"
+sudo make -C "/usr/src/git-$VERSION_NUMBER" prefix=/usr/local all
+sudo make -C "/usr/src/git-$VERSION_NUMBER" prefix=/usr/local install
 
 ### Verifying the version
-print_step "Verifying installation"
-INSTALLED=$(git --version | grep -oE "[0-9]\.[0-9]+\.[0-9]+(-rc[0-9])?")
+print_msg step "Step 5/6: Verifying installation"
 
-if [[ "$INSTALLED" == "$VERSION" ]]
+if [[ $(git --version) == "git version $VERSION_NUMBER" ]]
 then
-  success_msg "Successfully installed git $LATEST_VERSION"
-  print_step "Removing source folder"
-  sudo sudo rm -rf /usr/src/git*
-  if [[ $? -eq 0 ]]
+  print_msg success "Successfully installed git $LATEST_VERSION"
+  print_msg step "Step 6/6: Removing source folder"
+  if sudo rm -rf /usr/src/git*
   then
-    success_msg "Installation complete"
+    print_msg success "Installation complete"
   else
-    error_msg "Could not remove source folder! Please check /usr/src/ and remove all folders named git*"
+    print_msg error "Could not remove source folder! Please check /usr/src/ and remove all folders named git*"
   fi
 else
-  error_msg "Error while installing git $LATEST_VERSION!"
+  print_msg error "Error while installing git $LATEST_VERSION!"
   if command -v git
   then
-    error_msg "Versions do not match!"
+    print_msg error "Versions do not match!"
   else
-    error_msg "git command not found!"
+    print_msg error "git command not found!"
   fi
   exit 1
 fi
