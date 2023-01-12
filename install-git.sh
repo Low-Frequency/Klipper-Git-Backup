@@ -20,10 +20,6 @@ print_msg() {
   esac
 }
 
-cmd() {
-  
-}
-
 NONE='\033[0m'
 CYAN='\033[0;36m'
 PURPLE='\033[0;35m'
