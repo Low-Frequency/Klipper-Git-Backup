@@ -373,9 +373,10 @@ function enable_backups {
   			then
         echo "You have to update git"
         echo "To get the newest version, you have to install git from the source"
-        read -p "Do you want to update git now? [Y|n] " INSTALL_GIT
         while ! check_yes_no $INSTALL_GIT
         do
+          read -p "Do you want to update git now? [Y|n] " INSTALL_GIT
+          INSTALL_GIT=${INSTALL_GIT:-y}
           case $INSTALL_GIT in
             n|N)
               echo "Please follow the guide linked in the install section in the repo and try again"
@@ -388,6 +389,7 @@ function enable_backups {
               echo "Please provide a valid answer\n"
               ;;
           esac
+        done
   			fi
   			echo "GitHub backup enabled"
   			setup_git_repo
