@@ -1,3 +1,17 @@
+# DISCLAIMER
+
+**This version is under development and does not work in the current state!**
+
+## What can you expect of the new version?
+
+The new version will have a UI similar to KIAUH. Also the generation of the config and the installation process will be reworked completely.
+
+Due to the UI the configuration will take place before the actual install. You can preview the configuration at any point from the main menu.
+
+Also the install script can be used to edit the config file if you want to make some changes to it.
+
+Currently I'm about 50% done with coding. The biggest part will be testing however since the script grew way bigger than expected.
+
 # Adding a Klipper config backup script
 
 This script sets itself up as a service to backup your klipper config files to a GitHub repository. For Google Drive support refer to the last section of this file.
