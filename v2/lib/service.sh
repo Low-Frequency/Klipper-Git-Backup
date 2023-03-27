@@ -1,3 +1,6 @@
+#!/bin/bash
+
+SERVICE_FILE=$(cat <<- EOF
 [Unit]
 Description=Klipper config backup service
 Documentation="https://github.com/Low-Frequency/klipper_backup_script"
@@ -6,8 +9,10 @@ Requires=network-online.target
 
 [Service]
 Type=simple
-User=
-ExecStart=
+User=$(echo $USER)
+ExecStart=$(echo $SCRIPTPATH)/klipper_config_git_backup.sh)
 
 [Install]
 WantedBy=multi-user.target
+EOF
+)

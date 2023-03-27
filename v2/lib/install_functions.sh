@@ -55,29 +55,6 @@ print_msg() {
   esac
 }
 
-check_time() {
-  if [[ -n $TIME_UNIT ]]
-  then
-  	case $TIME_UNIT in
-  		s)
-  			MULTIPLIER=1 ;;
-  		m)
-  			MULTIPLIER=60 ;;
-  		h)
-  			MULTIPLIER=3600 ;;
-  		d)
-  			MULTIPLIER=86400 ;;
-  		*)
-  			echo "[$(date '+%F %T')]: Misconfiguration in backup interval" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Please specify a valid timespan" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Available are s(econds), m(inutes), h(ours) and d(ays)" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Falling back to hourly backup" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			MULTIPLIEER=3600 ;;
-  	esac
-  	PAUSE=$(($TIME * $MULTIPLIER))
-  fi
-}
-
 get_config() {
 	print_msg cyan "### Current configuration ###"
 	if [[ $GIT -eq 1 ]]
@@ -199,7 +176,8 @@ install() {
 	print_msg purple "Checking if requirements are met"
 	if ! command -v git &> /dev/null
   then
-    print_msg red "Git is not installed. Installing..."
+    print_msg red "Git is not installed"
+		print_msg purple "Installing..."
     "${SCRIPTPATH}/install-git.sh"
   else
     if [[ $GIT_VERSION -lt 2280 ]]
@@ -227,12 +205,15 @@ install() {
 	done
 	git config --global user.email "$GITHUB_MAIL"
 	git config --global user.name "$GITHUB_USER"
-	print_msg none "Testing SSH connention"
+	print_msg purple "Testing SSH connention"
   ssh -T git@github.com
-  print_msg purple "Setting up the service"
-  sed -i "s/^User=.*/User=$USER/g" "$HOME/scripts/klipper_backup_script/gitbackup.service"
-  sed -i "s|ExecStart=.*|ExecStart=$HOME\/scripts\/klipper_backup_script\/klipper_config_git_backup.sh|g" "$HOME/scripts/klipper_backup_script/gitbackup.service"
-  sudo cp "$HOME/scripts/klipper_backup_script/gitbackup.service" /etc/systemd/system/gitbackup.service
+	if [[ -f /etc/systemd/system/gitbackup.service ]]
+	then
+		print_msg green "Service already set up"
+	else
+		print_msg purple "Setting up the service"
+		sudo echo "$SERVICE_FILE" >> /etc/systemd/system/gitbackup.service
+	fi
   sudo chown root:root /etc/systemd/system/gitbackup.service
   sudo systemctl enable gitbackup.service
   sudo systemctl start gitbackup.service

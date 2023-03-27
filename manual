@@ -16,14 +16,12 @@ Contact:
 ##                                                                 ##
 #####################################################################
 
- 1. setup_klipper_backup.sh
+ 1. install.sh
  2. klipper_config_git_backup.sh
        Command: backup
  3. restore_config.sh
        Command: restore
- 4. drive.exp
- 5. delete_remote.exp
- 6. uninstall.sh
+ 4. uninstall.sh
        Command: uninstall_bak_util
 
 #####################################################################
@@ -32,42 +30,38 @@ Contact:
 ##                                                                 ##
 #####################################################################
 
-1. setup.sh
+1. install.sh
 
-This is the script for the initial setup. It is called directly from GitHub during the install.
-You shouldn't have to execute this manually and it might break the backup utility if it is run multiple times.
+This is the script for the initial setup. It is called directly from GitHub
+during the install. You shouldn't have to execute this manually and it might
+break the backup utility if it is run multiple times.
 
 
 2. klipper_config_git_backup.sh
 
-This is the main script. It is run after every reboot of your Raspberry Pi, imports the config file and pushes a backup to your specified locations.
-You can manually back up your klipper config with the command mentioned in the overview.
+This is the main script. It is run after every reboot of your Raspberry Pi,
+imports the config file and pushes a backup to your specified locations.
+You can manually back up your klipper config with the command mentioned in
+the overview.
 
 
 3. restore_config.sh
 
-If something catastrophically fails, you want this script. It guides you through the restore process for your klipper config.
-This script also relies on the config file to know which backup locations are available. To start the restoring process just execute the command mentioned in the overview.
+If something catastrophically fails, you want this script. It guides you
+through the restore process for your klipper config.
+This script also relies on the config file to know which backup locations
+are available. To start the restoring process just execute the command
+mentioned in the overview.
 
 
-4. drive.exp
+4. uninstall.sh
 
-This script automatically configures rclone for the Google Drive backup and is called from the setup.
-You shouldn't have to execute this script manually.
-
-
-5. delete_remote.exp
-
-This script deletes the link to your Google Drive and is called from uninstall.sh.
-You shouldn't have to execute this script manually.
-
-
-6. uninstall.sh
-
-Pretty self explanatory. This script completely uninstalls the klipper backup utility from your system.
+Pretty self explanatory. This script completely uninstalls the klipper backup
+utility from your system.
 To do this, execute the command mentioned in the overview.
 
-Be aware, that you still have to manually delete your SSH keys after the backup utility has been uninstalled.
+Be aware, that you still have to manually delete your SSH keys after the backup
+utility has been uninstalled.
 To delete the keys, execute this command:
 
 rm -r ~/.ssh/github_id_rsa*

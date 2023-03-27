@@ -8,17 +8,18 @@ LOG_RETENTION=3
 SCHEDULED_BACKUPS=0
 GIT_VERSION=$(git --version | cut -b 13- | sed -e 's/\.//g')
 
-source "${SCRIPTPATH}/lib/functions.sh"
-source "${SCRIPTPATH}/lib/ui.sh"
+source "${SCRIPTPATH}/lib/install_functions.sh"
+source "${SCRIPTPATH}/ui/ui.sh"
 source "${SCRIPTPATH}/lib/colors.sh"
-source "${SCRIPTPATH}/ui/github.sh"
-source "${SCRIPTPATH}/ui/log_rotation.sh"
-source "${SCRIPTPATH}/ui/main.sh"
-source "${SCRIPTPATH}/ui/schedule.sh"
+source "${SCRIPTPATH}/lib/service.sh"
+source "${SCRIPTPATH}/ui/install/github.sh"
+source "${SCRIPTPATH}/ui/install/log_rotation.sh"
+source "${SCRIPTPATH}/ui/install/main.sh"
+source "${SCRIPTPATH}/ui/install/schedule.sh"
 
-if [[ -f "$HOME/.config/klipper_backup_script/backup.cfg" ]]
+if [[ -f "${HOME}/.config/klipper_backup_script/backup.cfg" ]]
 then
-  source "$HOME/.config/klipper_backup_script/backup.cfg"
+  source "${HOME}/.config/klipper_backup_script/backup.cfg"
 fi
 
 while true
