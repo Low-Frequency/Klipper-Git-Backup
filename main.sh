@@ -9,13 +9,20 @@ SCHEDULED_BACKUPS=0
 GIT_VERSION=$(git --version | cut -b 13- | sed -e 's/\.//g')
 
 source "${SCRIPTPATH}/lib/install_functions.sh"
-source "${SCRIPTPATH}/ui/ui.sh"
+source "${SCRIPTPATH}/lib/general_functions.sh"
+source "${SCRIPTPATH}/lib/backup_functions.sh"
+source "${SCRIPTPATH}/lib/restore_functions.sh"
 source "${SCRIPTPATH}/lib/colors.sh"
 source "${SCRIPTPATH}/lib/service.sh"
+source "${SCRIPTPATH}/lib/uninstall.sh"
+source "${SCRIPTPATH}/lib/git_install.sh"
+source "${SCRIPTPATH}/ui/ui.sh"
 source "${SCRIPTPATH}/ui/install/github.sh"
 source "${SCRIPTPATH}/ui/install/log_rotation.sh"
-source "${SCRIPTPATH}/ui/install/main.sh"
+source "${SCRIPTPATH}/ui/install/main_menu.sh"
 source "${SCRIPTPATH}/ui/install/schedule.sh"
+source "${SCRIPTPATH}/ui/restore/mode.sh"
+source "${SCRIPTPATH}/ui/restore/restore.sh"
 
 if [[ -f "${HOME}/.config/klipper_backup_script/backup.cfg" ]]
 then
@@ -47,6 +54,11 @@ do
     6)
       install ;;
     7)
+      restore_ui
+      restore_actions ;;
+    8)
+      uninstall ;;
+    9)
       main_ui ;;
     *)
       end_script ;;

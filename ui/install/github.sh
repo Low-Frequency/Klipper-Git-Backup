@@ -1,9 +1,21 @@
 #!/bin/bash
 
+GITHUB_UI_CONTENT=(
+  "Username"
+  "Mail"
+  "SSH_Setup"
+  "Repositories"
+  "Config_Folders"
+  "Default_Branch"
+  "Enable_Backups"
+  "Disable_Backups"
+  "Clear_Screen"
+)
+
 github_ui() {
   clear
   ui_header "GitHub Config"
-  ui_body "Username" "Mail" "SSH_Setup" "Repositories" "Config_Folders" "Default_Branch" "Enable_Backups" "Disable_Backups" "Clear_Screen"
+  ui_body "${GITHUB_UI_CONTENT[@]}"
   ui_footer
 }
 
@@ -55,8 +67,8 @@ github_actions() {
           COUNTER=$(( COUNTER + 1 ))
         done ;;
       6)
-        print_msg none "The default branch is set to main"
-        print_msg none "The current branch is ${GITHUB_BRANCH}"
+        print_msg purple "The default branch is set to main"
+        print_msg cyan "The current branch is ${GITHUB_BRANCH}"
         GITHUB_BRANCH=$(get_input "Press enter to use the default, or provide a different value:")
         GITHUB_BRANCH=${GITHUB_BRANCH:-main} ;;
       7)
@@ -66,7 +78,7 @@ github_actions() {
         print_msg red "Backups disabled"
         GIT=0 ;;
       9)
-        configure_github_ui ;;
+        github_ui ;;
       *)
         ;;
     esac

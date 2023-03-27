@@ -11,19 +11,14 @@ check_time() {
   		d)
   			MULTIPLIER=86400 ;;
   		*)
-  			echo "[$(date '+%F %T')]: Misconfiguration in backup interval" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Please specify a valid timespan" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Available are s(econds), m(inutes), h(ours) and d(ays)" | tee -a "$HOME/backup_log/$(date +%F).log"
-  			echo "[$(date '+%F %T')]: Falling back to hourly backup" | tee -a "$HOME/backup_log/$(date +%F).log"
+  			log_msg "[$(date '+%F %T')]: Misconfiguration in backup interval"
+  			log_msg "[$(date '+%F %T')]: Please specify a valid timespan"
+  			log_msg "[$(date '+%F %T')]: Available are s(econds), m(inutes), h(ours) and d(ays)"
+  			log_msg "[$(date '+%F %T')]: Falling back to hourly backup"
   			MULTIPLIEER=3600 ;;
   	esac
   	PAUSE=$(($BACKUP_INTERVAL * $MULTIPLIER))
   fi
-}
-
-log_msg() {
-  MSG="$1"
-  echo "$MSG" | tee -a "$HOME/backup_log/$(date +%F).log"
 }
 
 backup_config() {

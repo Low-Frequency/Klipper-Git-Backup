@@ -10,7 +10,7 @@ Requires=network-online.target
 [Service]
 Type=simple
 User=$(echo $USER)
-ExecStart=$(echo $SCRIPTPATH)/klipper_config_git_backup.sh)
+ExecStart=$(echo $SCRIPTPATH)/backup.sh)
 
 [Install]
 WantedBy=multi-user.target

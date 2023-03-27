@@ -8,9 +8,17 @@ The new version will have a UI similar to KIAUH. Also the generation of the conf
 
 Due to the UI the configuration will take place before the actual install. You can preview the configuration at any point from the main menu.
 
-Also the install script can be used to edit the config file if you want to make some changes to it.
+Here's a preview if you're curious:
 
-Currently I'm about 50% done with coding. The biggest part will be testing however since the script grew way bigger than expected.
+![Preview of the main UI](/docs/images/preview.png)
+
+As a side effect the install script can be used to edit the config file if you want to make some changes to it.
+
+Also there's now only one custom command: `backup`
+
+The main part of coding is done. All that is left is testing if the rework broke any of the existing code (Which I hope it didn't).
+
+Google Drive support has now been completely removed from the source code. If there's enough demand, I'll consider adding it again, but for now I'll keep it as it is.
 
 # Adding a Klipper config backup script
 

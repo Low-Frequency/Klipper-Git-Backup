@@ -1,60 +1,5 @@
 #!/bin/bash
 
-get_input() {
-  TEXT="$1"
-  read -p "$1 " INPUT
-  echo "$INPUT"
-}
-
-check_yn() {
-  ANSWER=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-  case $ANSWER in
-    y|n|yes|no)
-      return 0 ;;
-    *)
-      return 1 ;;
-  esac
-}
-
-check_no() {
-  ANSWER=$(echo "$1" | tr '[:upper:]' '[:lower:]')
-  case $ANSWER in
-    n|no)
-      return 0 ;;
-    *)
-      return 1 ;;
-  esac
-}
-
-check_int() {
-  ANSWER=$1
-  case $ANSWER in
-    [0-9])
-      return 0 ;;
-    *)
-      return 1 ;;
-  esac
-}
-
-print_msg() {
-  COLOR=$1
-  MSG=$2
-  case $COLOR in
-    purple)
-      echo -e "${PURPLE}${MSG}${NC}" ;;
-    green)
-      echo -e "${GREEN}${MSG}${NC}" ;;
-    red)
-      echo -e "${RED}${MSG}${NC}" ;;
-    cyan)
-      echo -e "${CYAN}${MSG}${NC}" ;;
-		yellow)
-			echo -e "${YELLOW}${MSG}${NC}" ;;
-		none)
-			echo -e "${NC}${MSG}${NC}" ;;
-  esac
-}
-
 get_config() {
 	print_msg cyan "### Current configuration ###"
 	if [[ $GIT -eq 1 ]]
@@ -78,7 +23,6 @@ get_config() {
 	else
 		print_msg red "Log rotation is disabled"
 	fi
-	echo -e "\n"
 	if [[ $SCHEDULED_BACKUPS -eq 1 ]]
 	then
 		print_msg green "Scheduled Backups are enabled"
@@ -90,23 +34,28 @@ get_config() {
 	CONTINUE=$(get_input "Press enter to continue")
 }
 
+write_conf() {
+	LINE="$1"
+	echo "$LINE" >> "$HOME/.config/klipper_backup_script/backup.cfg"
+}
+
 save_config() {
 	mkdir -p "$HOME/.config/klipper_backup_script"
 	if [[ -f "$HOME/.config/klipper_backup_script/backup.cfg" ]]
 	then
   	rm "$HOME/.config/klipper_backup_script/backup.cfg"
 	fi
-	echo "GIT=${GIT}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "GITHUB_USER=${GITHUB_USER}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "GITHUB_MAIL=${GITHUB_MAIL}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "GITHUB_BRANCH=${GITHUB_BRANCH}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "REPO_LIST=(${REPO_LIST[@]})" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "CONFIG_FOLDER_LIST=(${CONFIG_FOLDER_LIST[@]})" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "LOG_ROTATION=${LOG_ROTATION}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "LOG_RETENTION=${LOG_RETENTION}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "SCHEDULED_BACKUPS=${SCHEDULED_BACKUPS}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "BACKUP_INTERVAL=${BACKUP_INTERVAL}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
-	echo "TIME_UNIT=${TIME_UNIT}" >> "$HOME/.config/klipper_backup_script/backup.cfg"
+	write_conf "GIT=${GIT}"
+	write_conf "GITHUB_USER=${GITHUB_USER}"
+	write_conf "GITHUB_MAIL=${GITHUB_MAIL}"
+	write_conf "GITHUB_BRANCH=${GITHUB_BRANCH}"
+	write_conf "REPO_LIST=($(echo ${REPO_LIST[@]}))"
+	write_conf "CONFIG_FOLDER_LIST=($(echo ${CONFIG_FOLDER_LIST[@]}))"
+	write_conf "LOG_ROTATION=${LOG_ROTATION}"
+	write_conf "LOG_RETENTION=${LOG_RETENTION}"
+	write_conf "SCHEDULED_BACKUPS=${SCHEDULED_BACKUPS}"
+	write_conf "BACKUP_INTERVAL=${BACKUP_INTERVAL}"
+	write_conf "TIME_UNIT=${TIME_UNIT}"
 }
 
 setup_ssh() {
@@ -120,10 +69,10 @@ setup_ssh() {
       KEY_ALREADY_ADDED=${KEY_ALREADY_ADDED:-n}
   		case $KEY_ALREDAY_ADDED in
   			n|N)
-  				print_msg none "Please add this key to your GitHub account:"
+  				print_msg none "Please add this public key to your GitHub account:"
   				cat "$HOME/.ssh/github_id_rsa.pub"
-  				print_msg purple "You can find instructions for this here:"
-  			  print_msg none "https://github.com/Low-Frequency/klipper_backup_script"
+  				print_msg none "You can find instructions for this here:"
+  			  print_msg none "https://github.com/Low-Frequency/klipper_backup_script/blob/main/docs/git-update.md"
   				CONTINUE=$(get_input "Press enter to continue") ;;
   			y|Y)
   				print_msg green "Continuing setup" ;;
@@ -132,7 +81,7 @@ setup_ssh() {
   		esac
   	done
 	else
-  	print_msg none "Generating SSH key pair"
+  	print_msg purple "Generating new SSH key pair"
 		if [ -z ${GITHUB_MAIL+x} ]
 		then
 			print_msg red "Please configure your mail address first"
@@ -143,7 +92,7 @@ setup_ssh() {
 			print_msg none "Please copy the public key and add it to your GitHub account:"
   		cat "$HOME/.ssh/github_id_rsa.pub"
   		print_msg purple "You can find instructions for this here:"
-  		print_msg none "https://github.com/Low-Frequency/klipper_backup_script"
+  		print_msg none "https://github.com/Low-Frequency/klipper_backup_script/blob/main/docs/git-update.md"
   		CONTINUE=$(get_input "Press enter to continue")
 		fi
   fi
@@ -217,9 +166,7 @@ install() {
   sudo chown root:root /etc/systemd/system/gitbackup.service
   sudo systemctl enable gitbackup.service
   sudo systemctl start gitbackup.service
-	print_msg purple "Setting up custom commands"
-	sudo ln -s "$HOME/scripts/klipper_backup_script/klipper_config_git_backup.sh" /usr/local/bin/backup
-	sudo ln -s "$HOME/scripts/klipper_backup_script/restore_config.sh" /usr/local/bin/restore
-	sudo ln -s "$HOME/scripts/klipper_backup_script/uninstall.sh" /usr/local/bin/uninstall_bak_util
+	print_msg purple "Setting up custom command"
+	sudo ln -s "${SCRIPTPATH}/main.sh" /usr/local/bin/backup
 	print_msg green "Installation complete"
 }

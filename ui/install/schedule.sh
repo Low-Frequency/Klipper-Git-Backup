@@ -1,16 +1,29 @@
 #!/bin/bash
 
+BACKUP_SCHEDULE_UI_CONTENT=(
+  "Set_Schedule"
+  "Enable_Scheduled_Backups"
+  "Disable_Scheduled_Backups"
+  "Clear_Screen"
+)
+
+SCHEDULE_UI_CONTENT=(
+  "Days"
+  "Hours"
+  "Minutes"
+)
+
 backup_schedule_ui() {
   clear
   ui_header "Backup Schedule"
-  ui_body "Set_Schedule" "Enable_Scheduled_Backups" "Disable_Scheduled_Backups" "Clear_Screen"
+  ui_body "${BACKUP_SCHEDULE_UI_CONTENT[@]}"
   ui_footer
 }
 
 schedule_ui() {
   clear
   ui_header "Schedule Setup"
-  ui_body "Days" "Hours" "Minutes"
+  ui_body "${SCHEDULE_UI_CONTENT[@]}"
   ui_footer
 }
 
@@ -51,20 +64,15 @@ schedule_actions() {
         break ;;
       1)
         TIME_UNIT="d"
-        BACKUP_INTERVAL=$(get_input "Backup every x days")
-        clear
-        break ;;
+        BACKUP_INTERVAL=$(get_input "Backup every x days") ;;
       2)
         TIME_UNIT="h"
-        BACKUP_INTERVAL=$(get_input "Backup every x hours")
-        clear
-        break ;;
+        BACKUP_INTERVAL=$(get_input "Backup every x hours") ;;
       3)
         TIME_UNIT="m"
-        BACKUP_INTERVAL=$(get_input "Backup every x minutes")
-        clear
-        break ;;
+        BACKUP_INTERVAL=$(get_input "Backup every x minutes") ;;
       *)
         ;;
+    esac
   done
 }
