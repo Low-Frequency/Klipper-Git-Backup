@@ -11,6 +11,7 @@ restore_ui() {
     fi
   done
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "Klipper Config Restore"
   ui_title "The following instaces can be restored"
   ui_divider normal

@@ -7,6 +7,7 @@ MODE_UI_CONTENT=(
 
 mode_ui() {
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "Klipper Config Restore"
   ui_body "${MODE_UI_CONTENT[@]}"
   ui_footer

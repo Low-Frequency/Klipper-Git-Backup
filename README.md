@@ -16,9 +16,9 @@ As a side effect the install script can be used to edit the config file if you w
 
 Also there's now only one custom command: `backup`
 
-The main part of coding is done. All that is left is testing if the rework broke any of the existing code (Which I hope it didn't).
-
 Google Drive support has now been completely removed from the source code. If there's enough demand, I'll consider adding it again, but for now I'll keep it as it is.
+
+While testing I decided to redo some aspects of the UI since I didn't like how some of the configuration works, so it will take some time for the new version to be released.
 
 # Adding a Klipper config backup script
 

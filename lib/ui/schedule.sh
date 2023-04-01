@@ -22,6 +22,7 @@ backup_schedule_ui() {
 
 schedule_ui() {
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "Schedule Setup"
   ui_body "${SCHEDULE_UI_CONTENT[@]}"
   ui_footer

@@ -9,6 +9,7 @@ LOG_ROTATION_UI_CONTENT=(
 
 log_rotation_ui() {
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "Log Rotation Setup"
   ui_body "${LOG_ROTATION_UI_CONTENT[@]}"
   ui_footer

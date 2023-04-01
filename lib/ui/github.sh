@@ -14,6 +14,7 @@ GITHUB_UI_CONTENT=(
 
 github_ui() {
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "GitHub Config"
   ui_body "${GITHUB_UI_CONTENT[@]}"
   ui_footer

@@ -91,3 +91,19 @@ ui_footer() {
   echo -e "${RED}${CANCEL}${NC} |"
   ui_divider normal
 }
+
+ui_script_title() {
+  TITLE="$1"
+  SUBTITLE="$2"
+  LINE_LENGTH="${#SUBTITLE}"
+  for (( i=0; i<$LINE_LENGTH; i++ ))
+  do
+    LINE=$(echo "~${LINE}")
+  done
+  ui_divider strong
+  ui_title "${LINE}"
+  ui_title "${TITLE}"
+  ui_title "${SUBTITLE}"
+  uit_title "${LINE}"
+  ui_divider strong
+}

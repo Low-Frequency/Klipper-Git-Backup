@@ -14,6 +14,7 @@ MAIN_UI_CONTENT=(
 
 main_ui() {
   clear
+  ui_script_title "KGB" "Klipper Git Backup"
   ui_header "Klipper Backup Utility"
   ui_body "${MAIN_UI_CONTENT[@]}"
   ui_footer
