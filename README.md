@@ -4,7 +4,7 @@
 
 ## What can you expect of the new version?
 
-The new version will have a UI similar to KIAUH. Also the generation of the config and the installation process will be reworked completely.
+The new version will have a UI heavily influenced by KIAUH. Also the generation of the config and the installation process will be reworked completely.
 
 Due to the UI the configuration will take place before the actual install. You can preview the configuration at any point from the main menu.
 
@@ -14,11 +14,11 @@ Here's a preview if you're curious:
 
 As a side effect the install script can be used to edit the config file if you want to make some changes to it.
 
-Also there's now only one custom command: `backup`
+Also there will only be one custom command: `kgb`
 
 Google Drive support has now been completely removed from the source code. If there's enough demand, I'll consider adding it again, but for now I'll keep it as it is.
 
-While testing I decided to redo some aspects of the UI since I didn't like how some of the configuration works, so it will take some time for the new version to be released.
+The UI is almost completely redone from the previous version and almost fully tested. In the next step I'll verify that I didn't miss some settings and test all functions of the UI again. After that the main part of the script get's a mekeover.
 
 # Adding a Klipper config backup script
 
