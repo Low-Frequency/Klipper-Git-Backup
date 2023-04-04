@@ -69,8 +69,9 @@ main_ui() {
   echo -e "${WHITE}| 1) Configure            | ${STATUS_COLOR_GIT}GitHub${WHITE}                 |${NC}"
   echo -e "${WHITE}| 2) Install              | ${STATUS_COLOR_LOG}Log Rotation${WHITE}           |${NC}"
   echo -e "${WHITE}| 3) Update               | ${STATUS_COLOR_SCHEDULE}Scheduled Backups${WHITE}      |${NC}"
-  echo -e "${WHITE}| 4) Restore              |                        |${NC}"
-  echo -e "${WHITE}| 5) Uninstall            | ${BACKUP_COUNT}|${NC}"
+  echo -e "${WHITE}| 4) Backup               |                        |${NC}"
+  echo -e "${WHITE}| 5) Restore              |                        |${NC}"
+  echo -e "${WHITE}| 6) Uninstall            | ${BACKUP_COUNT}|${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_info
   menu_footer
