@@ -96,24 +96,23 @@ main_menu() {
         break
         ;;
       2)
-        clear
         install_dialog
         break
         ;;
       3)
-        clear
         update_dialog
         quit_installer
         ;;
       4)
+        backup_dialog
+        ;;
+      5)
         clear
         restore_menu
         break
         ;;
-      5)
-        clear
+      6)
         uninstall_dialog
-        break
         ;;
       *)
         deny_action

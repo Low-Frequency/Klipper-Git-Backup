@@ -5,13 +5,13 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit; pwd -P )"
 UNSAVED_CHANGES=0
 
 ### Load all functions
-for script in "${SCRIPTPATH}/lib/"*.sh
+for SCRIPT in "${SCRIPTPATH}/lib/functions/"*.sh
 do
-  source "${script}"
+  source "${SCRIPT}"
 done
-for script in "${SCRIPTPATH}/lib/ui/"*.sh
+for SCRIPT in "${SCRIPTPATH}/lib/ui/"*.sh
 do
-  source "${script}"
+  source "${SCRIPT}"
 done
 
 ### Load config
@@ -20,8 +20,8 @@ if [[ -f "${HOME}/.config/kgb.cfg" ]]
 then
   source "${HOME}/.config/kgb.cfg"
 else
-  GITHUB_BRANCH="main"
   GIT=1
+  GITHUB_BRANCH="main"
   LOG_ROTATION=1
   LOG_RETENTION=3
   SCHEDULED_BACKUPS=0

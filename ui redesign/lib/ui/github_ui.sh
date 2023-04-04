@@ -9,9 +9,9 @@ github_ui() {
   ### Backup status
   if [[ $GIT -ne 1 ]]
   then
-    STATUS_BACKUP="[${RED}\u2717${WHITE}]"      ### Unicode cross mark
+    STATUS_BACKUP="[${RED}\u2717${WHITE}] Disabled"      ### Unicode cross mark
   else
-    STATUS_BACKUP="[${GREEN}\u2713${WHITE}]"    ### Unicode check mark
+    STATUS_BACKUP="[${GREEN}\u2713${WHITE}] Enabled "    ### Unicode check mark
   fi
 
   ### Repo status
@@ -61,7 +61,7 @@ github_ui() {
   echo -e "${WHITE}| 3) Default Branch       | ${BRANCH_STATUS} |${NC}"
   echo -e "${WHITE}| 4) Repositories         | ${STATUS_REPO}                    |${NC}"
   echo -e "${WHITE}| 5) Config Folders       | ${STATUS_CONFIG}                    |${NC}"
-  echo -e "${WHITE}| 6) Toggle Backup        | ${STATUS_BACKUP}                    |${NC}"
+  echo -e "${WHITE}| 6) Toggle Backup        | ${STATUS_BACKUP}           |${NC}"
   echo -e "${WHITE}| 7) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_footer

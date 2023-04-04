@@ -9,9 +9,9 @@ backup_schedule_ui() {
   ### Log Rotation status
   if [[ ${SCHEDULED_BACKUPS} -eq 0 ]]
   then
-    STATUS_SCHEDULED_BACKUPS="[${RED}\u2717${WHITE}]"        ### Unicode cross mark
+    STATUS_SCHEDULED_BACKUPS="[${RED}\u2717${WHITE}] Disabled"        ### Unicode cross mark
   else
-    STATUS_SCHEDULED_BACKUPS="[${GREEN}\u2713${WHITE}]"      ### Unicode check mark
+    STATUS_SCHEDULED_BACKUPS="[${GREEN}\u2713${WHITE}] Enabled "      ### Unicode check mark
   fi
 
   ### Setting menu entry depending on schedule
@@ -63,7 +63,7 @@ backup_schedule_ui() {
   echo -e "${WHITE}|    ${BOLD}Actions${WHITE}              | ${BOLD}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
   echo -e "${WHITE}| 1) Set Schedule         | ${SCHEDULE_STATUS}         |${NC}"
-  echo -e "${WHITE}| 2) Toggle Schedule      | ${STATUS_SCHEDULED_BACKUPS}                    |${NC}"
+  echo -e "${WHITE}| 2) Toggle Schedule      | ${STATUS_SCHEDULED_BACKUPS}           |${NC}"
   echo -e "${WHITE}| 3) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_footer

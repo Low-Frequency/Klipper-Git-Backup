@@ -9,9 +9,9 @@ log_rotation_ui() {
   ### Log Rotation status
   if [[ ${LOG_ROTATION} -eq 0 ]]
   then
-    STATUS_LOG_ROTATION="[${RED}\u2717${WHITE}]"        ### Unicode cross mark
+    STATUS_LOG_ROTATION="[${RED}\u2717${WHITE}] Disabled"        ### Unicode cross mark
   else
-    STATUS_LOG_ROTATION="[${GREEN}\u2713${WHITE}]"      ### Unicode check mark
+    STATUS_LOG_ROTATION="[${GREEN}\u2713${WHITE}] Enabled "      ### Unicode check mark
   fi
 
   ### Setting menu entry depending on length of number
@@ -32,7 +32,7 @@ log_rotation_ui() {
   echo -e "${WHITE}|    ${BOLD}Actions${WHITE}              | ${BOLD}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
   echo -e "${WHITE}| 1) Set Retention Time   | Retention: ${RETENTION_STATUS}|${NC}"
-  echo -e "${WHITE}| 2) Toggle Log Rotation  | ${STATUS_LOG_ROTATION}                    |${NC}"
+  echo -e "${WHITE}| 2) Toggle Log Rotation  | ${STATUS_LOG_ROTATION}           |${NC}"
   echo -e "${WHITE}| 3) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_footer
