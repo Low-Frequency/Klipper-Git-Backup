@@ -15,7 +15,7 @@ quit_installer() {
         warning_msg "Your changes will be lost!"
         while true
         do
-          read -p "$(echo "${CYAN}Continue? ${NC}")" LOOSE_CHANGES
+          read -p "$(echo -e "${CYAN}Continue? ${NC}")" LOOSE_CHANGES
           case $LOOSE_CHANGES in
             y|Y)
               warning_msg "Discarding changes"
@@ -72,7 +72,7 @@ error_msg() {
 
 info_msg() {
   MSG="$1"
-  echo -e "   ${WHITE}[${PURPLE}\u26A0${WHITE}] ${MSG}${NC}"
+  echo -e "   ${WHITE}[${PURPLE}\u24D8${WHITE}] ${MSG}${NC}"
 }
 
 log_msg() {

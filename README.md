@@ -22,31 +22,27 @@ The UI is almost completely redone from the previous version and almost fully te
 
 # Adding a Klipper config backup script
 
-This script sets itself up as a service to backup your klipper config files to a GitHub repository. For Google Drive support refer to the last section of this file.
+This script sets itself up as a service to backup your klipper config files to a GitHub repository.
 
 In the version prior to this only a default install of klipper was supported. Now you can use this script with systems that were set up with [KIAUH](https://github.com/th33xitus/kiauh) too and it even supports multiple instances of klipper!
 
-If your're migrating from an old version of the script please just set it up from scratch since pretty much everything has changed.
+If your're migrating from an old version of the script please use the uninstall script and set it up from scratch again. Repositories that were already set up will be reused. You still have to configure them in the UI though, so the script recognizes them.
 
-If you have any questions, bug reports or requests feel free to create an issue or DM me on Discord: **Low_Frequency#0831**
+If you have any questions, bug reports or requests feel free to open an issue.
 
 # How does it work?
 
-This script runs when your Pi starts, or if configured even on a set timeschedule. It waits for network connection and then pushes a backup to your specified locations. Every action is logged. This way you always know what fails, or has failed in the past.
+This script runs when your Pi starts, or if configured on a set timeschedule. It waits for network connection and then pushes a backup to your specified locations. Every action is logged. This way you always know what fails, or has failed in the past.
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
-If you want to know what each script does, you can look inside of the manual located inside of the scripts folder.
-
-This script even sets up custom commands for you to use which makes it super easy to backup and restore your configs via the CLI.
+This script sets up a custom command for you as a convenience feature to launch the UI.
 
 # Setup
 
 ## Preparations
 
-Create a GitHub account if you want to store your backup there. If not, just use Google Drive.
-
-If you plan to store the backup on GitHub, go ahead and create a new repo.
+Create a GitHub account and create a new repo.
 
 ## Install
 
@@ -55,27 +51,13 @@ To install this script, `SSH` into your Pi and execute the following command:
 wget -qO setup_klipper_backup.sh "https://raw.githubusercontent.com/Low-Frequency/klipper_backup_script/main/setup_klipper_backup.sh" && chmod +x setup_klipper_backup.sh && ./setup_klipper_backup.sh
 ```
 
-Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. The install script will check that for you and prompt you to install the latest version of `git` from the source. This is done with a separate [git install script](install-git.sh). You can also use this script to update `git` since it won't be updated by `apt` anymore.
+Be aware that this script only works correctly if the installed version of `git` is 2.28 or newer. The install script will check that for you and install the latest version of `git` from the source if the requirement isn't met.
 
 Alternatively you can check this with `git --version` and follow this [guide](git-update.md) to update it manually.
-
-## Update
-
-I removed the update script, since it was a pain to track all the versions and make it compatible to every possible version. To update you simply can pull the latest version from the repo with this command:
-```shell
-git -C "$HOME/scripts/klipper_backup_script" pull
-```
 
 ## Adding an SSH key to your GitHub account
 
 The setup script tells you to copy a private key and add it to your GitHub account. To do this just navigate to your *profile* -> *settings* -> *SSH and GPG keys*, add a new key and paste the copied key.
-
-## Making manual backups
-
-To manually create a backup just execute the following command that is created during install:
-```shell
-backup
-```
 
 ## Editing the config file
 

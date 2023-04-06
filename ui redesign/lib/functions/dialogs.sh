@@ -56,7 +56,11 @@ backup_dialog() {
 
 update_dialog() {
   info_msg "Updating..."
-  git -C "${SCRIPTPATH}" pull
+  if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"
+  then
+    info_msg "KGB has to be restarted"
+    quit_installer
+  fi
 }
 
 install_dialog() {
