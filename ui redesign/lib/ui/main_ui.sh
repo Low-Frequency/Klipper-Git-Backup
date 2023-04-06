@@ -102,7 +102,6 @@ main_menu() {
         ;;
       3)
         update_dialog
-        quit_installer
         ;;
       4)
         backup_dialog

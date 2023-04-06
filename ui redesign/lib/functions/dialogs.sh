@@ -56,6 +56,7 @@ backup_dialog() {
 
 update_dialog() {
   info_msg "Updating..."
+  git reset --hard
   if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"
   then
     info_msg "KGB has to be restarted"
