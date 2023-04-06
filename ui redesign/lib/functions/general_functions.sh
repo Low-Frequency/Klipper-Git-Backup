@@ -1,42 +1,45 @@
 #!/bin/bash
 
 quit_installer() {
-  while true
-  do
-    warning_msg "You have config changes pending!"
-    read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
-    case $SAVE_CHANGES in
-      y|Y)
-        save_config
-        UNSAVED_CHANGES=0
-        break
-        ;;
-      n|N)
-        warning_msg "Your changes will be lost!"
-        while true
-        do
-          read -p "$(echo -e "${CYAN}Continue? ${NC}")" LOOSE_CHANGES
-          case $LOOSE_CHANGES in
-            y|Y)
-              warning_msg "Discarding changes"
-              break
-              ;;
-            n|N)
-              success_msg "Resuming"
-              return 0
-              ;;
-            *)
-              deny_action
-              ;;
-          esac
-        done
-        break
-        ;;
-      *)
-        deny_action
-        ;;
-    esac
-  done
+  if [[ $UNSAVED_CHANGES -ne 0 ]]
+  then
+    while true
+    do
+      warning_msg "You have config changes pending!"
+      read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
+      case $SAVE_CHANGES in
+        y|Y)
+          save_config
+          UNSAVED_CHANGES=0
+          break
+          ;;
+        n|N)
+          warning_msg "Your changes will be lost!"
+          while true
+          do
+            read -p "$(echo -e "${CYAN}Continue? ${NC}")" LOOSE_CHANGES
+            case $LOOSE_CHANGES in
+              y|Y)
+                warning_msg "Discarding changes"
+                break
+                ;;
+              n|N)
+                success_msg "Resuming"
+                return 0
+                ;;
+              *)
+                deny_action
+                ;;
+            esac
+          done
+          break
+          ;;
+        *)
+          deny_action
+          ;;
+      esac
+    done
+  fi
   success_msg "Exiting"
   exit 0
 }
