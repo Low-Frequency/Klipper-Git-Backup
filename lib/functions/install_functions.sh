@@ -25,7 +25,7 @@ save_config() {
   UNSAVED_CHANGES=0
 }
 
-get_config() {
+show_config() {
   info_msg "### Current configuration ###"
   if [[ $GIT -eq 1 ]]
   then
@@ -102,7 +102,7 @@ setup_ssh() {
       info_msg "Please copy the public key and add it to your GitHub account:"
       cat "$HOME/.ssh/github_id_rsa.pub"
       info_msg "You can find instructions for this here:"
-      info_msg "https://github.com/Low-Frequency/klipper_backup_script/blob/main/docs/git-update.md"
+      info_msg "https://github.com/Low-Frequency/klipper_backup_script"
       read -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
     fi
   fi
@@ -111,7 +111,7 @@ setup_ssh() {
 
 install() {
   success_msg "Installing"
-  chmod +x "$HOME"/scripts/klipper_backup_script/*.sh
+  chmod +x "${SCRIPTPATH}/"*.sh
   info_msg "Checking if requirements are met"
   if ! command -v git &> /dev/null
   then

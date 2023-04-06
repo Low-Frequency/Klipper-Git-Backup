@@ -76,7 +76,7 @@ install_dialog() {
   if [[ $UNSAVED_CHANGES -ne 0 ]]
   then
     warning_msg "You have config changes pending!"
-    get_config
+    show_config
     while true
     do
       read -p "$(echo -e "${CYAN}Install with current config? ${NC}")" INSTALL
@@ -108,7 +108,7 @@ install_dialog() {
           ;;
         *)
           deny_action
-          ;
+          ;;
       esac
     done
   fi

@@ -94,60 +94,15 @@ github_menu() {
       3)
         read -p "$(echo -e "${PURPLE}Please enter the default branch you want to use: ${NC}")" GITHUB_BRANCH
         success_msg "Default branch set to ${GITHUB_BRANCH}"
+        GITHUB_BRANCH=${GITHUB_BRANCH:-main}
         UNSAVED_CHANGES=1
         ;;
       4)
-        if [[ ${#REPO_LIST[@]} -ne 0 ]]
-        then
-          REPO_COUNT="${#REPO_LIST[@]}"
-        elif [[ ${#CONFIG_FOLDER_LIST[@]} -ne 0 ]]
-        then
-          REPO_COUNT="${#CONFIG_FOLDER_LIST[@]}"
-        fi
-        if [[ $REPO_COUNT -eq 0 ]]
-        then
-          read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
-        fi
-        success_msg "Instance count has been set to ${REPO_COUNT}"
-        for (( i=1; i<=$REPO_COUNT; i++ ))
-        do
-          read -p "$(echo -e "${PURPLE}Enter the name of repo #${i}: ${NC}")" REPO
-          REPO_LIST+=("${REPO}")
-          success_msg "${REPO} has been added to the list"
-          REPO=""
-        done
+        config_repo
         UNSAVED_CHANGES=1
         ;;
       5)
-        if [[ ${#REPO_LIST[@]} -ne 0 ]]
-        then
-          CONFIG_COUNT="${#REPO_LIST[@]}"
-        elif [[ ${#CONFIG_FOLDER_LIST[@]} -ne 0 ]]
-        then
-          CONFIG_COUNT="${#CONFIG_FOLDER_LIST[@]}"
-        fi
-        if [[ $CONFIG_COUNT -eq 0 ]]
-        then
-          read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
-        fi
-        success_msg "Instance count has been set to ${REPO_COUNT}"
-        for (( i=1; i<=$CONFIG_COUNT; i++ ))
-        do
-          read -p "$(echo -e "${PURPLE}Enter the path of config folder #${i}: ${NC}")" CONFIG
-          if ! echo "$CONFIG" | grep -q "^${HOME}"
-          then
-            if echo "$CONFIG" | grep -q "^~"
-            then
-              CONFIG=${CONFIG/\~/$HOME}
-            else
-              warning_msg "Relative path detected. Assuming relative to ${HOME}"
-              CONFIG="${HOME}/${CONFIG}"
-            fi
-          fi
-          CONFIG_FOLDER_LIST+=("${CONFIG}")
-          success_msg "${CONFIG} has been added to the list"
-          CONFIG=""
-        done
+        config_folders
         UNSAVED_CHANGES=1
         ;;
       6)

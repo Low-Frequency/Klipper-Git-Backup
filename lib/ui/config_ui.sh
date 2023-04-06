@@ -65,8 +65,9 @@ config_ui() {
   echo -e "${WHITE}| 2) Log Rotation         | ${STATUS_COLOR_LOG}Log Rotation${WHITE}           |${NC}"
   echo -e "${WHITE}| 3) Scheduled Backups    | ${STATUS_COLOR_SCHEDULE}Scheduled Backups${WHITE}      |${NC}"
   echo -e "${WHITE}| 4) Save Config          | ${STATUS_UNSAVED_CHANGES}                    |${NC}"
-  echo -e "${WHITE}| 5) Advanced             |                        |${NC}"
-  echo -e "${WHITE}| 6) Refresh Menu         |                        |${NC}"
+  echo -e "${WHITE}| 5) Show Config          |                        |${NC}"
+  echo -e "${WHITE}| 6) Advanced             |                        |${NC}"
+  echo -e "${WHITE}| 7) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_info
   menu_footer
@@ -107,12 +108,14 @@ config_menu() {
         break
         ;;
       5)
-        # clear
-        # advanced_menu
-        # break
-        echo -e "${PURPLE}Sorry, not implemented yet${NC}"
+        show_config
         ;;
       6)
+        clear
+        advanced_menu
+        break
+        ;;
+      7)
         break
         ;;
       *)

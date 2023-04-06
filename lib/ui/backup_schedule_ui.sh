@@ -69,7 +69,7 @@ backup_schedule_ui() {
   menu_footer
 }
 
-timetable() {
+show_timetable() {
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   echo -e "${WHITE}|               ${BOLD}Availabe time units${WHITE}                |${NC}"
   echo -e "${WHITE}| h: hours                                         |${NC}"
@@ -93,44 +93,8 @@ backup_schedule_menu() {
         return
         ;;
       1)
-        timetable
-        while true
-        do
-          read -p "$(echo -e "${CYAN}What time unit should the schedule comply to? ${NC}")" TIME_UNIT
-          case $TIME_UNIT in
-            h)
-              success_msg "Set time unit to hours"
-              UNITS="hours"
-              break
-              ;;
-            d)
-              success_msg "Set time unit to days"
-              UNITS="days"
-              break
-              ;;
-            m)
-              success_msg "Set time unit to months"
-              UNITS="months"
-              break
-              ;;
-            *)
-              deny_action
-              ;;
-          esac
-        done
-        while true
-        do
-          read -p "$(echo -e "${CYAN}How many ${UNITS} between the backups? ${NC}")" BACKUP_INTERVAL
-          case $BACKUP_INTERVAL in
-            [0-9]*)
-              success_msg "Backing up every ${BACKUP_INTERVAL} ${UNITS}"
-              break
-              ;;
-            *)
-              deny_action
-              ;;
-          esac
-        done
+        show_timetable
+        set_schedule
         UNSAVED_CHANGES=1
         ;;
       2)

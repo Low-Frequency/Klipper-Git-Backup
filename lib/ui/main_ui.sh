@@ -98,7 +98,6 @@ main_menu() {
         ;;
       2)
         install_dialog
-        break
         ;;
       3)
         update_dialog
