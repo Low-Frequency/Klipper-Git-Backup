@@ -31,6 +31,9 @@ git_https_url() {
 init_schedule() {
   if [[ -z ${TIME_UNIT+x} ]]
   then
+    log_msg "Something went wrong during schedule initialization"
+    exit 1
+  else
   	case $TIME_UNIT in
   		h)
   			MULTIPLIER=3600
@@ -50,9 +53,6 @@ init_schedule() {
         ;;
   	esac
   	PAUSE=$(( BACKUP_INTERVAL * MULTIPLIER ))
-  else
-    log_msg "Something went wrong during schedule initialization"
-    exit 1
   fi
 }
 

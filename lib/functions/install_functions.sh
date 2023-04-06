@@ -161,14 +161,12 @@ install() {
     success_msg "Service was already set up"
   else
     info_msg "Setting up the service"
-    sudo echo "$SERVICE_FILE" >> /etc/systemd/system/kgb.service
+    sudo echo "$SERVICE_FILE" >> "${SCRIPTPATH}/kgb.service"
+    mv "${SCRIPTPATH}/kgb.service" /etc/systemd/system/kgb.service
+    sudo chown root:root /etc/systemd/system/kgb.service
+    sudo systemctl enable kgb.service
+    sudo systemctl start kgb.service
   fi
-  sudo chown root:root /etc/systemd/system/kgb.service
-  sudo systemctl enable kgb.service
-  sudo systemctl start kgb.service
-  info_msg "Setting up custom command"
-  sudo ln -s "${SCRIPTPATH}/kgb.sh" /usr/local/bin/kgb
   success_msg "Installation complete"
-  info_msg "You can now start the script with this command: kgb"
   read -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
 }
