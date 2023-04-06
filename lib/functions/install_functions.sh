@@ -71,7 +71,7 @@ setup_ssh() {
     do
       read -p "$(echo -e "${CYAN}Did you already add this key to your GitHub account? ${NC}")" KEY_ALREADY_ADDED
       KEY_ALREADY_ADDED=${KEY_ALREADY_ADDED:-n}
-      case $KEY_ALREDAY_ADDED in
+      case $KEY_ALREADY_ADDED in
         n|N)
           info_msg "Please add this public key to your GitHub account:"
           cat "$HOME/.ssh/github_id_rsa.pub"

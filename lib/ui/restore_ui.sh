@@ -29,7 +29,6 @@ restore_ui() {
     MENU_ENTRY=$(( MENU_ENTRY + 1 ))
   done
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
-  menu_info
   menu_footer
 }
 
