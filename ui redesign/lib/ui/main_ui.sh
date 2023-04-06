@@ -89,7 +89,7 @@ main_menu() {
         quit_installer
         ;;
       b|B)
-        return
+        quit_installer
         ;;
       1)
         clear

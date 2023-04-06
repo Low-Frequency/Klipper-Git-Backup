@@ -1,44 +1,52 @@
 #!/bin/bash
 
 backup_dialog() {
-  if [[ $UNSAVED_CHANGES -eq 1 ]]
+  if [[ $UNSAVED_CHANGES -ne 0 ]]
   then
-    warning_msg "You have config changes pending!"
-    read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
-    case $SAVE_CHANGES in
-      y|Y)
-        save_config
-        ;;
-      n|N)
-        error_msg "Not saving"
-        ;;
-      *)
-        deny_action
-        break
-        ;;
-    esac
+    while true
+    do
+      warning_msg "You have config changes pending!"
+      read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
+      case $SAVE_CHANGES in
+        y|Y)
+          save_config
+          break
+          ;;
+        n|N)
+          error_msg "Not saving"
+          break
+          ;;
+        *)
+          deny_action
+          ;;
+      esac
+    done
   fi
   if [[ $SCHEDULED_BACKUPS -eq 1 ]]
   then
     warning_msg "You have scheduled backups enabled!"
     info_msg "This action will turn off scheduled backups temporarily"
     info_msg "This causes all your pending changes to be saved"
-    read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
-    case $SAVE_CHANGES in
-      y|Y)
-        SCHEDULED_BACKUPS=0
-        REVERT_SCHEDULE=1
-        save_config
-        ;;
-      n|N)
-        error_msg "Aborting"
-        break
-        ;;
-      *)
-        deny_action
-        break
-        ;;
-    esac
+    while true
+    do
+      read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
+      case $SAVE_CHANGES in
+        y|Y)
+          SCHEDULED_BACKUPS=0
+          REVERT_SCHEDULE=1
+          save_config
+          break
+          ;;
+        n|N)
+          info_msg "This would lead to an infinite loop"
+          error_msg "Aborting"
+          return 1
+          ;;
+        *)
+          deny_action
+          ;;
+      esac
+    done
   fi
   if "${SCRIPTPATH}/backup.sh"
   then

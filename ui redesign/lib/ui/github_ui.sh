@@ -106,7 +106,7 @@ github_menu() {
         fi
         if [[ $REPO_COUNT -eq 0 ]]
         then
-          read -p "$(echo -e "${PURPLE}How may instances should be backed up? ${NC}")" REPO_COUNT
+          read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
         fi
         success_msg "Instance count has been set to ${REPO_COUNT}"
         for (( i=1; i<=$REPO_COUNT; i++ ))
@@ -128,7 +128,7 @@ github_menu() {
         fi
         if [[ $CONFIG_COUNT -eq 0 ]]
         then
-          read -p "$(echo -e "${PURPLE}How may instances should be backed up? ${NC}")" REPO_COUNT
+          read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
         fi
         success_msg "Instance count has been set to ${REPO_COUNT}"
         for (( i=1; i<=$CONFIG_COUNT; i++ ))
