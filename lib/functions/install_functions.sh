@@ -155,13 +155,7 @@ install() {
   git config --global user.email "$GITHUB_MAIL"
   git config --global user.name "$GITHUB_USER"
   info_msg "Testing SSH connention"
-  if ssh -T git@github.com
-  then
-    success_msg "SSH connection works"
-  else
-    error_msg "Something went wrong while connecting to GitHub"
-    return 1
-  fi
+  ssh -T git@github.com
   if [[ -f /etc/systemd/system/kgb.service ]]
   then
     success_msg "Service was already set up"
