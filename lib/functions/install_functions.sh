@@ -11,7 +11,13 @@ save_config() {
   then
     rm "$HOME/.config/kgb.cfg"
   fi
+  if [[ -z ${NAMESPACE+x} ]]
+  then
+    NAMESPACE="$GITHUB_USER"
+  fi
   write_line_to_config "GIT=${GIT}"
+  write_line_to_config "GIT_BASE_URL=${GIT_BASE_URL}"
+  write_line_to_config "NAMESPACE=${NAMESPACE}"
   write_line_to_config "GITHUB_USER=${GITHUB_USER}"
   write_line_to_config "GITHUB_MAIL=${GITHUB_MAIL}"
   write_line_to_config "GITHUB_BRANCH=${GITHUB_BRANCH}"
@@ -33,11 +39,12 @@ show_config() {
     info_msg "GITHUB_USER: ${GITHUB_USER}"
     info_msg "GITHUB_MAIL: ${GITHUB_MAIL}"
     info_msg "GITHUB_BRANCH: ${GITHUB_BRANCH}"
-    for (( i=0; i<${REPO_COUNT}; i++ ))
+    info_msg "GIT_BASE_URL: ${GIT_BASE_URL}"
+    info_msg "NAMESPACE: ${NAMESPACE}"
+    for (( i=0; i<${#REPO_LIST[@]}; i++ ))
     do
-      echo ""
-      info_msg "Repository ${i}: ${REPO_LIST[$i]}"
-      info_msg "Config folder ${i}: ${CONFIG_FOLDER_LIST[$i]}"
+      info_msg "Repository #$(( i + 1 )): ${REPO_LIST[$i]}"
+      info_msg "Config folder #$(( i + 1 )): ${CONFIG_FOLDER_LIST[$i]}"
     done
   else
     error_msg "Backups are disabled"
@@ -137,6 +144,8 @@ install() {
     fi
   fi
   mkdir -p "$HOME/kgb-log"
+  git config --global user.email "$GITHUB_MAIL"
+  git config --global user.name "$GITHUB_USER"
   for i in ${!REPO_LIST[@]}
   do
     if [[ -d "${CONFIG_FOLDER_LIST[$i]}/.git" ]]
@@ -145,15 +154,12 @@ install() {
       warning_msg "Skipping"
     else
       info_msg "Initializing ${CONFIG_FOLDER_LIST[$i]}"
-      HTTPS=$(git_https_url "${REPO_LIST[$i]}")
-      SSH=$(git_ssh_url "${REPO_LIST[$i]}")
       git -C "${CONFIG_FOLDER_LIST[$i]}" init --initial-branch=$GITHUB_BRANCH
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "${HTTPS}"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote set-url origin "${SSH}"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "https://${GIT_BASE_URL}/${NAMESPACE}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote set-url origin "git@${GIT_BASE_URL}:${NAMESPACE}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" push --set-upstream origin "$GITHUB_BRANCH"
     fi
   done
-  git config --global user.email "$GITHUB_MAIL"
-  git config --global user.name "$GITHUB_USER"
   info_msg "Testing SSH connention"
   ssh -T git@github.com
   if [[ -f /etc/systemd/system/kgb.service ]]

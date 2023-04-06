@@ -27,6 +27,7 @@ else
   SCHEDULED_BACKUPS=0
   TIME_UNIT=d
   BACKUP_INTERVAL=7
+  GIT_BASE_URL=github.com
 fi
 
 main_menu

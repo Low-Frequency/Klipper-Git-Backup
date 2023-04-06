@@ -14,11 +14,11 @@ Here's a preview if you're curious:
 
 As a side effect the install script can be used to edit the config file if you want to make some changes to it.
 
-Also there will only be one custom command: `kgb`
-
 Google Drive support has now been completely removed from the source code. If there's enough demand, I'll consider adding it again, but for now I'll keep it as it is.
 
-The UI is almost completely redone from the previous version and almost fully tested. In the next step I'll verify that I didn't miss some settings and test all functions of the UI again. After that the main part of the script get's a mekeover.
+I removed the custom command since it didn't play along nicely with the new structure of the script. I might however try to add another script that handles all functions without the UI to provide an additional commandline tool, but that's a project for the future.
+
+The UI is completely redone and fully tested. I still have to test a few functions, but all the basic functionalities work. I also added an advanced config section for those who host their own git, or want to use GitLab instead of GitHub.
 
 # Adding a Klipper config backup script
 

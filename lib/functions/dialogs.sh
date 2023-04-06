@@ -68,6 +68,7 @@ update_dialog() {
   if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"
   then
     info_msg "KGB has to be restarted"
+    chmod +x "${SCRIPTPATH}"/*.sh
     quit_installer
   fi
 }

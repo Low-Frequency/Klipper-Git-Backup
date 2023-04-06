@@ -23,3 +23,11 @@ menu_info() {
   echo -e "${WHITE}|     ${GREEN}Green             ${WHITE}Configured and enabled     |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 }
+
+advanced_info() {
+  echo -e "${WHITE}|                       ${BOLD}INFO${WHITE}                       |${NC}"
+  echo -e "${WHITE}| The URLs to the repos are generated like this:   |${NC}"
+  echo -e "${WHITE}| https://base_url/namespace/repo.git              |${NC}"
+  echo -e "${WHITE}| git@base_url:namespace/repo.git                  |${NC}"
+  echo -e "${WHITE}+--------------------------------------------------+${NC}"
+}

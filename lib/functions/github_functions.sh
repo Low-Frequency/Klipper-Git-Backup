@@ -1,33 +1,5 @@
 #!/bin/bash
 
-git_ssh_url() {
-  local REPO_NAME
-  REPO_NAME="$1"
-  if [[ -z ${GITHUB_USER+x} ]]
-  then
-    error_msg "GitHub username is undefined!"
-    info_msg "Please configure username first"
-    return 1
-  else
-    echo "git@github.com:${GITHUB_USER}/${REPO_NAME}.git"
-    return 0
-  fi
-}
-
-git_https_url() {
-  local REPO_NAME
-  REPO_NAME="$1"
-  if [[ -z ${GITHUB_USER+x} ]]
-  then
-    error_msg "GitHub username is undefined!"
-    info_msg "Please configure username first"
-    return 1
-  else
-    echo "https://github.com/${GITHUB_USER}/${REPO_NAME}"
-    return 0
-  fi
-}
-
 init_schedule() {
   if [[ -z ${TIME_UNIT+x} ]]
   then
