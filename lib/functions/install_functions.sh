@@ -11,27 +11,22 @@ save_config() {
   then
     rm "$HOME/.config/kgb.cfg"
   fi
-  if [[ -z ${NAMESPACE+x} ]]
-  then
-    NAMESPACE="$GITHUB_USER"
-  fi
-  write_line_to_config "GIT=${GIT}"
-  write_line_to_config "GIT_BASE_URL=${GIT_BASE_URL}"
-  write_line_to_config "NAMESPACE=${NAMESPACE}"
-  write_line_to_config "GITHUB_USER=${GITHUB_USER}"
-  write_line_to_config "GITHUB_MAIL=${GITHUB_MAIL}"
-  write_line_to_config "GITHUB_BRANCH=${GITHUB_BRANCH}"
+  write_line_to_config "GIT=\"${GIT}\""
+  write_line_to_config "GITHUB_USER=\"${GITHUB_USER}\""
+  write_line_to_config "GITHUB_MAIL=\"${GITHUB_MAIL}\""
+  write_line_to_config "GITHUB_BRANCH=\"${GITHUB_BRANCH}\""
   write_line_to_config "REPO_LIST=($(echo ${REPO_LIST[@]}))"
   write_line_to_config "CONFIG_FOLDER_LIST=($(echo ${CONFIG_FOLDER_LIST[@]}))"
-  write_line_to_config "LOG_ROTATION=${LOG_ROTATION}"
-  write_line_to_config "LOG_RETENTION=${LOG_RETENTION}"
-  write_line_to_config "SCHEDULED_BACKUPS=${SCHEDULED_BACKUPS}"
-  write_line_to_config "BACKUP_INTERVAL=${BACKUP_INTERVAL}"
-  write_line_to_config "TIME_UNIT=${TIME_UNIT}"
+  write_line_to_config "LOG_ROTATION=\"${LOG_ROTATION}\""
+  write_line_to_config "LOG_RETENTION=\"${LOG_RETENTION}\""
+  write_line_to_config "SCHEDULED_BACKUPS=\"${SCHEDULED_BACKUPS}\""
+  write_line_to_config "BACKUP_INTERVAL=\"${BACKUP_INTERVAL}\""
+  write_line_to_config "TIME_UNIT=\"${TIME_UNIT}\""
   UNSAVED_CHANGES=0
 }
 
 show_config() {
+  echo ""
   info_msg "### Current configuration ###"
   if [[ $GIT -eq 1 ]]
   then
@@ -39,8 +34,6 @@ show_config() {
     info_msg "GITHUB_USER: ${GITHUB_USER}"
     info_msg "GITHUB_MAIL: ${GITHUB_MAIL}"
     info_msg "GITHUB_BRANCH: ${GITHUB_BRANCH}"
-    info_msg "GIT_BASE_URL: ${GIT_BASE_URL}"
-    info_msg "NAMESPACE: ${NAMESPACE}"
     for (( i=0; i<${#REPO_LIST[@]}; i++ ))
     do
       info_msg "Repository #$(( i + 1 )): ${REPO_LIST[$i]}"
@@ -65,7 +58,6 @@ show_config() {
     error_msg "Scheduled backups are disabled"
   fi
   echo ""
-  read -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
 }
 
 setup_ssh() {
@@ -155,9 +147,9 @@ install() {
     else
       info_msg "Initializing ${CONFIG_FOLDER_LIST[$i]}"
       git -C "${CONFIG_FOLDER_LIST[$i]}" init --initial-branch=$GITHUB_BRANCH
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "https://${GIT_BASE_URL}/${NAMESPACE}/${REPO_LIST[$i]}.git"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote set-url origin "git@${GIT_BASE_URL}:${NAMESPACE}/${REPO_LIST[$i]}.git"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" push --set-upstream origin "$GITHUB_BRANCH"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "https://${GIT_BASE_URL}/${GITHUB_USER}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote set-url origin "git@${GIT_BASE_URL}:${GITHUB_USER}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" push --set-upstream origin $GITHUB_BRANCH
     fi
   done
   info_msg "Testing SSH connention"

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+### Non functional. Was just for testing, but I might implement it fully in the future
+
 advanced_ui() {
   GIT_BASE_URL_STATUS="${GIT_BASE_URL}"
   for (( i=${#GIT_BASE_URL}; i<29; i++ ))
@@ -21,7 +23,7 @@ advanced_ui() {
   menu_header
   echo -e "${WHITE}|                     Advanced                     |${NC}"
   echo -e "${WHITE}+==================================================+${NC}"
-  echo -e "${WHITE}|    ${BOLD}Actions${WHITE}              | ${BOLD}Status${WHITE}                 |${NC}"
+  echo -e "${WHITE}|    ${BOLD}Actions${WHITE}       | ${BOLD}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                  |                               |${NC}"
   echo -e "${WHITE}| 1) Git Base URL  | ${GIT_BASE_URL_STATUS} |${NC}"
   echo -e "${WHITE}| 2) Git Namespace | ${NAMESPACE_STATUS} |${NC}"

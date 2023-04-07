@@ -18,7 +18,7 @@ Google Drive support has now been completely removed from the source code. If th
 
 I removed the custom command since it didn't play along nicely with the new structure of the script. I might however try to add another script that handles all functions without the UI to provide an additional commandline tool, but that's a project for the future.
 
-The UI is completely redone and fully tested. I still have to test a few functions, but all the basic functionalities work. I also added an advanced config section for those who host their own git, or want to use GitLab instead of GitHub.
+The UI is completely redone and fully tested. I still have to test a few functions, but all the basic functionalities work.
 
 # Adding a Klipper config backup script
 
