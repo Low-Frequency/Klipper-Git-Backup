@@ -23,14 +23,14 @@ Create a GitHub account and create a new repo.
 
   Download KGB:
   ```bash
-  cd ~ && git clone https://github.com/Low-Frequency/klipper_backup_script.git
+  cd ~ && git clone https://github.com/Low-Frequency/Klipper-Git-Backup.git
   ```
 
 * **Step 3:**
 
   Start KGB:
   ```bash
-  chmod +x ~/klipper_backup_script/*.sh && ./klipper_backup_script/kgb.sh
+  chmod +x ~/Klipper-Git-Backup/*.sh && ./Klipper-Git-Backup/kgb.sh
   ```
 
 * **Step 4:**
