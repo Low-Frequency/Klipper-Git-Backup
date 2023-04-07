@@ -146,10 +146,12 @@ install() {
       warning_msg "Skipping"
     else
       info_msg "Initializing ${CONFIG_FOLDER_LIST[$i]}"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" init --initial-branch=$GITHUB_BRANCH
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "https://${GIT_BASE_URL}/${GITHUB_USER}/${REPO_LIST[$i]}.git"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote set-url origin "git@${GIT_BASE_URL}:${GITHUB_USER}/${REPO_LIST[$i]}.git"
-      git -C "${CONFIG_FOLDER_LIST[$i]}" push --set-upstream origin $GITHUB_BRANCH
+      git -C "${CONFIG_FOLDER_LIST[$i]}" init
+      git -C "${CONFIG_FOLDER_LIST[$i]}" add .
+      git -C "${CONFIG_FOLDER_LIST[$i]}" commit -m "initial commit"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" branch -M $GITHUB_BRANCH
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "git@github.com:${GITHUB_USER}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" push -u origin $GITHUB_BRANCH
     fi
   done
   info_msg "Testing SSH connention"
@@ -159,8 +161,8 @@ install() {
     success_msg "Service was already set up"
   else
     info_msg "Setting up the service"
-    sudo echo "$SERVICE_FILE" >> "${SCRIPTPATH}/kgb.service"
-    mv "${SCRIPTPATH}/kgb.service" /etc/systemd/system/kgb.service
+    echo "$SERVICE_FILE" >> "${SCRIPTPATH}/kgb.service"
+    sudo mv "${SCRIPTPATH}/kgb.service" /etc/systemd/system/kgb.service
     sudo chown root:root /etc/systemd/system/kgb.service
     sudo systemctl enable kgb.service
     sudo systemctl start kgb.service

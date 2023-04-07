@@ -134,8 +134,6 @@ uninstall_dialog() {
       info_msg "Removing backup service"
       sudo systemctl disable kgb.service
       sudo rm /etc/systemd/system/kgb.service
-      info_msg "Removing custom command"
-      sudo rm /usr/local/bin/kgb
       info_msg "Deleting config"
       rm -r "$HOME/.config/kgb.cfg"
       info_msg "Deleting scripts"
@@ -145,6 +143,5 @@ uninstall_dialog() {
     *)
       deny_action
       ;;
-    esac
-  fi
+  esac
 }

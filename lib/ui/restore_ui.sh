@@ -44,15 +44,15 @@ restore_menu() {
         quit_installer
         ;;
       b|B)
-        break
+        return
         ;;
       [0-9]*)
         if [[ $ACTION -le 0 ]]
         then
           deny_action
-        elif [[ $ACTION -le ${#CONFIG_FOLDER_LIST} ]]
+        elif [[ $ACTION -le ${#CONFIG_FOLDER_LIST[@]} ]]
         then
-          restore_config "${ACTION}"
+          restore_config "$ACTION"
           break
         else
           deny_action

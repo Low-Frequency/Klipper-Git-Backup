@@ -54,7 +54,18 @@ config_repo() {
   fi
   if [[ $REPO_COUNT -eq 0 ]]
   then
-    read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
+    while true
+    do
+      read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
+      case $REPO_COUNT in
+        [0-9]*)
+          break
+          ;;
+        *)
+          deny_action
+          ;;
+      esac
+    done
   fi
   success_msg "Instance count has been set to ${REPO_COUNT}"
   for (( i=1; i<=$REPO_COUNT; i++ ))
@@ -76,7 +87,18 @@ config_folders() {
   fi
   if [[ $CONFIG_COUNT -eq 0 ]]
   then
-    read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
+    while true
+    do
+      read -p "$(echo -e "${PURPLE}How many instances should be backed up? ${NC}")" REPO_COUNT
+      case $REPO_COUNT in
+        [0-9]*)
+          break
+          ;;
+        *)
+          deny_action
+          ;;
+      esac
+    done
   fi
   success_msg "Instance count has been set to ${REPO_COUNT}"
   for (( i=1; i<=$CONFIG_COUNT; i++ ))
