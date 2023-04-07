@@ -52,7 +52,7 @@ restore_menu() {
           deny_action
         elif [[ $ACTION -le ${#CONFIG_FOLDER_LIST[@]} ]]
         then
-          restore_config "$ACTION"
+          restore_config "$(( ACTION - 1 ))"
           break
         else
           deny_action
