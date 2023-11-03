@@ -215,13 +215,32 @@ install() {
   else
     info_msg "Setting up the schedule"
   fi
-    init_schedule
-    echo "$SERVICE_TIMER" >> "${SCRIPTPATH}/kgb.timer"
-    sudo mv "${SCRIPTPATH}/kgb.timer" /etc/systemd/system/kgb.timer
-    sudo chown root:root /etc/systemd/system/kgb.timer
-    info_msg "Enabling the schedule"
-    sudo systemctl enable kgb.timer
-    sudo systemctl start kgb.timer
+  init_schedule
+  info_msg "################################"
+  info_msg "DEBUG INFO"
+  info_msg "################################"
+  info_msg "Time Unit"
+  echo "$TIME_UNIT"
+  info_msg "Schedule"
+  echo "$INTERVAL"
+  info_msg "Persist"
+  echo "$PERSISTENT"
+  info_msg "################################"
+  info_msg "DEBUG INFO END"
+  info_msg "################################"
+  echo "$SERVICE_TIMER" >> "${SCRIPTPATH}/kgb.timer"
+  sudo mv "${SCRIPTPATH}/kgb.timer" /etc/systemd/system/kgb.timer
+  sudo chown root:root /etc/systemd/system/kgb.timer
+  info_msg "Enabling the schedule"
+  sudo systemctl enable kgb.timer
+  sudo systemctl start kgb.timer
+  info_msg "################################"
+  info_msg "DEBUG INFO"
+  info_msg "################################"
+  sudo cat /etc/systemd/system/kgb.timer
+  info_msg "################################"
+  info_msg "DEBUG INFO END"
+  info_msg "################################"
   success_msg "Installation complete"
   read -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
 }
