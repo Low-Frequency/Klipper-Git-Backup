@@ -4,7 +4,7 @@
 
 * Removed endless loop for scheduled backups
 * Added systemd timer for scheduled backups
-* Fixed `backup` fuction not recognizing errors
+* Fixed `backup` function not recognizing errors
 
 ## 1.0.1
 
