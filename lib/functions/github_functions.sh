@@ -55,7 +55,7 @@ backup_config_folders() {
     log_msg "Committing to GitHub repository"
     git -C "${FOLDER}" commit -m "backup $(date +%F)" | tee -a "${HOME}/kgb-log/$(date +%F).log"
     log_msg "Pushing to GitHub repository"
-    git -C "${FOLDER}" push -u origin "${BRANCH}" | tee -a "${HOME}/kgb-log/$(date +%F).log"
+    git -C "${FOLDER}" push -u origin "${GITHUB_BRANCH}" | tee -a "${HOME}/kgb-log/$(date +%F).log"
   done
 }
 
