@@ -229,8 +229,9 @@ install() {
   info_msg "DEBUG INFO END"
   info_msg "################################"
   echo "$SERVICE_TIMER" >> "${SCRIPTPATH}/kgb.timer"
-  sed -i "s/replace_interval/${INTERVAL}/g" "${SCRIPTPATH}/kgb.timer"
-  sed -i "s/replace_persist/${PERSISTENT}/g" "${SCRIPTPATH}/kgb.timer"
+  sleep 1
+  sed -i "s|replace_interval|${INTERVAL}|g" "${SCRIPTPATH}/kgb.timer"
+  sed -i "s|replace_persist|${PERSISTENT}|g" "${SCRIPTPATH}/kgb.timer"
   sudo mv "${SCRIPTPATH}/kgb.timer" /etc/systemd/system/kgb.timer
   sudo chown root:root /etc/systemd/system/kgb.timer
   info_msg "Enabling the schedule"
