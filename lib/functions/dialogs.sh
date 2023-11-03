@@ -6,6 +6,7 @@ backup_dialog() {
     while true
     do
       warning_msg "You have config changes pending!"
+      warning_msg "Not saving will cause the pending changes to be lost!"
       read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
       case $SAVE_CHANGES in
         y|Y)
@@ -22,43 +23,11 @@ backup_dialog() {
       esac
     done
   fi
-  if [[ $SCHEDULED_BACKUPS -eq 1 ]]
-  then
-    warning_msg "You have scheduled backups enabled!"
-    info_msg "This action will turn off scheduled backups temporarily"
-    info_msg "This causes all your pending changes to be saved"
-    while true
-    do
-      read -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
-      case $SAVE_CHANGES in
-        y|Y)
-          SCHEDULED_BACKUPS=0
-          REVERT_SCHEDULE=1
-          save_config
-          break
-          ;;
-        n|N)
-          info_msg "This would lead to an infinite loop"
-          error_msg "Aborting"
-          return 1
-          ;;
-        *)
-          deny_action
-          ;;
-      esac
-    done
-  fi
   if "${SCRIPTPATH}/backup.sh"
   then
     success_msg "Backup succeeded"
   else
     error_msg "Backup failed! Please check the log"
-  fi
-  if [[ $REVERT_SCHEDULE -eq 1 ]]
-  then
-    SCHEDULED_BACKUPS=1
-    REVERT_SCHEDULE=0
-    save_config
   fi
 }
 
@@ -90,7 +59,7 @@ install_dialog() {
         n|N)
           while true
           do
-            read -p "$(echo -e "${CYAN}Ignore config changes? ${NC}")" IGNORE
+            read -p "$(echo -e "${CYAN}Ignore config changes and cancel install? ${NC}")" IGNORE
             case $IGNORE in
               y|Y)
                 success_msg "Ignoring config changes"
@@ -134,6 +103,9 @@ uninstall_dialog() {
       info_msg "Removing backup service"
       sudo systemctl disable kgb.service
       sudo rm /etc/systemd/system/kgb.service
+      info_msg "Removing backup schedule"
+      sudo systemctl disable kgb.timer
+      sudo rm /etc/systemd/system/kgb.timer
       info_msg "Deleting config"
       rm -r "$HOME/.config/kgb.cfg"
       info_msg "Deleting scripts"

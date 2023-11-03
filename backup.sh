@@ -13,7 +13,9 @@ else
   exit 1
 fi
 
-init_schedule
-backup
-
-exit 0
+if backup
+then
+  exit 0
+else
+  exit 1
+fi

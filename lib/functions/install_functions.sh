@@ -108,6 +108,43 @@ setup_ssh() {
   return 0
 }
 
+init_schedule() {
+  if [[ -z ${TIME_UNIT+x} ]]
+  then
+    log_msg "Something went wrong during schedule initialization"
+    exit 1
+  else
+  	if [[ $SCHEDULED_BACKUPS -eq 1 ]]
+		then
+			case $TIME_UNIT in
+				h)
+					INTERVAL="OnCalendar=*-*-* 01/${BACKUP_INTERVAL}:00:00"
+					PERSISTENT="true"
+			    ;;
+				d)
+					INTERVAL="OnCalendar=*-*-01/${BACKUP_INTERVAL} 00:00:00"
+					PERSISTENT="true"
+			    ;;
+			  m)
+					INTERVAL="OnCalendar=*-01/${BACKUP_INTERVAL}-* 00:00:00"
+					PERSISTENT="true"
+			    ;;
+				*)
+					log_msg "Misconfiguration in backup interval"
+					log_msg "Please specify a valid timespan"
+					log_msg "Available are h(ours), d(ays) and m(onths)"
+					log_msg "Falling back to daily backup"
+					INTERVAL="OnCalendar=*-*-*/${BACKUP_INTERVAL} 00:00:00"
+					PERSISTENT="true"
+			    ;;
+			esac
+		else
+			INTERVAL="OnBootSec=3min"
+			PERSISTENT="false"
+		fi
+  fi
+}
+
 install() {
   success_msg "Installing"
   chmod +x "${SCRIPTPATH}/"*.sh
@@ -116,7 +153,7 @@ install() {
   then
     error_msg "Git is not installed"
     info_msg "Installing..."
-    "${SCRIPTPATH}/install-git.sh"
+    install_git
   else
     GIT_VERSION=$(git --version | cut -b 13- | sed -e 's/\.//g')
     if [[ $GIT_VERSION -lt 2280 ]]
@@ -138,6 +175,7 @@ install() {
   mkdir -p "$HOME/kgb-log"
   git config --global user.email "$GITHUB_MAIL"
   git config --global user.name "$GITHUB_USER"
+  git config --global init.defaultBranch "$GITHUB_BRANCH"
   for i in ${!REPO_LIST[@]}
   do
     if [[ -d "${CONFIG_FOLDER_LIST[$i]}/.git" ]]
@@ -164,9 +202,32 @@ install() {
     echo "$SERVICE_FILE" >> "${SCRIPTPATH}/kgb.service"
     sudo mv "${SCRIPTPATH}/kgb.service" /etc/systemd/system/kgb.service
     sudo chown root:root /etc/systemd/system/kgb.service
+    sudo chmod 644 /etc/systemd/system/kgb.service
     sudo systemctl enable kgb.service
-    sudo systemctl start kgb.service
+    # sudo systemctl start kgb.service
   fi
+  if [[ -f /etc/systemd/system/kgb.timer ]]
+  then
+    info_msg "Schedule was already set up"
+    info_msg "Disabling the schedule temporarily"
+    sudo systemctl stop kgb.timer
+    sudo systemctl disable kgb.timer
+    info_msg "Updating the schedule"
+  else
+    info_msg "Setting up the schedule"
+  fi
+  init_schedule
+  echo "$SERVICE_TIMER" >> "${SCRIPTPATH}/kgb.timer"
+  sleep 1
+  sed -i "s|replace_interval|${INTERVAL}|g" "${SCRIPTPATH}/kgb.timer"
+  sed -i "s|replace_persist|${PERSISTENT}|g" "${SCRIPTPATH}/kgb.timer"
+  sudo mv "${SCRIPTPATH}/kgb.timer" /etc/systemd/system/kgb.timer
+  sudo chown root:root /etc/systemd/system/kgb.timer
+  sudo chmod 644 /etc/systemd/system/kgb.timer
+  info_msg "Enabling the schedule"
+  sudo systemctl daemon-reload
+  sudo systemctl enable kgb.timer
+  sudo systemctl start kgb.timer
   success_msg "Installation complete"
   read -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
 }
