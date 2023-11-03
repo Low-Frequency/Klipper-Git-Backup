@@ -53,6 +53,10 @@ It even has log rotation implemented, so it doesn't eat up the precious space fo
 
 The setup script tells you to copy a private key and add it to your GitHub account. To do this just navigate to your *profile* -> *settings* -> *SSH and GPG keys*, add a new key and paste the copied key.
 
+## Checking the status of the utility
+
+The utility runs as systemd timer. To view the current status you can execute `systemctl list-timers kgb`. This tells you when the next execution of the script is scheduled and when the last successful execution was.
+
 # Credits
 
 Big thanks to [KIAUH](https://github.com/th33xitus/kiauh) for the inspiration for the UI. 
