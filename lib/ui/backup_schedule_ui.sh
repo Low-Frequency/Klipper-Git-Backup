@@ -20,6 +20,9 @@ backup_schedule_ui() {
       if [[ $BACKUP_INTERVAL -eq 1 ]]
       then
         SCHEDULE_STATUS="${BACKUP_INTERVAL} hour        "
+      elif [[ $BACKUP_INTERVAL -lt 10 ]]
+      then
+        SCHEDULE_STATUS="${BACKUP_INTERVAL} hours       "
       else
         SCHEDULE_STATUS="${BACKUP_INTERVAL} hours      "
       fi
@@ -32,6 +35,9 @@ backup_schedule_ui() {
       if [[ $BACKUP_INTERVAL -eq 1 ]]
       then
         SCHEDULE_STATUS="${BACKUP_INTERVAL} day         "
+      elif [[ $BACKUP_INTERVAL -lt 10 ]]
+      then
+        SCHEDULE_STATUS="${BACKUP_INTERVAL} days        "
       else
         SCHEDULE_STATUS="${BACKUP_INTERVAL} days       "
       fi
@@ -44,6 +50,9 @@ backup_schedule_ui() {
       if [[ $BACKUP_INTERVAL -eq 1 ]]
       then
         SCHEDULE_STATUS="${BACKUP_INTERVAL} month       "
+      elif [[ $BACKUP_INTERVAL -lt 10 ]]
+      then
+        SCHEDULE_STATUS="${BACKUP_INTERVAL} months      "
       else
         SCHEDULE_STATUS="${BACKUP_INTERVAL} months     "
       fi

@@ -119,15 +119,15 @@ init_schedule() {
 			case $TIME_UNIT in
 				h)
 					INTERVAL="OnCalendar=*-*-* */${BACKUP_INTERVAL}:00:00"
-					PERSISTENT="Persistent=true"
+					PERSISTENT="true"
 			    ;;
 				d)
 					INTERVAL="OnCalendar=*-*-*/${BACKUP_INTERVAL} 00:00:00"
-					PERSISTENT="Persistent=true"
+					PERSISTENT="true"
 			    ;;
 			  m)
 					INTERVAL="OnCalendar=*-*/${BACKUP_INTERVAL}-* 00:00:00"
-					PERSISTENT="Persistent=true"
+					PERSISTENT="true"
 			    ;;
 				*)
 					log_msg "Misconfiguration in backup interval"
@@ -135,12 +135,12 @@ init_schedule() {
 					log_msg "Available are h(ours), d(ays) and m(onths)"
 					log_msg "Falling back to daily backup"
 					INTERVAL="OnCalendar=*-*-*/${BACKUP_INTERVAL} 00:00:00"
-					PERSISTENT="Persistent=true"
+					PERSISTENT="true"
 			    ;;
 			esac
 		else
 			INTERVAL="OnBootSec=3min"
-			PERSISTENT="Persistent=false"
+			PERSISTENT="false"
 		fi
   fi
 }
@@ -175,6 +175,7 @@ install() {
   mkdir -p "$HOME/kgb-log"
   git config --global user.email "$GITHUB_MAIL"
   git config --global user.name "$GITHUB_USER"
+  git config --global init.defaultBranch "$GITHUB_BRANCH"
   for i in ${!REPO_LIST[@]}
   do
     if [[ -d "${CONFIG_FOLDER_LIST[$i]}/.git" ]]
@@ -192,12 +193,7 @@ install() {
     fi
   done
   info_msg "Testing SSH connention"
-  if ssh -T git@github.com
-  then
-    info_msg "SSH connection successful"
-  else
-    error_msg "SSH connection to GitHub could not be established. Please check if it was set up correctly!"
-  fi
+  ssh -T git@github.com
   if [[ -f /etc/systemd/system/kgb.service ]]
   then
     success_msg "Service was already set up"

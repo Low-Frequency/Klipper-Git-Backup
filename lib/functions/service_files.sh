@@ -27,7 +27,7 @@ Requires=network-online.target
 [Timer]
 $(echo $INTERVAL)
 Unit=kgb.service
-$(echo $PERSISTENT)
+Persistent=$(echo $PERSISTENT)
 
 [Install]
 WantedBy=multi-user.target
