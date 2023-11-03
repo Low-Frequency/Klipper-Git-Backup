@@ -1,17 +1,17 @@
 #!/bin/bash
 
-VERSION="v1.0.0"
+VERSION="v1.1.0"
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit; pwd -P )"
 UNSAVED_CHANGES=0
 
 ### Load all functions
-for SCRIPT in "${SCRIPTPATH}/lib/functions/"*.sh
+for FN_SCRIPT in "${SCRIPTPATH}/lib/functions/"*.sh
 do
-  source "${SCRIPT}"
+  source "${FN_SCRIPT}"
 done
-for SCRIPT in "${SCRIPTPATH}/lib/ui/"*.sh
+for UI_SCRIPT in "${SCRIPTPATH}/lib/ui/"*.sh
 do
-  source "${SCRIPT}"
+  source "${UI_SCRIPT}"
 done
 
 ### Load config

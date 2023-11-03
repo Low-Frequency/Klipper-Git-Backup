@@ -1,35 +1,7 @@
 #!/bin/bash
 
-init_schedule() {
-  if [[ -z ${TIME_UNIT+x} ]]
-  then
-    log_msg "Something went wrong during schedule initialization"
-    exit 1
-  else
-  	case $TIME_UNIT in
-  		h)
-  			MULTIPLIER=3600
-        ;;
-  		d)
-  			MULTIPLIER=86400
-        ;;
-      m)
-  			MULTIPLIER=2592000
-        ;;
-  		*)
-  			log_msg "Misconfiguration in backup interval"
-  			log_msg "Please specify a valid timespan"
-  			log_msg "Available are h(ours), d(ays) and m(onths)"
-  			log_msg "Falling back to daily backup"
-  			MULTIPLIEER=86400
-        ;;
-  	esac
-  	PAUSE=$(( BACKUP_INTERVAL * MULTIPLIER ))
-  fi
-}
-
 log_rotation() {
-  DEL=$(( ( $(date '+%s') - $(date -d "${LOG_RETENTION} months ago" '+%s') ) / 86400 ))
+  local DEL=$(( ( $(date '+%s') - $(date -d "${LOG_RETENTION} months ago" '+%s') ) / 86400 ))
 	case $LOG_ROTATION in
 		0)
 			log_msg "Log rotation is disabled"
@@ -47,6 +19,7 @@ log_rotation() {
 }
 
 backup_config_folders() {
+	local ERROR=0
   for FOLDER in "${CONFIG_FOLDER_LIST[@]}"
   do
     log_msg "Backing ${FOLDER} up to GitHub"
@@ -55,32 +28,46 @@ backup_config_folders() {
     log_msg "Committing to GitHub repository"
     git -C "${FOLDER}" commit -m "backup $(date +%F)" | tee -a "${HOME}/kgb-log/$(date +%F).log"
     log_msg "Pushing to GitHub repository"
-    git -C "${FOLDER}" push -u origin "${GITHUB_BRANCH}" | tee -a "${HOME}/kgb-log/$(date +%F).log"
+    if git -C "${FOLDER}" push -u origin "${GITHUB_BRANCH}" | tee -a "${HOME}/kgb-log/$(date +%F).log"
+		then
+			log_msg "${FOLDER} backed up"
+		else
+			log_msg "${FOLDER} backup failed"
+			ERROR=$(( ERROR + 1 ))
+		fi
   done
+	if [[ $ERROR -ne 0 ]]
+	then
+		return 1
+	else
+		return 0
+	fi
 }
 
 backup() {
-  while true
-  do
-  	case $GIT in
-  		0)
-  			log_msg "Backups are disabled"
-        ;;
-  		1)
-  			backup_config_folders
-        ;;
-  		*)
-  			log_msg "No valid backup configuration"
-  			log_msg "Please check the config file!"
-  			exit 1
-        ;;
-  	esac
-  	log_rotation
-  	if [[ $SCHEDULED_BACKUPS -eq 0 ]]
-  	then
-  		break
-  	else
-  		sleep $PAUSE
-  	fi
-  done
+  case $GIT in
+  	0)
+  		log_msg "Backups are disabled"
+      ;;
+  	1)
+  		if backup_config_folders
+			then
+				local ERROR=0
+			else
+				local ERROR=1
+			fi
+      ;;
+  	*)
+  		log_msg "No valid backup configuration"
+  		log_msg "Please check the config file!"
+  		exit 1
+      ;;
+  esac
+  log_rotation
+	if [[ $ERROR -ne 0 ]]
+	then
+		return 1
+	else
+		return 0
+	fi
 }
