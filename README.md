@@ -47,6 +47,25 @@ This script runs when your Pi starts, or if configured on a set timeschedule. It
 
 It even has log rotation implemented, so it doesn't eat up the precious space for your gcodes :wink:
 
+
+
+It runs as a service
+
+To stop the service run the command 
+```bash 
+systemctl stop kgb.service
+```
+
+To start the service run the command 
+```bash
+systemctl start kgb.service
+```
+
+To check the status of the service run the command 
+```bash
+systemctl status kgb.service
+```
+
 # Further setup infos
 
 ## Adding an SSH key to your GitHub account
