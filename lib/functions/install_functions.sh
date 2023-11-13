@@ -13,6 +13,8 @@ save_config() {
   fi
   write_line_to_config "GIT=\"${GIT}\""
   write_line_to_config "GITHUB_USER=\"${GITHUB_USER}\""
+  write_line_to_config "GIT_SERVER=\"${GIT_SERVER}\""
+  write_line_to_config "GIT_ORG=\"${GIT_ORG}\""
   write_line_to_config "GITHUB_MAIL=\"${GITHUB_MAIL}\""
   write_line_to_config "GITHUB_BRANCH=\"${GITHUB_BRANCH}\""
   write_line_to_config "REPO_LIST=($(echo ${REPO_LIST[@]}))"
@@ -32,6 +34,8 @@ show_config() {
   then
     success_msg "Backups are enabled"
     info_msg "GITHUB_USER: ${GITHUB_USER}"
+	info_msg "GIT_SERVER: ${GIT_SERVER}"
+	info_msg "GIT_ORG: ${GIT_ORG}"
     info_msg "GITHUB_MAIL: ${GITHUB_MAIL}"
     info_msg "GITHUB_BRANCH: ${GITHUB_BRANCH}"
     for (( i=0; i<${#REPO_LIST[@]}; i++ ))
@@ -68,11 +72,11 @@ setup_ssh() {
     success_msg "SSH Key found"
     while true
     do
-      read -p "$(echo -e "${CYAN}Did you already add this key to your GitHub account? ${NC}")" KEY_ALREADY_ADDED
+      read -p "$(echo -e "${CYAN}Did you already add this key to your Git account? ${NC}")" KEY_ALREADY_ADDED
       KEY_ALREADY_ADDED=${KEY_ALREADY_ADDED:-n}
       case $KEY_ALREADY_ADDED in
         n|N)
-          info_msg "Please add this public key to your GitHub account:"
+          info_msg "Please add this public key to your Git account:"
           cat "$HOME/.ssh/github_id_rsa.pub"
           info_msg "You can find instructions for this here:"
           info_msg "https://github.com/Low-Frequency/klipper_backup_script"
@@ -98,7 +102,7 @@ setup_ssh() {
       ssh-keygen -t ed25519 -C "$GITHUB_MAIL" -f "$HOME/.ssh/github_id_rsa" -q -N ""
       echo "IdentityFile $HOME/.ssh/github_id_rsa" >> "$HOME/.ssh/config"
       chmod 600 "$HOME/.ssh/config"
-      info_msg "Please copy the public key and add it to your GitHub account:"
+      info_msg "Please copy the public key and add it to your Git account:"
       cat "$HOME/.ssh/github_id_rsa.pub"
       info_msg "You can find instructions for this here:"
       info_msg "https://github.com/Low-Frequency/klipper_backup_script"
@@ -176,6 +180,10 @@ install() {
   git config --global user.email "$GITHUB_MAIL"
   git config --global user.name "$GITHUB_USER"
   git config --global init.defaultBranch "$GITHUB_BRANCH"
+  # Add sane limits in case server is slow or printer_data has big gcode files
+  git config --global pack.windowMemory "100m"
+  git config --global pack.packSizeLimit "100m"
+  git config --global pack.threads "1" 
   for i in ${!REPO_LIST[@]}
   do
     if [[ -d "${CONFIG_FOLDER_LIST[$i]}/.git" ]]
@@ -188,12 +196,12 @@ install() {
       git -C "${CONFIG_FOLDER_LIST[$i]}" add .
       git -C "${CONFIG_FOLDER_LIST[$i]}" commit -m "initial commit"
       git -C "${CONFIG_FOLDER_LIST[$i]}" branch -M $GITHUB_BRANCH
-      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "git@github.com:${GITHUB_USER}/${REPO_LIST[$i]}.git"
+      git -C "${CONFIG_FOLDER_LIST[$i]}" remote add origin "git@${GIT_SERVER}:${GIT_ORG}/${REPO_LIST[$i]}.git"
       git -C "${CONFIG_FOLDER_LIST[$i]}" push -u origin $GITHUB_BRANCH
     fi
   done
   info_msg "Testing SSH connention"
-  ssh -T git@github.com
+  ssh -T git@${GIT_SERVER}
   if [[ -f /etc/systemd/system/kgb.service ]]
   then
     success_msg "Service was already set up"

@@ -61,7 +61,7 @@ config_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BOLD}Actions${WHITE}              | ${BOLD}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
-  echo -e "${WHITE}| 1) GitHub               | ${STATUS_COLOR_GIT}GitHub${WHITE}                 |${NC}"
+  echo -e "${WHITE}| 1) Git                  | ${STATUS_COLOR_GIT}GitHub${WHITE}                 |${NC}"
   echo -e "${WHITE}| 2) Log Rotation         | ${STATUS_COLOR_LOG}Log Rotation${WHITE}           |${NC}"
   echo -e "${WHITE}| 3) Scheduled Backups    | ${STATUS_COLOR_SCHEDULE}Scheduled Backups${WHITE}      |${NC}"
   echo -e "${WHITE}| 4) Save Config          | ${STATUS_UNSAVED_CHANGES}                    |${NC}"

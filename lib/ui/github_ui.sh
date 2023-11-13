@@ -36,7 +36,20 @@ github_ui() {
   else
     STATUS_USER="[${GREEN}\u2713${WHITE}]"    ### Unicode check mark
   fi
+  
+    if [[ -z ${GIT_SERVER+x} ]]
+  then
+    STATUS_SERVER="[${RED}\u2717${WHITE}]"      ### Unicode cross mark
+  else
+    STATUS_SERVER="[${GREEN}\u2713${WHITE}]"    ### Unicode check mark
+  fi
 
+	if [[ -z ${GIT_ORG+x} ]]
+		then
+    STATUS_ORG="[${RED}\u2717${WHITE}]"      ### Unicode cross mark
+  else
+    STATUS_ORG="[${GREEN}\u2713${WHITE}]"    ### Unicode check mark
+  fi
   if [[ -z ${GITHUB_MAIL+x} ]]
   then
     STATUS_MAIL="[${RED}\u2717${WHITE}]"      ### Unicode cross mark
@@ -57,12 +70,14 @@ github_ui() {
   echo -e "${WHITE}|    ${BOLD}Actions${WHITE}              | ${BOLD}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
   echo -e "${WHITE}| 1) User                 | ${STATUS_USER}                    |${NC}"
-  echo -e "${WHITE}| 2) Mail                 | ${STATUS_MAIL}                    |${NC}"
-  echo -e "${WHITE}| 3) Default Branch       | ${BRANCH_STATUS} |${NC}"
-  echo -e "${WHITE}| 4) Repositories         | ${STATUS_REPO}                    |${NC}"
-  echo -e "${WHITE}| 5) Config Folders       | ${STATUS_CONFIG}                    |${NC}"
-  echo -e "${WHITE}| 6) Toggle Backup        | ${STATUS_BACKUP}           |${NC}"
-  echo -e "${WHITE}| 7) Refresh Menu         |                        |${NC}"
+  echo -e "${WHITE}| 2) Git Server           | ${STATUS_SERVER}                    |${NC}"
+  echo -e "${WHITE}| 3) Organisation         | ${STATUS_ORG}                    |${NC}"
+  echo -e "${WHITE}| 4) Mail                 | ${STATUS_MAIL}                    |${NC}"
+  echo -e "${WHITE}| 5) Default Branch       | ${BRANCH_STATUS} |${NC}"
+  echo -e "${WHITE}| 6) Repositories         | ${STATUS_REPO}                    |${NC}"
+  echo -e "${WHITE}| 7) Config Folders       | ${STATUS_CONFIG}                    |${NC}"
+  echo -e "${WHITE}| 8) Toggle Backup        | ${STATUS_BACKUP}           |${NC}"
+  echo -e "${WHITE}| 9) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
   menu_footer
 }
@@ -82,30 +97,42 @@ github_menu() {
         return
         ;;
       1)
-        read -p "$(echo -e "${PURPLE}Please enter your GitHub username: ${NC}")" GITHUB_USER
+        read -p "$(echo -e "${PURPLE}Please enter your Git username: ${NC}")" GITHUB_USER
         success_msg "Username set to ${GITHUB_USER}"
         UNSAVED_CHANGES=1
         ;;
-      2)
+	  2)
+        read -p "$(echo -e "${PURPLE}Please enter your Git Server (default: github.com): ${NC}")" GIT_SERVER
+        success_msg "Server set to ${GIT_SERVER}"
+		GIT_SERVER=${GIT_SERVER:-main}
+        UNSAVED_CHANGES=1
+        ;;
+      3)
+        read -p "$(echo -e "${PURPLE}Please enter your Git Organisation (for github enter your username): ${NC}")" GIT_ORG
+        success_msg "Organisation set to ${GIT_ORG}"
+		GIT_ORG=${GIT_ORG:-main}
+        UNSAVED_CHANGES=1
+        ;;
+      4)
         read -p "$(echo -e "${PURPLE}Please enter your mail address: ${NC}")" GITHUB_MAIL
         success_msg "Mail set to ${GITHUB_MAIL}"
         UNSAVED_CHANGES=1
         ;;
-      3)
+      5)
         read -p "$(echo -e "${PURPLE}Please enter the default branch you want to use: ${NC}")" GITHUB_BRANCH
         success_msg "Default branch set to ${GITHUB_BRANCH}"
         GITHUB_BRANCH=${GITHUB_BRANCH:-main}
         UNSAVED_CHANGES=1
         ;;
-      4)
+      6)
         config_repo
         UNSAVED_CHANGES=1
         ;;
-      5)
+      7)
         config_folders
         UNSAVED_CHANGES=1
         ;;
-      6)
+      8)
         if [[ $GIT -eq 0 ]]
         then
           activate_module "backups"
@@ -116,7 +143,7 @@ github_menu() {
         fi
         UNSAVED_CHANGES=1
         ;;
-      7)
+      9)
         break
         ;;
       *)
