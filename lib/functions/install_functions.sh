@@ -183,7 +183,7 @@ install() {
   # Add sane limits in case server is slow or printer_data has big gcode files
   git config --global pack.windowMemory "100m"
   git config --global pack.packSizeLimit "100m"
-  git config --global pack.threads "1" 
+  git config --global pack.threads "2" 
   for i in ${!REPO_LIST[@]}
   do
     if [[ -d "${CONFIG_FOLDER_LIST[$i]}/.git" ]]
