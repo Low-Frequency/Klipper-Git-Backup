@@ -104,13 +104,13 @@ github_menu() {
 	  2)
         read -p "$(echo -e "${PURPLE}Please enter your Git Server (default: github.com): ${NC}")" GIT_SERVER
         success_msg "Server set to ${GIT_SERVER}"
-		GIT_SERVER=${GIT_SERVER:-main}
+		GIT_SERVER=${GIT_SERVER:-github.com}
         UNSAVED_CHANGES=1
         ;;
       3)
         read -p "$(echo -e "${PURPLE}Please enter your Git Organisation (for github enter your username): ${NC}")" GIT_ORG
         success_msg "Organisation set to ${GIT_ORG}"
-		GIT_ORG=${GIT_ORG:-main}
+		GIT_ORG=${GIT_ORG:-${GITHUB_USER}}
         UNSAVED_CHANGES=1
         ;;
       4)
