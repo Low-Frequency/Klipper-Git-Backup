@@ -223,5 +223,6 @@ install() {
   sudo systemctl enable kgb.timer
   sudo systemctl start kgb.timer
   success_msg "Installation complete"
+  INSTALLED=1
   read -r -p "$(echo -e "${CYAN}Press enter to continue ${NC}")" CONTINUE
 }
