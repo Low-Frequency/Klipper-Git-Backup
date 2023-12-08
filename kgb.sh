@@ -48,4 +48,11 @@ else
   BACKUP_INTERVAL=7
 fi
 
+### Check if the script has been installed
+if [[ -f /etc/systemd/system/kgb.service ]]; then
+  INSTALLED=1
+else
+  INSTALLED=0
+fi
+
 main_menu

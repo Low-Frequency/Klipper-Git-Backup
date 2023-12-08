@@ -9,7 +9,12 @@ quit_installer() {
       y | Y)
         save_config
         UNSAVED_CHANGES=0
-        break
+        check_install
+        if [[ $SKIP_INSTALL -eq 1 ]]; then
+          break
+        else
+          continue
+        fi
         ;;
       n | N)
         warning_msg "Your changes will be lost!"
@@ -18,7 +23,12 @@ quit_installer() {
           case $LOOSE_CHANGES in
           y | Y)
             warning_msg "Discarding changes"
-            break
+            check_install
+            if [[ $SKIP_INSTALL -eq 1 ]]; then
+              break
+            else
+              continue
+            fi
             ;;
           n | N)
             success_msg "Resuming"
@@ -39,6 +49,30 @@ quit_installer() {
   fi
   success_msg "Exiting"
   exit 0
+}
+
+check_install() {
+  # shellcheck disable=SC2153
+  if [[ $INSTALLED -eq 0 ]]; then
+    while true; do
+      warning_msg "You haven't installed the script yet!"
+      warning_msg "This will lead to errors if you want to use the script"
+      read -r -p "$(echo -e "${CYAN}Continue anyway? ${NC}")" INSTALLER
+      case $INSTALLER in
+      y | Y)
+        SKIP_INSTALL=1
+        break
+        ;;
+      n | N)
+        SKIP_INSTALL=0
+        break
+        ;;
+      *)
+        deny_action
+        ;;
+      esac
+    done
+  fi
 }
 
 config_repo() {
