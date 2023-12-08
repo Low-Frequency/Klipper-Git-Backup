@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.3.0
+
+* Added advanced git config for gt server & git organization
+
 ## 1.2.0
 
 * Added custom git server and organization configuration in advanced menu

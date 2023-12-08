@@ -1,6 +1,6 @@
 #!/bin/bash
 
-VERSION="v1.2.0"
+VERSION="v1.3.0"
 SCRIPTPATH="$(
   cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit
   pwd -P
