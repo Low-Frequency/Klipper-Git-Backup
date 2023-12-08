@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.0
+
+* Added custom git server and organization configuration in advanced menu
+
 ## 1.1.0
 
 * Removed endless loop for scheduled backups

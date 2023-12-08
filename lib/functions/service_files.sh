@@ -1,18 +1,20 @@
 #!/bin/bash
 
-SERVICE_FILE=$(cat <<- EOF
+SERVICE_FILE=$(
+  cat <<-EOF
 [Unit]
 Description=Klipper config backup service
 Documentation="https://github.com/Low-Frequency/klipper_backup_script"
 
 [Service]
 Type=simple
-User=$(echo $USER)
-ExecStart=$(echo $SCRIPTPATH)/backup.sh
+User=$USER
+ExecStart=$SCRIPTPATH/backup.sh
 EOF
 )
 
-SERVICE_TIMER=$(cat <<- EOF
+SERVICE_TIMER=$(
+  cat <<-EOF
 [Unit]
 Description=Timer for kgb.service
 Documentation="https://github.com/Low-Frequency/klipper_backup_script"

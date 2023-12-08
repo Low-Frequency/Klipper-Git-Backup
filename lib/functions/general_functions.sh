@@ -1,6 +1,6 @@
 #!/bin/bash
 
-activate_module(){
+activate_module() {
   MODULE="$1"
   echo -e "   ${WHITE}[${GREEN}\u2713${WHITE}] Activated ${MODULE}${NC}"
 }

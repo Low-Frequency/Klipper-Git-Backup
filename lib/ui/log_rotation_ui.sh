@@ -7,22 +7,18 @@ log_rotation_ui() {
   ### Enabled and configured: Green
 
   ### Log Rotation status
-  if [[ ${LOG_ROTATION} -eq 0 ]]
-  then
-    STATUS_LOG_ROTATION="[${RED}\u2717${WHITE}] Disabled"        ### Unicode cross mark
+  if [[ ${LOG_ROTATION} -eq 0 ]]; then
+    STATUS_LOG_ROTATION="[${RED}\u2717${WHITE}] Disabled" ### Unicode cross mark
   else
-    STATUS_LOG_ROTATION="[${GREEN}\u2713${WHITE}] Enabled "      ### Unicode check mark
+    STATUS_LOG_ROTATION="[${GREEN}\u2713${WHITE}] Enabled " ### Unicode check mark
   fi
 
   ### Setting menu entry depending on length of number
-  if [[ $LOG_RETENTION -eq 1 ]]
-  then
+  if [[ $LOG_RETENTION -eq 1 ]]; then
     RETENTION_STATUS="${LOG_RETENTION} month     "
-  elif [[ $(( LOG_RETENTION - 10 )) -lt 0 ]]
-  then
+  elif [[ $((LOG_RETENTION - 10)) -lt 0 ]]; then
     RETENTION_STATUS="${LOG_RETENTION} months    "
-  elif [[ $(( LOG_RETENTION - 10 )) -ge 0 ]]
-  then
+  elif [[ $((LOG_RETENTION - 10)) -ge 0 ]]; then
     RETENTION_STATUS="${LOG_RETENTION} months   "
   fi
 
@@ -42,43 +38,40 @@ log_rotation_menu() {
   clear
   log_rotation_ui
   local ACTION
-  while true
-  do
-    read -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" ACTION
+  while true; do
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" ACTION
     case $ACTION in
-      q|Q)
-        quit_installer
-        ;;
-      b|B)
-        return
-        ;;
-      1)
-        read -p "$(echo -e "${PURPLE}How many months should the logs be kept? ${NC}")" LOG_RETENTION
-        if [[ $LOG_RETENTION -eq 1 ]]
-        then
-          success_msg "Set log retention to ${LOG_RETENTION} month"
-        else
-          success_msg "Set log retention to ${LOG_RETENTION} months"
-        fi
-        UNSAVED_CHANGES=1
-        ;;
-      2)
-        if [[ $LOG_ROTATION -eq 0 ]]
-        then
-          activate_module "log rotation"
-          LOG_ROTATION=1
-        else
-          deactivate_module "log rotation"
-          LOG_ROTATION=0
-        fi
-        UNSAVED_CHANGES=1
-        ;;
-      3)
-        break
-        ;;
-      *)
-        deny_action
-        ;;
+    q | Q)
+      quit_installer
+      ;;
+    b | B)
+      return
+      ;;
+    1)
+      read -r -p "$(echo -e "${PURPLE}How many months should the logs be kept? ${NC}")" LOG_RETENTION
+      if [[ $LOG_RETENTION -eq 1 ]]; then
+        success_msg "Set log retention to ${LOG_RETENTION} month"
+      else
+        success_msg "Set log retention to ${LOG_RETENTION} months"
+      fi
+      UNSAVED_CHANGES=1
+      ;;
+    2)
+      if [[ $LOG_ROTATION -eq 0 ]]; then
+        activate_module "log rotation"
+        LOG_ROTATION=1
+      else
+        deactivate_module "log rotation"
+        LOG_ROTATION=0
+      fi
+      UNSAVED_CHANGES=1
+      ;;
+    3)
+      break
+      ;;
+    *)
+      deny_action
+      ;;
     esac
   done
   log_rotation_menu
