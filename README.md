@@ -6,7 +6,7 @@ Securing your printer.cfg
 
 KGB automatically backs up your klipper config to GitHub. All you have to do is configure it through the UI, run the installer and you're done.
 
-Detailed instructions an documentation can be found in the docs folder [here](docs/SETUP.md).
+Detailed instructions an documentation can be found in the docs folder [here](docs/DOCUMENTATION.md).
 
 ### Quick start
 
@@ -34,6 +34,8 @@ Detailed instructions an documentation can be found in the docs folder [here](do
   ```
 
   Paste the access token, save and quit the editor (`Ctrl + x`, `y` to confirm). The hard part is done now.
+
+  Detailed information on how to create the token can be found [here](/docs/all/SETUP.md).
 
 * **Step 2:**
 
