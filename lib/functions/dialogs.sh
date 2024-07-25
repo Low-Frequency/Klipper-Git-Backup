@@ -1,26 +1,38 @@
 #!/bin/bash
 
 backup_dialog() {
-  if [[ $UNSAVED_CHANGES -ne 0 ]]; then
+  ### Trigger a backup
+
+  local input
+
+  ### Check for pending changes
+  if [[ ${UNSAVED_CHANGES} -ne 0 ]]; then
+    ### Loop until user input is valid
     while true; do
       warning_msg "You have config changes pending!"
       warning_msg "Not saving will cause the pending changes to be lost!"
-      read -r -p "$(echo -e "${CYAN}Save changes now? ${NC}")" SAVE_CHANGES
-      case $SAVE_CHANGES in
-      y | Y)
-        save_config
-        break
-        ;;
-      n | N)
-        error_msg "Not saving"
-        break
-        ;;
-      *)
-        deny_action
-        ;;
+      ### Prompt the user for input
+      read -r -p "$(echo -e "${CYAN}Save changes now? ${NC}")" -i "y" -e input
+      case ${input} in
+        y | Y)
+          ### Save config and start backup
+          save_config
+          break
+          ;;
+        n | N)
+          ### Discard changes and start backup
+          error_msg "Not saving"
+          break
+          ;;
+        *)
+          ### Invalid input
+          deny_action
+          ;;
       esac
-    done
+    done && input=""
   fi
+
+  ### Execute backup script
   if "${SCRIPTPATH}/backup.sh"; then
     success_msg "Backup succeeded"
   else
@@ -29,83 +41,105 @@ backup_dialog() {
 }
 
 update_dialog() {
+  ### Update KGB
+
   info_msg "Updating..."
-  git reset --hard
+  ### Reset the KGB repo
+  git -C "${SCRIPTPATH}" reset --hard
+  ### Pull the latest version
   if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"; then
+    ### KGB was updated. Terminating
     info_msg "KGB has to be restarted"
     chmod +x "${SCRIPTPATH}"/*.sh
-    quit_installer
+    return 0
   fi
+  ### KGB was up to date
+  return 1
 }
 
 install_dialog() {
-  if [[ $UNSAVED_CHANGES -ne 0 ]]; then
+  ### Starts the installation process
+
+  local input
+
+  ### Check if all settings have been saved
+  if [[ ${UNSAVED_CHANGES} -ne 0 ]]; then
     warning_msg "You have config changes pending!"
     show_config
+    ### Loop until user input is valid
     while true; do
-      read -r -p "$(echo -e "${CYAN}Install with current config? ${NC}")" INSTALL
-      case $INSTALL in
-      y | Y)
-        info_msg "Saving config"
-        save_config
-        break
-        ;;
-      n | N)
-        while true; do
-          read -r -p "$(echo -e "${CYAN}Ignore config changes and cancel install? ${NC}")" IGNORE
-          case $IGNORE in
-          y | Y)
-            success_msg "Ignoring config changes"
-            break
-            ;;
-          n | N)
-            error_msg "Install was cancelled"
-            return 1
-            ;;
-          *)
-            deny_action
-            ;;
-          esac
-        done
-        break
-        ;;
-      *)
-        deny_action
-        ;;
+      ### Prompt user for input
+      read -r -p "$(echo -e "${CYAN}Install with current config? ${NC}")" -i "y" -e input
+
+      ### Evaluate user input
+      case ${input} in
+        y | Y)
+          ### Save changes
+          info_msg "Saving config"
+          save_config
+          break
+          ;;
+        n | N)
+          ### Confirmation prompt
+          input=""
+          while true; do
+            read -r -p "$(echo -e "${CYAN}Cancel install? ${NC}")" -i "n" -e input
+            case ${input} in
+              y | Y)
+                ### Cancel installation
+                return 1
+                ;;
+              n | N)
+                ### Return to previous prompt
+                break
+                ;;
+              *)
+                ### Invalid input
+                deny_action
+                ;;
+            esac
+          done && input=""
+          break
+          ;;
+        *)
+          ### Invalid input
+          deny_action
+          ;;
       esac
-    done
+    done && input=""
   fi
-  if setup_ssh; then
-    install
-  else
-    error_msg "SSH setup failed"
-  fi
+  return 0
 }
 
 uninstall_dialog() {
-  read -r -p "$(echo -e "${CYAN}Do you really want to uninstall KGB? ${NC}")" UNINSTALL
-  case $UNINSTALL in
-  n | N)
-    success_msg "Cancelled uninstall"
-    ;;
-  y | Y)
-    success_msg "Uninstalling..."
-    info_msg "Removing log files"
-    rm -r "$HOME/kgb-log"
-    info_msg "Removing backup service"
-    sudo systemctl disable kgb.service
-    sudo rm /etc/systemd/system/kgb.service
-    info_msg "Removing backup schedule"
-    sudo systemctl disable kgb.timer
-    sudo rm /etc/systemd/system/kgb.timer
-    info_msg "Deleting config"
-    rm -r "$HOME/.config/kgb.cfg"
-    info_msg "Deleting scripts"
-    rm -r "${SCRIPTPATH}"
-    exit 0
-    ;;
-  *)
-    deny_action
-    ;;
-  esac
+  ### Uninstall the script
+
+  local input
+  local gh_ssh_id
+
+  ### Loop until user input is valid
+  while true; do
+    ### Prompt for user input
+    read -r -p "$(echo -e "${CYAN}Do you really want to uninstall KGB? ${NC}")" -i "n" -e input
+    ### Evaluate user input to choose the right actions
+    case ${input} in
+      n | N)
+        ### Cancel install
+        return 1
+        ;;
+      y | Y)
+        ### Uninstall script
+        #!  *Insert sad pepe meme*
+        if uninstall; then
+          return 0
+        else
+          return 1
+        fi
+        ;;
+      *)
+        ### Invalid input
+        deny_action
+        ;;
+    esac
+  done && action=""
 }

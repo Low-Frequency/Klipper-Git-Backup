@@ -1,4 +1,16 @@
-# Changelog
+## Changelog
+
+## 2.0.0
+
+* Only one repo needed
+* Auto creation of the repo
+* SSH auto setup
+* Automatically detect `printer_data` folders
+* Complete rework of backup and restore functionality
+* New data structure
+* Quick help in KGB menus
+* Code refactoring
+* Better documentation
 
 ## 1.3.0
 

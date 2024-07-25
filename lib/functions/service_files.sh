@@ -8,8 +8,8 @@ Documentation="https://github.com/Low-Frequency/klipper_backup_script"
 
 [Service]
 Type=simple
-User=$USER
-ExecStart=$SCRIPTPATH/backup.sh
+User=${USER}
+ExecStart=${SCRIPTPATH}/backup.sh
 EOF
 )
 

@@ -1,15 +1,23 @@
 #!/bin/bash
 
+### Get path where script is located and save it to a variable
+#!  Using this variable will ensure that full paths are used
+#!  when files are referenced
 SCRIPTPATH="$(
   cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit
   pwd -P
 )"
 
-# shellcheck source=lib/functions/general_functions.sh
-source "${SCRIPTPATH}/lib/functions/general_functions.sh"
-# shellcheck source=lib/functions/github_functions.sh
-source "${SCRIPTPATH}/lib/functions/github_functions.sh"
+### Load required functions
+#!  Shellcheck directives to make linting not fail on ´source´ commands
+# shellcheck source=lib/functions/general.sh
+source "${SCRIPTPATH}/lib/functions/general.sh"
+# shellcheck source=lib/functions/backup.sh
+source "${SCRIPTPATH}/lib/functions/backup.sh"
+# shellcheck source=lib/functions/log_rotation.sh
+source "${SCRIPTPATH}/lib/functions/log_rotation.sh"
 
+### Check for existing config file and load it
 if [[ -f "${HOME}/.config/kgb.cfg" ]]; then
   # shellcheck source=sample_backup.cfg
   source "${HOME}/.config/kgb.cfg"
@@ -18,6 +26,7 @@ else
   exit 1
 fi
 
+### Execute backup
 if backup; then
   exit 0
 else

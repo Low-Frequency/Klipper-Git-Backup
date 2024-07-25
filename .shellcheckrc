@@ -1,2 +1,32 @@
-disable=SC2034,SC2116
 external-sources=true
+
+# Suggest putting braces around all variable references
+enable=require-variable-braces
+
+# Require [[ and warn about [ in Bash/Ksh
+enable=require-double-brackets
+
+# Suggest adding a default case in `case` statements
+enable=add-default-case
+
+# Suggest 'command -v' instead of 'which'
+enable=deprecate-which
+
+# Suggest quoting variables without metacharacters
+enable=quote-safe-variables
+
+# SC2034: foo appears unused. Verify it or export it.
+# https://www.shellcheck.net/wiki/SC2034
+disable=SC2034
+
+# SC2116: Useless echo? Instead of cmd $(echo foo), just use cmd foo.
+# https://www.shellcheck.net/wiki/SC2116
+# disable=SC2116
+
+# SC2162: `read` without `-r` will mangle backslashes.
+# https://www.shellcheck.net/wiki/SC2162
+disable=SC2162
+
+# SC2164: Use `cd ... || exit` in case `cd` fails
+# https://www.shellcheck.net/wiki/SC2164
+disable=SC2164
