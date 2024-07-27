@@ -6,7 +6,7 @@ migrate_config() {
 
   local input
   local new_dir
-  local tmp_arr
+  local tmp_array
 
   ### Check if requirements are met
   if [[ ! -f ${HOME}/.secrets/gh-token ]]; then
@@ -61,11 +61,11 @@ migrate_config() {
     ### Fix config folder list
     for dir in "${CONFIG_FOLDER_LIST[@]}"; do
       ### Only leave path to instance folder intact
-      tmp_arr+=("${dir//config/}")
+      tmp_array+=("${dir//config/}")
     done
 
     ### Reassign array
-    CONFIG_FOLDER_LIST=("${tmp_arr[@]}")
+    CONFIG_FOLDER_LIST=("${tmp_array[@]}")
 
     ### Save config
     save_config
