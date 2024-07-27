@@ -1,5 +1,10 @@
 ## Changelog
 
+## 2.1.0
+
+* Added function to remove backed up folder from config
+* Safety check to prevent adding the same folder twice
+
 ## 2.0.0
 
 * Only one repo needed
