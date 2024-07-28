@@ -47,15 +47,26 @@ add_config_folder() {
     case ${input} in
       [0-9]*)
         ### Add directory to list
+        #!  First check if the input is in the range of the array index
         if [[ ${input} -le ${#auto_detected_dirs[@]} ]]; then
+          ### Set internal field separator to something weird that should not be in the name of a direcory
           IFS="%"
+          ### Convert the CNONFIG_FOLDER_LIST array to a single string with the elements separated by IFS
+          #!  Append and prepend IFS to make checking easier
+          #!  Compare string with user input
           if [[ "${IFS}${CONFIG_FOLDER_LIST[*]}${IFS}" =~ ${IFS}${auto_detected_dirs[$((input - 1))]}${IFS} ]]; then
+            ### Match found, so dir already exists
             warning_msg "Selected folder already exists in config"
+            ### Reset IFS to not mess with other stuff
             unset IFS
           else
+            ### No match found, so add the dir to the array
+            #!  Reset IFS to not mess with other stuff
             unset IFS
+            ### Append dir to array
             CONFIG_FOLDER_LIST+=("${auto_detected_dirs[$((input - 1))]}")
             success_msg "Added ${auto_detected_dirs[$((input - 1))]}"
+            UNSAVED_CHANGES=1
           fi
         else
           ### Invalid input
@@ -67,15 +78,25 @@ add_config_folder() {
         break
         ;;
       all)
+        ### Loop over all auto detected instances
         for dir in "${auto_detected_dirs[@]}"; do
+          ### Set internal field separator to something weird that should not be in the name of a direcory
           IFS="%"
+          ### Convert the CNONFIG_FOLDER_LIST array to a single string with the elements separated by IFS
+          #!  Append and prepend IFS to make checking easier
+          #!  Compare string with user current dir
           if [[ "${IFS}${CONFIG_FOLDER_LIST[*]}${IFS}" =~ ${IFS}${dir}${IFS} ]]; then
+            ### Match found, so dir already exists
             warning_msg "Selected folder already exists in config"
+            ### Reset IFS to not mess with other stuff
             unset IFS
           else
+            ### Reset IFS to not mess with other stuff
             unset IFS
+            ### Append dir to array
             CONFIG_FOLDER_LIST+=("${dir}")
             success_msg "Added ${dir}"
+            UNSAVED_CHANGES=1
           fi
         done
         break
@@ -121,14 +142,23 @@ add_additional_dirs() {
         fi
 
         ### Append input to the config folder list
+        #!  Set internal field separator to something weird that should not be in the name of a direcory
         IFS="%"
+        ### Convert the CNONFIG_FOLDER_LIST array to a single string with the elements separated by IFS
+        #!  Append and prepend IFS to make checking easier
+        #!  Compare string with user current dir
         if [[ "${IFS}${CONFIG_FOLDER_LIST[*]}${IFS}" =~ ${IFS}${input}${IFS} ]]; then
+          ### Match found, so dir already exists
           warning_msg "Selected folder already exists in config"
+          ### Reset IFS to not mess with other stuff
           unset IFS
         else
+          ### Reset IFS to not mess with other stuff
           unset IFS
+          ### Append input to array
           CONFIG_FOLDER_LIST+=("${input}")
           success_msg "Added ${input}"
+          UNSAVED_CHANGES=1
         fi
 
         ### Reset input to prevent duplicate entries
@@ -169,14 +199,21 @@ remove_config_folder() {
           ### Loop over all folders
           #!  Skip input
           for i in "${!CONFIG_FOLDER_LIST[@]}"; do
+            ### Compare current index with user input
             if [[ ${i} -ne $((input - 1)) ]]; then
+              ### Current insed not equal to user input
+              #!  Append value to temporary array
               tmp_array+=("${CONFIG_FOLDER_LIST[${i}]}")
             else
+              ### Current index matches input
+              #!  Save value for output message
               del_dir="${CONFIG_FOLDER_LIST[${i}]}"
             fi
           done
+          ### Reassign CONFIG_FOLDER_LIST with temporary array
           CONFIG_FOLDER_LIST=("${tmp_array[@]}")
           success_msg "Removed ${del_dir} from backed up folders"
+          UNSAVED_CHANGES=1
         else
           ### Invalid input
           deny_action
@@ -205,11 +242,14 @@ config_folders() {
     ### Validate user input
     case ${input} in
       add)
+        ### Add auto detected dirs
         add_config_folder
+        ### Add user input dirs
         add_additional_dirs
         break
         ;;
       remove)
+        ### Remove dirs
         remove_config_folder
         break
         ;;

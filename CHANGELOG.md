@@ -1,5 +1,9 @@
 ## Changelog
 
+## 2.1.1
+
+* Fixed unsaved changes not updating on config folder updates
+
 ## 2.1.0
 
 * Added function to remove backed up folder from config
