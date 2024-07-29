@@ -3,26 +3,6 @@
 advanced_ui() {
   ### Prints the advanced git config menu
 
-  local git_server_Status
-  local git_org_status
-
-  ### Set git server string to correct length
-  git_server_status="${GIT_SERVER}"
-  for ((i = ${#GIT_SERVER}; i < 29; i++)); do
-    git_server_status="${git_server_status} "
-  done
-
-  ### Default GitHub org
-  if [[ ${GIT_SERVER} == "github.com" ]]; then
-    GIT_ORG=${GITHUB_USER}
-  fi
-
-  ### Ser git org string to correct length
-  git_org_status=${GIT_ORG}
-  for ((i = ${#GIT_ORG}; i < 29; i++)); do
-    git_org_status="${git_org_status} "
-  done
-
   ### Print default menu header
   menu_header
 
@@ -31,9 +11,8 @@ advanced_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BWHITE}Actions${WHITE}       | ${BWHITE}Status${WHITE}                        |${NC}"
   echo -e "${WHITE}|                  |                               |${NC}"
-  echo -e "${WHITE}| 1) Git Server    | ${git_server_status} |${NC}"
-  echo -e "${WHITE}| 2) Organisation  | ${git_org_status} |${NC}"
-  echo -e "${WHITE}| 3) Refresh Menu  |                               |${NC}"
+  echo -e "${WHITE}| 1) Git Server    |                               |${NC}"
+  echo -e "${WHITE}| 2) Organisation  |                               |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
   ### Print info section for the advanced git config
@@ -48,7 +27,6 @@ advanced_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
   local input
 
   ### Clear the screen to always print the menu at the same spot
@@ -60,10 +38,10 @@ advanced_menu() {
   ### Loop until user input is valid
   while true; do
     ### Prompt the user to choose an action
-    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" action
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" input
 
     ### Evaluate user input to execute the corresponding function
-    case ${action} in
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -83,16 +61,12 @@ advanced_menu() {
         ### Configure the git org
         configure_git_org
         ;;
-      3)
-        ### Break out of the loop to reload the menu
-        break
-        ;;
       *)
         ### Invalid input
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   advanced_menu

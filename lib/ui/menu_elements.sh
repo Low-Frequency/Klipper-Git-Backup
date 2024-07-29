@@ -45,8 +45,8 @@ menu_footer() {
   #!  \u24D8: Info i in circle
 
   ### Print menu footer
-  echo -e "${WHITE}|                    H) \u24D8  Help                    |${NC}"
-  echo -e "${WHITE}|     ${YELLOW}B) \u00AB Back${WHITE}                      ${RED}Q) \u2717 Quit${WHITE}     |${NC}"
+  echo -e "${WHITE}|                    H) ${INFO}  Help                    |${NC}"
+  echo -e "${WHITE}|     ${YELLOW}B) ${BACK} Back${WHITE}                      ${RED}Q) ${CROSS} Quit${WHITE}     |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 }
 
@@ -55,10 +55,10 @@ menu_info() {
   #!  Displays all possible status colors and their meaning
 
   ### Print info menu
-  echo -e "${WHITE}|     ${BWHITE}Status Info${WHITE}                                  |${NC}"
-  echo -e "${WHITE}|     ${RED}Red               ${WHITE}Disabled                   |${NC}"
-  echo -e "${WHITE}|     ${YELLOW}Yellow            ${WHITE}Not Configured             |${NC}"
-  echo -e "${WHITE}|     ${GREEN}Green             ${WHITE}Configured and enabled     |${NC}"
+  echo -e "${WHITE}|                   ${BWHITE}Status Info${WHITE}                    |${NC}"
+  echo -e "${WHITE}|     [${RED}${CROSS}${WHITE}]               Disabled                   |${NC}"
+  echo -e "${WHITE}|     [${YELLOW}${EXCLM}${WHITE}]               Not Configured             |${NC}"
+  echo -e "${WHITE}|     [${GREEN}${CHECK}${WHITE}]               Configured and enabled     |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 }
 
@@ -69,7 +69,6 @@ advanced_info() {
   ### Print advanced info menu
   echo -e "${WHITE}|                       ${BWHITE}INFO${WHITE}                       |${NC}"
   echo -e "${WHITE}| The URLs to the repos are generated like this:   |${NC}"
-  echo -e "${WHITE}| https://base_url/namespace/repo.git              |${NC}"
   echo -e "${WHITE}| git@base_url:namespace/repo.git                  |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 }

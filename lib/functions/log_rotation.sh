@@ -28,7 +28,18 @@ configure_log_retention() {
 log_rotation() {
   ### Delete obsolete logs
 
-  local del=$((($(date '+%s') - $(date -d "${LOG_RETENTION} months ago" '+%s')) / 86400))
+  local del
+
+  ### Check for retention and set it
+  if [[ -z ${LOG_RETENTION} ]]; then
+    log_msg "Log rotation configuration invalid!"
+    return 1
+  elif [[ ${LOG_RETENTION} -lt 1 ]]; then
+    log_msg "Log rotation configuration invalid!"
+    return 1
+  else
+    del=$((($(date '+%s') - $(date -d "${LOG_RETENTION} months ago" '+%s')) / 86400))
+  fi
 
   ### Evaluate log rotation config
   case ${LOG_ROTATION} in
@@ -41,6 +52,7 @@ log_rotation() {
       find "${HOME}/kgb-data/log" -mindepth 1 -mtime +"${del}" -delete
       ;;
     *)
+      log_msg "Log rotation configuration invalid!"
       return 1
       ;;
   esac

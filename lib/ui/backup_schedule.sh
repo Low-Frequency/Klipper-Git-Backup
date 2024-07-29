@@ -9,59 +9,29 @@ backup_schedule_ui() {
 
   ### Local variables that are only used to display the status of the current config
   local status_scheduled_backups
-  local schedule_status
+  local status_schedule
 
   ### Determine if scheduled backups are enabled
   if [[ ${SCHEDULED_BACKUPS} -eq 0 ]]; then
-    status_scheduled_backups="[${RED}\u2717${WHITE}] Disabled" ### Unicode cross mark
+    status_scheduled_backups="[${RED}${CROSS}${WHITE}]"
   else
-    status_scheduled_backups="[${GREEN}\u2713${WHITE}] Enabled " ### Unicode check mark
+    status_scheduled_backups="[${GREEN}${CHECK}${WHITE}]"
   fi
 
   ### Determine correct length and wording for the schedule
   case ${TIME_UNIT} in
-    h)
+    [hmd])
       ### Hourly schedule
-      if [[ ${BACKUP_INTERVAL} -eq 1 ]]; then
-        schedule_status="${BACKUP_INTERVAL} hour        "
-      elif [[ ${BACKUP_INTERVAL} -lt 10 ]]; then
-        schedule_status="${BACKUP_INTERVAL} hours       "
-      else
-        schedule_status="${BACKUP_INTERVAL} hours      "
+      if [[ ${BACKUP_INTERVAL} -gt 0 ]]; then
+        status_schedule="[${GREEN}${CHECK}${WHITE}]"
       fi
       if [[ -z ${BACKUP_INTERVAL+x} ]]; then
-        schedule_status="${RED}Invalid config${WHITE}"
-      fi
-      ;;
-    d)
-      ### Daily schedule
-      if [[ ${BACKUP_INTERVAL} -eq 1 ]]; then
-        schedule_status="${BACKUP_INTERVAL} day         "
-      elif [[ ${BACKUP_INTERVAL} -lt 10 ]]; then
-        schedule_status="${BACKUP_INTERVAL} days        "
-      else
-        schedule_status="${BACKUP_INTERVAL} days       "
-      fi
-      if [[ -z ${BACKUP_INTERVAL+x} ]]; then
-        schedule_status="${RED}Invalid config${WHITE}"
-      fi
-      ;;
-    m)
-      ### Monthly schedule
-      if [[ ${BACKUP_INTERVAL} -eq 1 ]]; then
-        schedule_status="${BACKUP_INTERVAL} month       "
-      elif [[ ${BACKUP_INTERVAL} -lt 10 ]]; then
-        schedule_status="${BACKUP_INTERVAL} months      "
-      else
-        schedule_status="${BACKUP_INTERVAL} months     "
-      fi
-      if [[ -z ${BACKUP_INTERVAL+x} ]]; then
-        schedule_status="${RED}Invalid config${WHITE}"
+        status_schedule="[${YELLOW}${EXCLM}${WHITE}]"
       fi
       ;;
     *)
       ### Broken config
-      schedule_status="${RED}Invalid config${WHITE}"
+      status_schedule="[${RED}${CROSS}${WHITE}]"
       ;;
   esac
 
@@ -73,8 +43,8 @@ backup_schedule_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BWHITE}Actions${WHITE}              | ${BWHITE}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
-  echo -e "${WHITE}| 1) Set Schedule         | ${schedule_status}         |${NC}"
-  echo -e "${WHITE}| 2) Toggle Schedule      | ${status_scheduled_backups}           |${NC}"
+  echo -e "${WHITE}| 1) Set Schedule         | ${status_schedule}                    |${NC}"
+  echo -e "${WHITE}| 2) Toggle Schedule      | ${status_scheduled_backups}                    |${NC}"
   echo -e "${WHITE}| 3) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
@@ -98,7 +68,7 @@ backup_schedule_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
+  local input
 
   ### Clear the screen to always print the menu at the same spot
   clear
@@ -109,10 +79,10 @@ backup_schedule_menu() {
   ### Loop until user input is valid
   while true; do
     ### Prompt the user to choose an action
-    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" action
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" input
 
     ### Evaluate user input to execute the corresponding function
-    case ${action} in
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -151,7 +121,7 @@ backup_schedule_menu() {
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   backup_schedule_menu

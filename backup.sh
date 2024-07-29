@@ -19,7 +19,7 @@ source "${SCRIPTPATH}/lib/functions/log_rotation.sh"
 
 ### Check for existing config file and load it
 if [[ -f "${HOME}/.config/kgb.cfg" ]]; then
-  # shellcheck source=sample_backup.cfg
+  # shellcheck source=kgb.cfg.example
   source "${HOME}/.config/kgb.cfg"
 else
   log_msg "No config file found!"

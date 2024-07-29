@@ -8,51 +8,23 @@ main_ui() {
   #!  Enabled and configured: Green
 
   ### Local variables that are only used to display the status of the current config
-  #!  Variables with the prefix ´status_color´ are dynamic references to a color defined in ´lib/functions/colors.sh´
-  local status_color_git
-  local status_color_log
-  local status_color_schedule
   local backup_count
   local migrate_status
+  local update_status
+  local install_status
 
-  ### Determine the status of GitHub backups
-  #!  If GitHub backups are enabled and configured, status is okay
-  #!  A warning state is determined if GitHub backups are enabled, but not configured
-  if [[ ${GIT} -ne 1 ]]; then
-    status_color_git="${RED}"
+  ### Check if service has been installed
+  if [[ -f /etc/systemd/system/kgb.service ]]; then
+    install_status="[${GREEN}${CHECK}${WHITE}]"
   else
-    status_color_git="${GREEN}"
-    if [[ -z ${GIT_REPO+x} ]]; then
-      status_color_git="${YELLOW}"
-    elif [[ ${#CONFIG_FOLDER_LIST[@]} -eq 0 ]]; then
-      status_color_git="${YELLOW}"
-    fi
+    install_status="[${RED}${CROSS}${WHITE}]"
   fi
 
-  ### Determine the status of the log rotation
-  #!  If log rotation is enabled and configured, status is okay
-  #!  A warning state is determined if log rotation is enabled, but not configured
-  if [[ ${LOG_ROTATION} -ne 1 ]]; then
-    status_color_log="${RED}"
+  ### Complare latest release with current version
+  if [[ ${VERSION} != "${LATEST_RELEASE}" ]]; then
+    update_status="[${YELLOW}${EXCLM}${WHITE}]"
   else
-    status_color_log="${GREEN}"
-    if [[ -z ${LOG_RETENTION+x} ]]; then
-      status_color_log="${YELLOW}"
-    fi
-  fi
-
-  ### Determine the status of scheduled backups
-  #!  If scheduled backups are enabled and configured, status is okay
-  #!  A warning state is determined if scheduled backups are enabled, but not configured
-  if [[ ${SCHEDULED_BACKUPS} -ne 1 ]]; then
-    status_color_schedule="${RED}"
-  else
-    status_color_schedule="${GREEN}"
-    if [[ -z ${BACKUP_INTERVAL+x} ]]; then
-      status_color_schedule="${YELLOW}"
-    elif [[ -z ${TIME_UNIT+x} ]]; then
-      status_color_schedule="${YELLOW}"
-    fi
+    update_status="[${GREEN}${CHECK}${WHITE}]"
   fi
 
   ### Count the amount of repositories that are managed
@@ -68,9 +40,9 @@ main_ui() {
   fi
 
   if [[ ${#REPO_LIST[@]} -ne 0 ]]; then
-    migrate_status="${RED}Please migrate"
+    migrate_status="[${RED}${CROSS}${WHITE}]"
   else
-    migrate_status="${GREEN}Already v2    "
+    migrate_status="[${GREEN}${CHECK}${WHITE}]"
   fi
 
   ### Print the default menu header
@@ -81,12 +53,12 @@ main_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BWHITE}Actions${WHITE}              | ${BWHITE}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
-  echo -e "${WHITE}| 1) Configure            | ${status_color_git}GitHub${WHITE}                 |${NC}"
-  echo -e "${WHITE}| 2) Install              | ${status_color_log}Log Rotation${WHITE}           |${NC}"
-  echo -e "${WHITE}| 3) Update               | ${status_color_schedule}Scheduled Backups${WHITE}      |${NC}"
+  echo -e "${WHITE}| 1) Configure            |                        |${NC}"
+  echo -e "${WHITE}| 2) Install              | ${install_status}                    |${NC}"
+  echo -e "${WHITE}| 3) Update               | ${update_status}                    |${NC}"
   echo -e "${WHITE}| 4) Backup               | ${backup_count}|${NC}"
   echo -e "${WHITE}| 5) Restore              |                        |${NC}"
-  echo -e "${WHITE}| 6) Migrate to v2        | ${migrate_status}${WHITE}         |${NC}"
+  echo -e "${WHITE}| 6) Migrate to v2        | ${migrate_status}                    |${NC}"
   echo -e "${WHITE}| 7) Uninstall            |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
@@ -102,7 +74,7 @@ main_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
+  local input
   local prompt
 
   ### Clear the screen to always print the menu at the same spot
@@ -114,14 +86,16 @@ main_menu() {
   ### Loop until user input is valid
   while true; do
     ### Hint user towards config migration
-    if [[ ${#GIT_REPO} -eq 0 ]]; then
+    if [[ ${VERSION} != "${LATEST_RELEASE}" ]]; then
+      prompt=3
+    elif [[ ${#GIT_REPO} -eq 0 ]]; then
       prompt=6
     fi
     ### Prompt the user to choose an action
-    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" -i "${prompt}" -e action
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" -i "${prompt}" -e input
 
     ### Evaluate user input to execute the corresponding function
-    case ${action} in
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -155,12 +129,12 @@ main_menu() {
           else
             error_msg "SSH setup failed"
             read -r -p "Continue 1" action
-            action=""
+            input=""
           fi
         else
           error_msg "Install was cancelled"
           read -r -p "Continue 2" action
-          action=""
+          input=""
         fi
         ### Break out of the loop when install dialog is finished
         #!  Will print the main menu again
@@ -170,7 +144,7 @@ main_menu() {
         ### Start updating KGB
         #!  Updater returns 0 if KGB has to be restarted
         #!  Otherwise reload the menu
-        if update_dialog; then
+        if ! update_dialog; then
           quit_installer
         else
           clear
@@ -212,7 +186,7 @@ main_menu() {
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   main_menu

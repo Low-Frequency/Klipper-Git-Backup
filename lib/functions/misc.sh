@@ -1,5 +1,27 @@
 #!/bin/bash
 
+check_dep() {
+  ### Check dependency
+
+  local wheel_pid
+
+  ### Check if curl is installed
+  if ! command -v curl; then
+    info_msg "Curl not detected, but required"
+    ### Start loading wheel as background task
+    loading_wheel "Installing curl" &
+    ### Get loading wheel PID
+    wheel_pid=$!
+    ### Install curl
+    sudo apt-get update &>/dev/null
+    sudo apt-get install curl -y &>/dev/null
+    ### Kill loading wheel
+    kill "${wheel_pid}"
+    ### Overwrite last loading wheel line
+    echo -e "\r   ${WHITE}[${PURPLE}${INFO}${WHITE}] Installing curl ${GREEN}done${NC}"
+  fi
+}
+
 quit_installer() {
   ### Exits the installer
   #!  Has some safety built in to make sure the user doesn't accidentally discards config changes

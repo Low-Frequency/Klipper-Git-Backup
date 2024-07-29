@@ -43,18 +43,22 @@ backup_dialog() {
 update_dialog() {
   ### Update KGB
 
-  info_msg "Updating..."
-  ### Reset the KGB repo
-  git -C "${SCRIPTPATH}" reset --hard
-  ### Pull the latest version
-  if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"; then
-    ### KGB was updated. Terminating
-    info_msg "KGB has to be restarted"
-    chmod +x "${SCRIPTPATH}"/*.sh
-    return 0
-  fi
+  ### Compare versions
+  if [[ ${VERSION} == "${LATEST_RELEASE}" ]]; then
+    info_msg "Already up to date. Nothing to do"
+  else
+    info_msg "Updating..."
+    ### Reset the KGB repo in case user has made any local changes
+    git -C "${SCRIPTPATH}" reset --hard
+    ### Pull the latest version
+    if ! git -C "${SCRIPTPATH}" pull | grep -q "up to date"; then
+      ### KGB was updated. Terminating
+      info_msg "KGB has to be restarted"
+      chmod +x "${SCRIPTPATH}"/*.sh
+      return 1
+    fi
   ### KGB was up to date
-  return 1
+  return 0
 }
 
 install_dialog() {

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-i_dont_know_what_im_doing_here() {
+quick_help() {
   ### Default header for quick help menu
   #!  Dumb name because why not
 
@@ -14,7 +14,7 @@ i_dont_know_what_im_doing_here() {
 help_main() {
   ### Prints the help screen for the main menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}Configure             ${WHITE}This will lead to a menu to configure the script${NC}"
@@ -31,24 +31,38 @@ help_main() {
 help_config() {
   ### Prints the help screen for the config menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}Git                   ${WHITE}This will lead to a menu to configure GitHub options${NC}"
   echo -e "                      ${WHITE}Further information can be called from there${NC}"
+  echo -e "${PURPLE}Backups               ${WHITE}This will lead to a menu in which you can configure folders to be backed up${NC}"
   echo -e "${PURPLE}Log Rotation          ${WHITE}This will lead to a menu to configure when logs are deleted${NC}"
-  echo -e "                      ${WHITE}Further information can be called from there${NC}"
-  echo -e "${PURPLE}Scheduled Backups     ${WHITE}This will lead to a menu to configure the backup schedule${NC}"
   echo -e "                      ${WHITE}Further information can be called from there${NC}"
   echo -e "${PURPLE}Save Config           ${WHITE}This will save the current config${NC}"
   echo -e "${PURPLE}Show Config           ${WHITE}This will show the current config including unsaved changes${NC}"
-  echo -e "${PURPLE}Refresh Menu          ${WHITE}This will reload the menu to update the status column${NC}"
+}
+
+help_backups() {
+  ### Prints the help screen for the backups menu
+
+  quick_help
+
+  echo -e "${BWHITE}Action                Description${NC}"
+  echo -e "${PURPLE}Config Folders        ${WHITE}This will try to detect your klipper instances${NC}"
+  echo -e "                      ${WHITE}You can set additional folders after the auto detect${NC}"
+  echo -e "                      ${WHITE}All folders configured will be backed up${NC}"
+  echo -e "                      ${WHITE}Make sure to only input the printer_data folder${NC}"
+  echo -e "                      ${WHITE}The script will automatically choose the config files for you${NC}"
+  echo -e "${PURPLE}Scheduled Backups     ${WHITE}This will lead to a menu to configure the backup schedule${NC}"
+  echo -e "                      ${WHITE}Further information can be called from there${NC}"
+  echo -e "${PURPLE}Toggle Backup         ${WHITE}Turn on/off backups${NC}"
 }
 
 help_advanced() {
   ### Prints the help screen for the advanced menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}Git Server            ${WHITE}You can specify a custom git server through this option${NC}"
@@ -61,7 +75,7 @@ help_advanced() {
 help_schedule() {
   ### Prints the help screen for the backup schedule menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}Set Schedule          ${WHITE}You can configure the backup schedule here${NC}"
@@ -72,7 +86,7 @@ help_schedule() {
 help_github() {
   ### Prints the help screen for the github menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}User                  ${WHITE}Set your GitHub username here${NC}"
@@ -81,12 +95,6 @@ help_github() {
   echo -e "                      ${WHITE}Leave it set to main if you didn't change it on GitHub${NC}"
   echo -e "${PURPLE}Repository            ${WHITE}Set the repository name here${NC}"
   echo -e "                      ${WHITE}Defaults to a set name, but feel free to change this${NC}"
-  echo -e "${PURPLE}Config Folders        ${WHITE}This will try to detect your klipper instances${NC}"
-  echo -e "                      ${WHITE}You can set additional folders after the auto detect${NC}"
-  echo -e "                      ${WHITE}All folders configured will be backed up${NC}"
-  echo -e "                      ${WHITE}Make sure to only input the printer_data folder${NC}"
-  echo -e "                      ${WHITE}The script will automatically choose the config files for you${NC}"
-  echo -e "${PURPLE}Toggle Backup         ${WHITE}This will turn on/off the backups depending on the current config${NC}"
   echo -e "${PURPLE}Advanced              ${WHITE}This will lead to an advanced config menu${NC}"
   echo -e "                      ${WHITE}Further information can be called from there${NC}"
   echo -e "                      ${RED}Be aware that support for this will be limited${NC}"
@@ -96,7 +104,7 @@ help_github() {
 help_rotation() {
   ### Prints the help screen for the log rotation menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${BWHITE}Action                Description${NC}"
   echo -e "${PURPLE}Set Retention Time    ${WHITE}This controls how long logs are stored${NC}"
@@ -107,7 +115,7 @@ help_rotation() {
 help_restore() {
   ### Prints the help screen for the restore menu
 
-  i_dont_know_what_im_doing_here
+  quick_help
 
   echo -e "${PURPLE}This is a dynamic menu, so I can't give you explicit info to all entries${NC}"
   echo -e "${PURPLE}The menu is generated based on the printer_data folders you configured${NC}"

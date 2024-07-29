@@ -15,8 +15,10 @@ GITHUB_BRANCH=main
 ###
 ### List of repository URLs and their config folder counterparts
 ### The URLs and paths have to be in brackets and should be separated by a space
+### The config folder list should only point to the instance folder
+### The script automatically selects the config folder inside
 REPO_LIST=(https://github.com/Low-Frequency/klipper_config)
-CONFIG_FOLDER_LIST=(/home/voron/printer_data/config)
+CONFIG_FOLDER_LIST=(/home/voron/printer_data/)
 ###
 ### Log Rotation enable/disable
 ### 1: enable
@@ -36,3 +38,6 @@ LOG_RETENTION=3
 SCHEDULED_BACKUPS=1
 BACKUP_INTERVAL=30
 TIME_UNIT=d
+###
+### Spoolman data backup
+SPOOLMAN_DATA=/home/voron/.local/share/spoolman

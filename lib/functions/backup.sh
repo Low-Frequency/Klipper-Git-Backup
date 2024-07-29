@@ -1,10 +1,35 @@
 #!/bin/bash
 
+backup_kgb_config() {
+  ### Backup the KGB config
+
+  log_msg "Backing up KGB config"
+
+  ### Make sure KGB backup dir exists
+  mkdir -p "${HOME}/kgb-data/backups/kgb"
+
+  ### Copy KGB config
+  cp "${HOME}/.config/kgb.cfg" "${HOME}/kgb-data/backups/kgb/kgb.cfg"
+
+  ### Sanitize config backup to not leak mail addresses
+  sed -i 's/^GITHUB_MAIL=.*$/GITHUB_MAIL=""/g' "${HOME}/kgb-data/backups/kgb/kgb.cfg"
+}
+
+backup_spoolman_data() {
+  ### Backup spoolman database
+
+  log_msg "Backing up Spoolman database"
+
+  ### Make sure spoolman dir exists
+  mkdir -p "${HOME}/kgb-data/backups/spoolman"
+
+  ### Copy spoolman database
+  cp "${SPOOLMAN_DATA}/spoolman.db" "${HOME}/kgb-data/backups/spoolman/spoolman.db"
+}
+
 backup_config_folders() {
   ### Backup all config folders
 
-  ### Initialize the exit code
-  local error=0
   local src
 
   ### Loop over all folders in config
@@ -37,22 +62,23 @@ backup_config_folders() {
       src=""
     fi
   done
+}
+
+push_backup() {
+  ### Push local backup to GitHub
 
   ### Push backup to GitHub
   log_msg "Adding changes to push"
-  git -C "${HOME}/kgb-data/backups/" add . | tee -a "${HOME}/kgb-data/log/$(date +%F).log"
+  git -C "${HOME}/kgb-data/backups/" add . | tee -a "${HOME}/kgb-data/log/$(date +%F).log" &>/dev/null
   log_msg "Committing to Git repository"
-  git -C "${HOME}/kgb-data/backups/" commit -m "backup $(date +"%F %T")" | tee -a "${HOME}/kgb-data/log/kgb-$(date +%F).log"
+  git -C "${HOME}/kgb-data/backups/" commit -m "backup $(date +"%F %T")" | tee -a "${HOME}/kgb-data/log/kgb-$(date +%F).log" &>/dev/null
   log_msg "Pushing to Git repository"
-  if git -C "${HOME}/kgb-data/backups/" push -u origin "${GITHUB_BRANCH}" | tee -a "${HOME}/kgb-data/log/kgb-$(date +%F).log"; then
-    log_msg "Successfully pushed backup"
-  else
-    log_msg "Failed to push backup"
-    error=1
+  if ! git -C "${HOME}/kgb-data/backups/" push -u origin "${GITHUB_BRANCH}" | tee -a "${HOME}/kgb-data/log/kgb-$(date +%F).log" &>/dev/null; then
+    return 1
   fi
 
   ### Return backup status
-  echo "${error}"
+  return 0
 }
 
 backup() {
@@ -60,7 +86,12 @@ backup() {
 
   ### Initialize exit code
   local error=0
-  local log_err=0
+
+  ### Remove all local backups to be able to track deleted files
+  #!  Leave .git dir intact
+  for dir in $(find "${HOME}/kgb-data/backups" -type d -not \( -path "${HOME}/kgb-data/backups/.git" -prune \) | grep -vE "^${HOME}/kgb-data/backups$"); do
+    rm -rf "${dir}"
+  done
 
   ### Evaluate configuration
   case ${GIT} in
@@ -77,20 +108,29 @@ backup() {
       ;;
   esac
 
-  ### Trigger log rotation
-  log_err=$(log_rotation)
+  ### Backup KGB config
+  backup_kgb_config
 
-  ### Evaluate log rotation status
-  if [[ ${log_err} -ne 0 ]]; then
-    log_msg "No valid log rotation configuration!"
+  ### Backup spoolman database
+  if [[ -n ${SPOOLMAN_DATA} ]]; then
+    backup_spoolman_data
+  fi
+
+  ### Push backup to GitHub
+  error=$(push_backup)
+
+  ### Log rotation
+  if ! log_rotation; then
     log_msg "This may eat up the space on your SD card!"
     log_msg "Please check the config file!"
   fi
 
   ### Evaluate backup status
-  if [[ ${error} -ne 0 ]]; then
-    return 1
-  else
+  if push_backup; then
+    log_msg "Successfully pushed backup"
     return 0
+  else
+    log_msg "Failed to push backup"
+    return 1
   fi
 }

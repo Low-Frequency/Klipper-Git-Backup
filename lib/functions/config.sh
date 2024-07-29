@@ -38,6 +38,7 @@ save_config() {
   write_line_to_config "SCHEDULED_BACKUPS=\"${SCHEDULED_BACKUPS}\""
   write_line_to_config "BACKUP_INTERVAL=\"${BACKUP_INTERVAL}\""
   write_line_to_config "TIME_UNIT=\"${TIME_UNIT}\""
+  write_line_to_config "SPOOLMAN_DATA=\"${SPOOLMAN_DATA}\""
 
   ### Reset the unsaved changes tracker
   UNSAVED_CHANGES=0
@@ -61,6 +62,9 @@ show_config() {
     for dir in "${CONFIG_FOLDER_LIST[@]}"; do
       info_msg "    ${dir}"
     done
+    if [[ -n ${SPOOLMAN_DATA} ]]; then
+      info_msg "    ${SPOOLMAN_DATA}"
+    fi
   else
     error_msg "Backups are disabled"
   fi

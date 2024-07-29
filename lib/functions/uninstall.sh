@@ -5,6 +5,7 @@ uninstall() {
   #!  *Insert sad pepe meme*
 
   local input
+  local wheel_pid
 
   success_msg "Uninstalling..."
   info_msg "Removing local data"
@@ -61,11 +62,16 @@ uninstall() {
   fi
 
   ### Uninstall github-cli
-  info_msg "Uninstalling GitHub CLI"
-  sudo apt-get remove gh -y
+  loading_wheel "Uninstalling GitHub CLI" &
+  wheel_pid=$!
+  ### Silently uninstall GitHub CLI
+  sudo apt-get remove gh -y &>/dev/null
+  sudo apt-get autoremove &>/dev/null
   ### Remove github-cli repo
   sudo rm -f /etc/apt/keyrings/githubcli-archive-keyring.gpg
   sudo rm -f /etc/apt/sources.list.d/github-cli.list
+  kill "${wheel_pid}"
+  echo -e "\r   ${WHITE}[${PURPLE}${INFO}${WHITE}] Uninstalling GitHub CLI ${GREEN}done${NC}"
 
   ### Remove github-cli config
   rm -rf "${HOME}/.config/gh"

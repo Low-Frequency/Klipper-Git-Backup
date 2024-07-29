@@ -21,7 +21,7 @@ install_git() {
   version_number=${latest_version//v/}
 
   ### Check if git is installed
-  if command -v git >/dev/null; then
+  if command -v git &>/dev/null; then
     ### Check the version
     if [[ $(git --version) == "git version ${version_number}" ]]; then
       success_msg "git already up to date"

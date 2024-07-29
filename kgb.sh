@@ -4,7 +4,7 @@
 #!  Variables in CAPS are used across multiple files, for example config values
 #!  Lowercase variables are usually local to a function
 
-VERSION="2.1.1"
+VERSION="2.2.0"
 ### Get path where script is located and save it to a variable
 #!  Using this variable will ensure that full paths are used
 #!  when files are referenced
@@ -23,12 +23,12 @@ UNSAVED_CHANGES=0
 # shellcheck source=lib/functions/advanced.sh
 # shellcheck source=lib/functions/backup.sh
 # shellcheck source=lib/functions/colors.sh
+# shellcheck source=lib/functions/config_folders.sh
 # shellcheck source=lib/functions/config.sh
 # shellcheck source=lib/functions/dialogs.sh
 # shellcheck source=lib/functions/general.sh
 # shellcheck source=lib/functions/git_install.sh
 # shellcheck source=lib/functions/github.sh
-# shellcheck source=lib/functions/help.sh
 # shellcheck source=lib/functions/install_deps.sh
 # shellcheck source=lib/functions/install.sh
 # shellcheck source=lib/functions/log_rotation.sh
@@ -44,8 +44,10 @@ for function_script in "${SCRIPTPATH}/lib/functions/"*.sh; do
 done
 # shellcheck source=lib/ui/advanced.sh
 # shellcheck source=lib/ui/backup_schedule.sh
+# shellcheck source=lib/ui/backups.sh
 # shellcheck source=lib/ui/config.sh
 # shellcheck source=lib/ui/github.sh
+# shellcheck source=lib/ui/help.sh
 # shellcheck source=lib/ui/log_rotation.sh
 # shellcheck source=lib/ui/main.sh
 # shellcheck source=lib/ui/menu_elements.sh
@@ -54,9 +56,15 @@ for ui_script in "${SCRIPTPATH}/lib/ui/"*.sh; do
   source "${ui_script}"
 done
 
+### Dependency check
+check_dep
+
+### Get version of latest release
+LATEST_RELEASE="$(curl --silent "https://api.github.com/repos/Low-Frequency/Klipper-Git-Backup/releases/latest" | grep "tag_name" | sed -E 's/.*"v([^"]+)".*/\1/')"
+
 ### Load config
 #!  If config doesn't exist, defaults will be set
-# shellcheck source=sample_backup.cfg
+# shellcheck source=kgb.cfg.example
 if [[ -f "${HOME}/.config/kgb.cfg" ]]; then
   source "${HOME}/.config/kgb.cfg"
 else

@@ -11,23 +11,12 @@ log_rotation_ui() {
 
   ### Local variables that are only used to display the status of the current config
   local status_log_rotation
-  local retention_status
 
   ### Determine if log rotation is enabled
   if [[ ${LOG_ROTATION} -eq 0 ]]; then
-    status_log_rotation="[${RED}\u2717${WHITE}] Disabled" ### Unicode cross mark
+    status_log_rotation="[${RED}${CROSS}${WHITE}]"
   else
-    status_log_rotation="[${GREEN}\u2713${WHITE}] Enabled " ### Unicode check mark
-  fi
-
-  ### Determine log retention string
-  #!  The cases are basically only for the correct wording and spacing
-  if [[ ${LOG_RETENTION} -eq 1 ]]; then
-    retention_status="${LOG_RETENTION} month     "
-  elif [[ $((LOG_RETENTION - 10)) -lt 0 ]]; then
-    retention_status="${LOG_RETENTION} months    "
-  elif [[ $((LOG_RETENTION - 10)) -ge 0 ]]; then
-    retention_status="${LOG_RETENTION} months   "
+    status_log_rotation="[${GREEN}${CHECK}${WHITE}]"
   fi
 
   ### Print default menu header
@@ -38,8 +27,8 @@ log_rotation_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BWHITE}Actions${WHITE}              | ${BWHITE}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
-  echo -e "${WHITE}| 1) Set Retention Time   | Retention: ${retention_status}|${NC}"
-  echo -e "${WHITE}| 2) Toggle Log Rotation  | ${status_log_rotation}           |${NC}"
+  echo -e "${WHITE}| 1) Set Retention Time   |                        |${NC}"
+  echo -e "${WHITE}| 2) Toggle Log Rotation  | ${status_log_rotation}                    |${NC}"
   echo -e "${WHITE}| 3) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
@@ -52,7 +41,6 @@ log_rotation_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
   local input
 
   ### Clear the screen to always print the menu at the same spot
@@ -64,10 +52,10 @@ log_rotation_menu() {
   ### Loop until user input is valid
   while true; do
     ### Prompt the user to choose an action
-    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" action
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" input
 
     ### Evaluate user input to execute the corresponding function
-    case ${action} in
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -103,7 +91,7 @@ log_rotation_menu() {
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   log_rotation_menu

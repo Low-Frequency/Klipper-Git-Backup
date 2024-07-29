@@ -18,6 +18,17 @@ detect_printer_data() {
   echo "${printer_data[*]}"
 }
 
+detect_spoolman_data() {
+  ### Detects a spoolman installation and returns the data folder
+
+  local spoolman_data
+
+  ### Find spoolman DB
+  spoolman_data="$(find "${HOME}" -type f -name "*poolman.db" | grep -o "^.*/")"
+
+  echo "${spoolman_data}"
+}
+
 add_config_folder() {
   ### Add config folders to the list
 
@@ -176,6 +187,40 @@ add_additional_dirs() {
   done && input=""
 }
 
+remove_spoolman_folder() {
+  ### Removes spoolman folder from backup
+
+  local input
+
+  ### Check if spoolman is configured
+  if [[ -n ${SPOOLMAN_DATA} ]]; then
+    info_msg "Spoolman database is currently configured for backups"
+    ### Loop until user input is valid
+    while true; do
+      read -r -p "$(echo -e "${PURPLE}Do you want to remove the Spoolman database from backup? ${NC}")" -i "n" -e input
+      ### Validate user input
+      case ${input} in
+        y | Y)
+          ### Unset SPOOLMAN_DATA
+          success_msg "Removed ${SPOOLMAN_DATA} from backup"
+          unset SPOOLMAN_DATA
+          UNSAVED_CHANGES=1
+          break
+          ;;
+        n | N)
+          ### Do nothing
+          success_msg "Keeping Spoolman backup"
+          break
+          ;;
+        *)
+          ### Invalid input
+          deny_action
+          ;;
+      esac
+    done && input=""
+  fi
+}
+
 remove_config_folder() {
   ### Removes config folders from list
 
@@ -228,12 +273,57 @@ remove_config_folder() {
         ;;
     esac
   done && input=""
+
+  remove_spoolman_folder
+}
+
+config_spoolman_folder() {
+  ### Configure spoolman database to be backed up
+
+  local input
+  local spoolman
+
+  ### Detect spoolman installation
+  if [[ -z ${SPOOLMAN_DATA} ]]; then
+    spoolman=$(detect_spoolman_data)
+  fi
+
+  ### Check if installation was detected
+  if [[ -n ${spoolman} ]]; then
+    info_msg "Spoolman installation detected"
+    ### Loop until user input is valid
+    while true; do
+      read -r -p "$(echo -e "${PURPLE}Do you want to add the Spoolman database to the backup? ${NC}")" -i "y" -e input
+      ### Validate user input
+      case ${input} in
+        y | Y)
+          ### Keep detected dir
+          SPOOLMAN_DATA="${spoolman}"
+          success_msg "Added ${SPOOLMAN_DATA} to backup"
+          UNSAVED_CHANGES=1
+          break
+          ;;
+        n | N)
+          ### Reset variable
+          success_msg "Spoolman database will not be backed up"
+          break
+          ;;
+        *)
+          ### Invalid input
+          deny_action
+          ;;
+      esac
+    done && input=""
+  fi
 }
 
 config_folders() {
   ### Configure folders to be backed up
 
   local input
+
+  ### Auto detect spoolman installation
+  config_spoolman_folder
 
   ### Loop until user input is valid
   while true; do

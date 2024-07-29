@@ -32,6 +32,9 @@ restore_ui() {
     echo -e "${WHITE}| ${folder} |${NC}"
     menu_entry=$((menu_entry + 1))
   done
+  if [[ -n ${SPOOLMAN_DATA} ]]; then
+    echo -e "${WHITE}| s) Spoolman Database                             |${NC}"
+  fi
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
   ### Print the menu footer
@@ -43,7 +46,7 @@ restore_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
+  local input
 
   ### Clear the screen to always print the menu at the same spot
   clear
@@ -54,8 +57,8 @@ restore_menu() {
   ### Loop until user input is valid
   while true; do
     ### Prompt user for input
-    read -r -p "$(echo -e "${CYAN}Which instance do you want to restore? ${NC}")" action
-    case ${action} in
+    read -r -p "$(echo -e "${CYAN}Which instance do you want to restore? ${NC}")" input
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -67,11 +70,20 @@ restore_menu() {
       h | H)
         help_restore
         ;;
+      s | S)
+        if [[ -z ${SPOOLMAN_DATA} ]]; then
+          ### Spoolman not configured, so invalid input
+          deny_action
+        else
+          restore_spoolman
+          break
+        fi
+        ;;
       [1-9]*)
         ### Calculate real index of array
-        if [[ ${action} -le ${#CONFIG_FOLDER_LIST[@]} ]]; then
+        if [[ ${input} -le ${#CONFIG_FOLDER_LIST[@]} ]]; then
           ### Restore config
-          restore_config "$((action - 1))"
+          restore_config "$((input - 1))"
           break
         else
           ### Invalid input
@@ -83,7 +95,7 @@ restore_menu() {
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   restore_menu

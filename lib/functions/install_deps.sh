@@ -1,31 +1,63 @@
 #!/bin/bash
 
+loading_wheel() {
+  ### Fun loading wheel
+
+  ### Endless loop
+  while true; do
+    ### Print specified character each 0.1 second
+    #!  Overwites the line every time
+    # shellcheck disable=SC1003
+    for char in '|' '/' '-' '\'; do
+      echo -en "\r   ${WHITE}[${PURPLE}${INFO}${WHITE}]${NC} $1 ${char}"
+      sleep 0.1
+    done
+  done
+}
+
 setup_gh_cli() {
   ### Installs gh-cli
   #!  Is used to manage GitHub repos and SSH keys
 
   local input
+  local wheel_pid
 
   ### Check if git server is github.com
   #!  If it is not set, default to github.com
   if [[ ${GIT_SERVER:-github.com} == "github.com" ]]; then
     ### Check if GitHub CLI already is installed
-    if ! command -v gh; then
+    if ! command -v gh &>/dev/null; then
       ### Check requirement for install
-      if ! command -v wget; then
+      if ! command -v wget &>/dev/null; then
         ### Install ´wget´
-        sudo apt-get update >/dev/null
-        apt-get install wget -y >/dev/null
+        #!  Start loading wheel as background task
+        loading_wheel "Installing dependencies" &
+        ### Get PID of loading wheel
+        wheel_pid=$!
+        ### Silently install wget
+        sudo apt-get update &>/dev/null
+        apt-get install wget -y &>/dev/null
+        ### Kill loading wheel
+        kill "${wheel_pid}"
+        ### Overwrite last loading wheel line
+        echo -e "\r   ${WHITE}[${PURPLE}${INFO}${WHITE}] Installing dependecies ${GREEN}done${NC}"
       fi
-      info_msg "Installing GitHub CLI"
+      ### Start loading wheel as background task
+      loading_wheel "Installing GitHub CLI" &
+      ### Get PID of loading wheel
+      wheel_pid=$!
       ### Get GitHub CLI Keyring
       wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
       sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
       ### Configure necessary repo
       echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
-      ### Install GitHub CLI
-      sudo apt-get update
-      sudo apt-get install gh -y
+      ### Silently install GitHub CLI
+      sudo apt-get update &>/dev/null
+      sudo apt-get install gh -y &>/dev/null
+      ### Kill loading wheel
+      kill "${wheel_pid}"
+      ### Overwrite last loading wheel line
+      echo -e "\r   ${WHITE}[${PURPLE}${INFO}${WHITE}] Installing GitHub CLI ${GREEN}done${NC}"
     fi
     info_msg "Attempting login to your GitHub Account"
     ### Check if access token is present

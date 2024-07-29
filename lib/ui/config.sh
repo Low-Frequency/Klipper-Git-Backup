@@ -40,25 +40,11 @@ config_ui() {
     fi
   fi
 
-  ### Determine the status of scheduled backups
-  #!  If scheduled backups are enabled and configured, status is okay
-  #!  A warning state is determined if scheduled backups are enabled, but not configured
-  if [[ ${SCHEDULED_BACKUPS} -ne 1 ]]; then
-    status_color_schedule="${RED}"
-  else
-    status_color_schedule="${GREEN}"
-    if [[ -z ${BACKUP_INTERVAL+x} ]]; then
-      status_color_schedule="${YELLOW}"
-    elif [[ -z ${TIME_UNIT+x} ]]; then
-      status_color_schedule="${YELLOW}"
-    fi
-  fi
-
   ### Determine if there are unsaved changes to the config
   if [[ ${UNSAVED_CHANGES} -ne 0 ]]; then
-    status_unsaved_changes="[${RED}\u2717${WHITE}]" ### Unicode cross mark
+    status_unsaved_changes="[${RED}${CROSS}${WHITE}]"
   else
-    status_unsaved_changes="[${GREEN}\u2713${WHITE}]" ### Unicode check mark
+    status_unsaved_changes="[${GREEN}${CHECK}${WHITE}]"
   fi
 
   ### Print the default menu header
@@ -69,12 +55,11 @@ config_ui() {
   echo -e "${WHITE}+==================================================+${NC}"
   echo -e "${WHITE}|    ${BWHITE}Actions${WHITE}              | ${BWHITE}Status${WHITE}                 |${NC}"
   echo -e "${WHITE}|                         |                        |${NC}"
-  echo -e "${WHITE}| 1) Git                  | ${status_color_git}Git${WHITE}                    |${NC}"
-  echo -e "${WHITE}| 2) Log Rotation         | ${status_color_log}Log Rotation${WHITE}           |${NC}"
-  echo -e "${WHITE}| 3) Scheduled Backups    | ${status_color_schedule}Scheduled Backups${WHITE}      |${NC}"
+  echo -e "${WHITE}| 1) Git                  |                        |${NC}"
+  echo -e "${WHITE}| 2) Backups              |                        |${NC}"
+  echo -e "${WHITE}| 3) Log Rotation         |                        |${NC}"
   echo -e "${WHITE}| 4) Save Config          | ${status_unsaved_changes}                    |${NC}"
   echo -e "${WHITE}| 5) Show Config          |                        |${NC}"
-  echo -e "${WHITE}| 6) Refresh Menu         |                        |${NC}"
   echo -e "${WHITE}+--------------------------------------------------+${NC}"
 
   ### Print the info section of the menu
@@ -89,7 +74,7 @@ config_menu() {
 
   ### Local variable to determine the action to take
   #!  Gets its value from user input
-  local action
+  local input
 
   ### Clear the screen to always print the menu at the same spot
   clear
@@ -100,10 +85,10 @@ config_menu() {
   ### Loop until user input is valid
   while true; do
     ### Prompt the user to choose an action
-    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" action
+    read -r -p "$(echo -e "${CYAN}##### Choose action: ${NC}")" input
 
     ### Evaluate user input to execute the corresponding function
-    case ${action} in
+    case ${input} in
       q | Q)
         ### Exit
         quit_installer
@@ -127,18 +112,18 @@ config_menu() {
       2)
         ### Clear the screen to always print the menu at the same spot
         clear
-        ### Print log rotation config menu
-        log_rotation_menu
-        ### Break out of the loop when log rotation config menu is exited
+        ### Print backup config menu
+        backups_menu
+        ### Break out of the loop when backup scheldule config menu is exited
         #!  Will print the config menu again
         break
         ;;
       3)
         ### Clear the screen to always print the menu at the same spot
         clear
-        ### Print backup schedule config menu
-        backup_schedule_menu
-        ### Break out of the loop when backup scheldule config menu is exited
+        ### Print log rotation config menu
+        log_rotation_menu
+        ### Break out of the loop when log rotation config menu is exited
         #!  Will print the config menu again
         break
         ;;
@@ -158,16 +143,12 @@ config_menu() {
         #!  Will print the config menu again
         break
         ;;
-      6)
-        ### Break loop to reload the menu
-        break
-        ;;
       *)
         ### Invalid input
         deny_action
         ;;
     esac
-  done && action=""
+  done && input=""
 
   ### Loop back to itself
   config_menu

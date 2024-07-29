@@ -8,8 +8,12 @@ detect_existing_configs() {
   local error
 
   ### Clonig repo
-  info_msg "Cloning new repo"
-  git clone "git@${GIT_SERVER}:${GIT_ORG}/${GIT_REPO}.git" "${HOME}/kgb-data/backups"
+  info_msg "Cloning repo"
+  if [[ -d ${HOME}/kgb-data/backups/.git ]]; then
+    git -C "${HOME}/kgb-data/backups" pull &>/dev/null
+  else
+    git clone "git@${GIT_SERVER}:${GIT_ORG}/${GIT_REPO}.git" "${HOME}/kgb-data/backups" &>/dev/null
+  fi
 
   ### Find all files and direcories in the repo and count them
   #!  The command excludes the .git folder, so no files or dirs in the repo folder will return 1
@@ -19,12 +23,10 @@ detect_existing_configs() {
   #!  If number of files is greater than 1, there is at least one file or directory in the repo
   if [[ ${repo_files} -eq 1 ]]; then
     ### Initial Backup
-    error=$(backup_config_folders)
-    if [[ ${error} -ne 0 ]]; then
-      error_msg "Something went wrong while performing backup"
-      return 1
-    else
+    if backup; then
       return 0
+    else
+      return 1
     fi
   ### Very weird behavior
   #!  This should never happen, but print instructions just in case
@@ -47,12 +49,68 @@ detect_existing_configs() {
   fi
 }
 
+check_restore_destination() {
+  ### Finds the restore destination for a backup folder
+
+  local dir_name=$1
+  local restore_dst
+
+  ### Capture spoolman backup
+  if [[ ${dir_name} =~ [Ss]poolman ]]; then
+    ### Make sure spoolman restore destination exists
+    if [[ -d ${SPOOLMAN_DATA} ]]; then
+      restore_dst="${SPOOLMAN_DATA}"
+    fi
+  ### Capture KGB backup
+  elif [[ ${dir_name} =~ kgb ]]; then
+    restore_dst="${HOME}/.config"
+  else
+    ### Check if same name exists in ${HOME}
+    for dst in "${HOME}"/*/; do
+      if echo "${dst}" | grep -q "${dir_name}"; then
+        restore_dst="${dst}"
+      fi
+    done
+  fi
+
+  ### Return restore destination
+  echo "${restore_dst}"
+}
+
+restore_backup() {
+  ### Restores a backup
+
+  local dir=$1
+  local restore_dst=$2
+
+  if [[ -n ${restore_dst} ]]; then
+    ### Capture spoolman backup
+    if [[ ${restore_dst} =~ [Ss]poolman ]]; then
+      ### Copy config to existing printer_data directory
+      success_msg "Found restorable spoolman instance ${restore_dst}"
+      cp -r "${dir}/spoolman.db" "${restore_dst}/spoolman.db"
+    elif [[ ${restore_dst} == "${HOME}/.config" ]]; then
+      warning_msg "Not restoring KGB backup"
+      warning_msg "Currently only manual restore supported to not break the config during install"
+    else
+      ### Copy config to existing printer_data directory
+      success_msg "Found restorable klipper instance ${restore_dst}"
+      cp -r "${dir}/config/" "${restore_dst}"
+    fi
+  else
+    warning_msg "Could not find restore destination for ${dir}"
+  fi
+}
+
 auto_restore() {
   ### Automatically restores the found config files
 
   local input
+  local restore_dst
 
   info_msg "Existing configs in remote repository detected"
+  warning_msg "This will restore ALL configs!"
+  warning_msg "To prevent data loss only restore if you've lost all of your configuration!"
   ### Prompt for restore
   while true; do
     read -r -p "$(echo -e "${PURPLE}Do you want to restore the configs now? ${NC}")" -i "y" -e input
@@ -60,24 +118,15 @@ auto_restore() {
     case ${input} in
       y | Y)
         ### Start restore process
-        info_msg "Starting automatic restore process"
+        info_msg "Starting automatic restore process for all instances"
         ### Loop over all existing backups
         for dir in "${HOME}"/kgb-data/backups/*/; do
           ### Get name of backup directory
           dir_name="$(echo "${dir}" | sed -E 's|^.*/(.*_data)/?$|\1|')"
-          ### Check if same name exists in ${HOME}
-          for dst in "${HOME}"/*/; do
-            if echo "${dst}" | grep -q "${dir_name}"; then
-              restore_dst="${dst}"
-            fi
-          done
-          if [[ -n ${restore_dst} ]]; then
-            ### Copy config to existing printer_data directory
-            success_msg "Found restorable instance ${restore_dst}"
-            cp -r "${dir}/config/" "${restore_dst}"
-          else
-            warning_msg "Could not find printer_data directory for ${dir}"
-          fi
+          ### Get path to restore destination
+          restore_dst="$(check_restore_destination "${dir_name}")"
+          ### Restore the folder
+          restore_backup "${dir}" "${restore_dst}"
           restore_dst=""
         done
         success_msg "Automatic restore finished"
