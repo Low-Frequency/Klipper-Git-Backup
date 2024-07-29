@@ -1,5 +1,11 @@
 ## Changelog
 
+## 2.2.0
+
+* Support for [Spoolman](https://github.com/Donkie/Spoolman) database backups
+* Ability to track deleted files
+* KGB config backup
+
 ## 2.1.1
 
 * Fixed unsaved changes not updating on config folder updates
