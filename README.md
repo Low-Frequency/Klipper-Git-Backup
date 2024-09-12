@@ -29,7 +29,7 @@ Detailed instructions an documentation can be found in the docs folder [here](do
 
   Copy the access token and save it on your Pi:
   ```bash
-  mkdir ~/.secrets && chmod 700 ~./secrets
+  mkdir ~/.secrets && chmod 700 ~/.secrets
   nano ~/.secrets/gh-token && chmod 600 ~/.secrets/gh-token
   ```
 
