@@ -19,6 +19,9 @@ setup_gh_cli() {
       fi
       info_msg "Installing GitHub CLI"
       ### Get GitHub CLI Keyring
+      if [[ ! -d /etc/apt/keyrings ]]; then
+        sudo mkdir -p -m 755 /etc/apt/keyrings
+      fi
       wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
       sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
       ### Configure necessary repo
