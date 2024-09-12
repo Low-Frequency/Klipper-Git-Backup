@@ -4,7 +4,7 @@
 #!  Variables in CAPS are used across multiple files, for example config values
 #!  Lowercase variables are usually local to a function
 
-VERSION="2.1.1"
+VERSION="2.1.2"
 ### Get path where script is located and save it to a variable
 #!  Using this variable will ensure that full paths are used
 #!  when files are referenced

@@ -1,5 +1,10 @@
 ## Changelog
 
+## 2.1.2
+
+* Fix `gh` installation
+* Make sure keyrings directory exists
+
 ## 2.1.1
 
 * Fixed unsaved changes not updating on config folder updates
